@@ -283,8 +283,8 @@ $('#bFs').onclick = () => {
 };
 function fsLabel() { $('#bFs').innerHTML = isFs() ? '🗗 Keluar Layar Penuh' : '⛶ Layar Penuh'; setTimeout(fit, 120); }
 document.addEventListener('fullscreenchange', fsLabel); document.addEventListener('webkitfullscreenchange', fsLabel);
-$('#bSnd').onclick = () => { CFG.sound = !CFG.sound; saveCfg(); $('#bSnd').textContent = CFG.sound ? '🔊' : '🔇'; sfx.click(); };
-$('#bSnd').textContent = CFG.sound ? '🔊' : '🔇';
+$('#bSnd').onclick = () => { CFG.sound = !CFG.sound; saveCfg(); $('#bSnd').textContent = CFG.sound ? '🔊 Suara: Nyala' : '🔇 Suara: Mati'; sfx.click(); };
+$('#bSnd').textContent = CFG.sound ? '🔊 Suara: Nyala' : '🔇 Suara: Mati';
 $('#bMat').onclick = () => { location.href = 'index.html'; };
 function gameBar(on) { ['#qCount', '#bPause', '#bStop'].forEach(s => $(s).classList.toggle('hide', !on)); $('#bMat').classList.toggle('hide', on); }
 
