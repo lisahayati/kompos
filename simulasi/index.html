@@ -97,19 +97,70 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 
 /* ---------- home ---------- */
 .home{position:absolute;inset:0;background:linear-gradient(#7dd3fc,#e0f2fe 55%,#bbf7d0 55%,#86efac)}
-.home h1{position:absolute;left:0;right:0;top:40px;text-align:center;margin:0;font-size:96px;line-height:1;color:var(--green-d);text-shadow:0 6px 0 #fff}
-.home .sub{position:absolute;left:0;right:0;top:150px;text-align:center;font-size:36px;font-weight:600;color:#0f172a}
-.mcards{position:absolute;left:70px;right:70px;top:230px;display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+.home h1{position:absolute;left:0;right:0;top:104px;text-align:center;margin:0;font-size:78px;line-height:1;color:var(--green-d);text-shadow:0 6px 0 #fff}
+.home .sub{position:absolute;left:0;right:0;top:192px;text-align:center;font-size:32px;font-weight:600;color:#0f172a}
+.mcards{position:absolute;left:70px;right:70px;top:268px;display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
 .mcard{position:relative;background:#fff;border:6px solid var(--green-d);border-radius:36px;padding:20px 22px 24px;text-align:center;box-shadow:0 12px 0 rgba(20,83,45,.35);transition:transform .15s}
 .mcard:active{transform:translateY(8px);box-shadow:0 4px 0 rgba(20,83,45,.35)}
 .mcard .num{position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:var(--yellow);border:5px solid var(--green-d);border-radius:999px;font-weight:800;font-size:28px;padding:2px 26px;white-space:nowrap}
-.mcard svg.ill{width:230px;height:200px;display:block;margin:16px auto 6px}
+.mcard svg.ill{width:210px;height:180px;display:block;margin:14px auto 4px}
 .mcard h3{margin:0;font-size:38px;line-height:1.05;color:var(--green-d)}
-.mcard p{margin:10px 0 0;font-size:24px;line-height:1.25;color:var(--muted);font-weight:600;min-height:90px}
+.mcard p{margin:8px 0 0;font-size:24px;line-height:1.25;color:var(--muted);font-weight:600;min-height:62px}
 .mcard .st{margin-top:12px;font-size:26px;font-weight:800;color:#a16207;min-height:36px}
 .mcard.done{border-color:var(--green);background:#f0fdf4}
 .homeacts{position:absolute;left:0;right:0;bottom:46px;display:flex;justify-content:center;gap:26px}
 .fall{position:absolute;top:-80px;width:60px;height:60px;pointer-events:none;opacity:.9}
+
+/* ---------- halaman depan ---------- */
+.front{position:absolute;inset:0;background:linear-gradient(#7dd3fc,#e0f2fe 58%,#bbf7d0 58%,#86efac);overflow:hidden}
+.fnav{position:absolute;top:16px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:30;background:rgba(255,255,255,.92);padding:8px;border-radius:999px;box-shadow:0 6px 0 rgba(0,0,0,.12);border:4px solid var(--green-d);white-space:nowrap}
+.fnav button{border:none;border-radius:999px;padding:8px 24px;font-size:25px;font-weight:800;background:transparent;color:var(--green-d)}
+.fnav button.on{background:var(--green-d);color:#fff}
+.fnav button:active{background:var(--green-l)}
+.parrows{position:absolute;left:40px;right:40px;bottom:34px;display:flex;justify-content:space-between;z-index:25;pointer-events:none}
+.parrows .btn{pointer-events:auto}
+.cov{position:absolute;left:80px;top:118px;width:1080px;height:720px;background:#fff;border:8px solid var(--green-d);border-radius:48px;padding:46px 56px;box-shadow:0 14px 0 rgba(20,83,45,.3)}
+.covtag{display:inline-block;background:var(--yellow);color:var(--green-d);font-size:30px;font-weight:800;padding:6px 26px;border-radius:999px;border:4px solid var(--green-d)}
+.covtopic{margin-top:22px;font-size:38px;font-weight:800;color:#b45309}
+.cov h1{margin:6px 0 0;font-size:72px;line-height:1.05;color:var(--green-d)}
+.covmeta{position:absolute;left:56px;right:56px;bottom:44px;display:grid;gap:14px}
+.covmeta div{display:flex;flex-direction:column;background:#f0fdf4;border-left:12px solid var(--green);border-radius:18px;padding:10px 24px}
+.covmeta span{font-size:24px;font-weight:700;color:var(--muted)}
+.covmeta b{font-size:38px;line-height:1.15;color:#0f172a}
+.covart{position:absolute;left:1190px;top:120px;width:700px;height:700px}
+.aper-t{position:absolute;left:30px;top:104px;z-index:12;background:rgba(255,255,255,.94);border:6px solid var(--green-d);border-radius:32px;padding:12px 30px;box-shadow:0 8px 0 rgba(0,0,0,.15)}
+.aper-t .tg{font-size:26px;font-weight:800;color:#b45309}
+.aper-t h2{margin:0;font-size:50px;line-height:1.05;color:var(--green-d)}
+.qs{position:absolute;left:340px;right:340px;bottom:30px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;z-index:12}
+.q{background:rgba(255,255,255,.95);border:5px solid var(--green-d);border-radius:26px;padding:12px 16px;font-size:24px;font-weight:700;line-height:1.2;text-align:left;box-shadow:0 6px 0 rgba(0,0,0,.18);transition:transform .15s}
+.q .e{font-size:44px;line-height:1;display:block;margin-bottom:4px}
+.q.on{background:var(--yellow);transform:translateY(-10px)}
+.ptitle{position:absolute;left:0;right:0;top:108px;text-align:center;margin:0;font-size:72px;line-height:1;color:var(--green-d);text-shadow:0 6px 0 #fff}
+.tps{position:absolute;left:170px;right:170px;top:220px;display:grid;gap:24px}
+.tp{display:flex;align-items:center;gap:28px;background:#fff;border:6px solid var(--green-d);border-radius:36px;padding:20px 34px;box-shadow:0 10px 0 rgba(20,83,45,.25);text-align:left}
+.tp .n{flex:none;width:96px;height:96px;border-radius:50%;background:var(--yellow);border:6px solid var(--green-d);font-size:52px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--green-d)}
+.tp .e{flex:none;font-size:80px;line-height:1}
+.tp .t{flex:1;font-size:35px;line-height:1.28;font-weight:600}
+.tp .t b{color:var(--green)}
+.tp .chip{flex:none;font-size:22px;font-weight:800;background:var(--green-l);color:var(--green-d);border-radius:999px;padding:6px 18px}
+.pls{position:absolute;left:110px;right:110px;top:215px;display:grid;grid-template-columns:1fr 1fr;gap:44px}
+.pl{position:relative;background:#fff;border:8px solid var(--green-d);border-radius:44px;padding:30px 44px 36px;box-shadow:0 12px 0 rgba(20,83,45,.28);text-align:center}
+.pl .ab{position:absolute;top:-34px;left:40px;width:84px;height:84px;border-radius:50%;background:var(--yellow);border:6px solid var(--green-d);font-size:46px;font-weight:800;color:var(--green-d);display:flex;align-items:center;justify-content:center}
+.pl svg{width:100%;height:230px;display:block}
+.pl h3{margin:6px 0 10px;font-size:58px;line-height:1;color:var(--green-d)}
+.pl p{margin:0;font-size:32px;line-height:1.32;font-weight:600;color:#1f2937}
+.rq{position:absolute;left:120px;right:120px;top:200px;text-align:center;font-size:46px;font-weight:800;line-height:1.2;color:#0f172a}
+.emos{position:absolute;left:0;right:0;top:310px;display:flex;justify-content:center;gap:60px}
+.emo{width:400px;background:#fff;border:8px solid var(--green-d);border-radius:48px;padding:20px 10px 26px;box-shadow:0 12px 0 rgba(20,83,45,.28);transition:transform .12s}
+.emo:active{transform:translateY(8px);box-shadow:0 4px 0 rgba(20,83,45,.28)}
+.emo .f{font-size:160px;line-height:1.1;display:block}
+.emo .l{display:block;font-size:40px;font-weight:800;color:var(--green-d)}
+.emo .c{display:inline-block;margin-top:10px;font-size:28px;font-weight:800;background:#f1f5f9;border-radius:999px;padding:4px 22px}
+.emo.on{background:#fef9c3;border-color:#ca8a04}
+.emo.hop .f{animation:hop .6s ease}
+@keyframes hop{30%{transform:translateY(-40px) scale(1.15)}60%{transform:translateY(0) scale(.95)}}
+.rmsg{position:absolute;left:260px;right:260px;bottom:120px;text-align:center;font-size:34px;font-weight:700;line-height:1.3;background:rgba(255,255,255,.95);border:5px solid var(--green);border-radius:30px;padding:16px 30px;opacity:0;transition:opacity .3s}
+.rmsg.show{opacity:1}
 
 /* ---------- mission 1 ---------- */
 .choices{position:absolute;left:0;right:0;bottom:28px;display:flex;justify-content:center;gap:34px;z-index:12}
@@ -235,7 +286,7 @@ input.big::-moz-range-thumb{width:72px;height:72px;border-radius:50%;background:
 .cert .bd.no{opacity:.35;filter:grayscale(1)}
 .cert .pred{font-size:42px;font-weight:800;color:var(--green)}
 .namein{font:inherit;font-size:34px;font-weight:700;padding:6px 24px;border-radius:20px;border:5px solid var(--green-d);width:640px;text-align:center;-webkit-user-select:text;user-select:text}
-.pledge{font-size:28px;line-height:1.35;background:#fff;border-radius:24px;padding:14px 28px;border:4px solid #bbf7d0;margin:10px auto;max-width:1300px;text-align:left}
+.pledge{font-size:26px;line-height:1.3;background:#fff;border-radius:24px;padding:14px 28px;border:4px solid #bbf7d0;margin:10px auto;max-width:1300px;text-align:left}
 @media print{
   body{background:#fff}
   #topbar,.noprint{display:none!important}
@@ -419,7 +470,7 @@ input.big::-moz-range-thumb{width:72px;height:72px;border-radius:50%;background:
 <div id="stage">
   <header id="topbar">
     <button class="tb" id="bHome" title="Beranda">🏠 Beranda</button>
-    <div class="brand"><svg width="60" height="68"><use href="#mascot"/></svg><div>Penjaga Bumi<small>Daun Kering Jadi Kompos, Bukan Asap!</small></div></div>
+    <div class="brand"><svg width="60" height="68"><use href="#mascot"/></svg><div>Penjaga Bumi<small>IPA Kelas VII · SMP Negeri 1 Bandar Seikijang</small></div></div>
     <div class="sp"></div>
     <div class="pill" title="Skor">⭐ <span id="score">0</span></div>
     <div class="pill" title="Lencana">🏅 <span id="badges">0</span>/5</div>
@@ -618,7 +669,7 @@ function fsLabel() { $('#bFs').innerHTML = isFs() ? '🗗 Keluar Layar Penuh' : 
 document.addEventListener('fullscreenchange', fsLabel); document.addEventListener('webkitfullscreenchange', fsLabel);
 $('#bSnd').onclick = () => { S.sound = !S.sound; save(); updateHud(); sfx.click(); };
 $('#bNarr').onclick = () => { S.narr = !S.narr; save(); updateHud(); if (!S.narr && window.speechSynthesis) speechSynthesis.cancel(); else { const t = $('#sayT'); t && speak(t.innerHTML); } };
-$('#bHome').onclick = () => { sfx.click(); go(home); };
+$('#bHome').onclick = () => { sfx.click(); go(cover); };
 
 function go(fn) {
   clearTimers(); runId++; closeModal(); curMission = null; cur = 0;
@@ -639,10 +690,152 @@ const MISSIONS = [
   { k: 'm4', fn: () => m4(), t: 'Kebun Sekolah Hijau', d: 'Pakai kompos matang untuk menyuburkan tanaman & panen hasilnya.',
     ill: `<svg class="ill" viewBox="0 0 230 200"><rect x="10" y="150" width="210" height="40" rx="12" fill="#5b3a1e"/><path d="M115 150 V60" stroke="#15803d" stroke-width="8"/><ellipse cx="90" cy="100" rx="30" ry="12" fill="#22c55e" transform="rotate(-25 90 100)"/><ellipse cx="140" cy="80" rx="30" ry="12" fill="#22c55e" transform="rotate(25 140 80)"/><circle cx="100" cy="125" r="14" fill="#ef4444"/><circle cx="132" cy="112" r="14" fill="#ef4444"/><use href="#compostSack" x="160" y="90" width="70" height="76"/></svg>` },
 ];
+/* =========================================================
+   HALAMAN DEPAN: Sampul → Apersepsi → Tujuan → Profil → Petualangan → Refleksi
+   ========================================================= */
+const PAGES = [
+  { k: 'cover', l: '📘 Sampul', s: 'Sampul', fn: () => cover() },
+  { k: 'aper', l: '👀 Apersepsi', s: 'Apersepsi', fn: () => apersepsi() },
+  { k: 'tujuan', l: '🎯 Tujuan', s: 'Tujuan', fn: () => tujuan() },
+  { k: 'profil', l: '🌟 Profil Lulusan', s: 'Profil Lulusan', fn: () => profil() },
+  { k: 'misi', l: '🚀 Petualangan', s: 'Petualangan', fn: () => home() },
+  { k: 'refl', l: '💭 Refleksi', s: 'Refleksi', fn: () => refleksi() },
+];
+function frontNav(k, arrows = true, nextLabel) {
+  const i = PAGES.findIndex(p => p.k === k);
+  const nav = document.createElement('div'); nav.className = 'fnav';
+  nav.innerHTML = PAGES.map((p, j) => `<button class="${j === i ? 'on' : ''}" data-j="${j}">${p.l}</button>`).join('');
+  nav.querySelectorAll('button').forEach(b => b.onclick = () => { sfx.click(); go(PAGES[+b.dataset.j].fn); });
+  screen.appendChild(nav);
+  if (!arrows) return;
+  const d = document.createElement('div'); d.className = 'parrows';
+  d.innerHTML = (i > 0 ? `<button class="btn w" id="pPrev">⬅ ${PAGES[i - 1].s}</button>` : '<span></span>') +
+    (i < PAGES.length - 1 ? `<button class="btn y glow" id="pNext">${nextLabel || PAGES[i + 1].s} ➜</button>` : '<span></span>');
+  screen.appendChild(d);
+  if (i > 0) $('#pPrev').onclick = () => { sfx.click(); go(PAGES[i - 1].fn); };
+  if (i < PAGES.length - 1) $('#pNext').onclick = () => { sfx.click(); go(PAGES[i + 1].fn); };
+}
+function fallLeaves(host, n = 14) {
+  for (let i = 0; i < n; i++) {
+    const s = svgEl('svg', { class: 'fall', viewBox: '0 0 120 120' }, host);
+    svgEl('use', { href: '#' + ['leafDry', 'leafDry2', 'leafYel'][i % 3] }, s);
+    s.style.left = rnd(0, 1880) + 'px';
+    s.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${rnd(-150, 150)}px,1080px) rotate(${rnd(-540, 540)}deg)` }],
+      { duration: rnd(7000, 13000), delay: rnd(0, 8000), iterations: Infinity });
+  }
+}
+
+/* ---------- 1. Sampul ---------- */
+function cover() {
+  screen.innerHTML = `<div class="front" id="front">
+    <div class="cov">
+      <div class="covtag">📗 PELAJARAN IPA · KELAS VII SMP</div>
+      <div class="covtopic">🌍 Pencemaran Lingkungan</div>
+      <h1>Pembuatan Pupuk Kompos dari Sampah Daun yang Ada di Sekitar Sekolah</h1>
+      <div class="covmeta">
+        <div><span>👩‍🏫 Nama Guru</span><b>Lisa Hayati, S.Si.</b></div>
+        <div><span>🏫 Satuan Pendidikan</span><b>SMP Negeri 1 Bandar Seikijang</b></div>
+      </div>
+    </div>
+    <svg class="covart" viewBox="0 0 760 760">
+      <defs><clipPath id="covc"><circle cx="380" cy="370" r="332"/></clipPath></defs>
+      <circle cx="380" cy="370" r="340" fill="#dcfce7" stroke="#14532d" stroke-width="10"/>
+      <g clip-path="url(#covc)">
+        <circle cx="620" cy="150" r="60" fill="#fde047"/>
+        <rect y="500" width="760" height="260" fill="#84cc16"/>
+        <path d="M0 540 Q380 500 760 540 V760 H0Z" fill="#e7d8b5"/>
+        <rect x="200" y="250" width="56" height="300" rx="16" fill="#92400e"/>
+        <g class="sway"><circle cx="228" cy="220" r="140" fill="#15803d"/><circle cx="120" cy="290" r="90" fill="#16a34a"/><circle cx="340" cy="290" r="90" fill="#16a34a"/><circle cx="228" cy="130" r="90" fill="#22c55e"/>
+        <circle cx="170" cy="250" r="16" fill="#f59e0b"/><circle cx="290" cy="190" r="14" fill="#d97706"/><circle cx="250" cy="300" r="13" fill="#eab308"/></g>
+        ${Array.from({ length: 16 }, (_, i) => `<use href="#${['leafDry', 'leafDry2', 'leafYel'][i % 3]}" x="${60 + (i * 37) % 360}" y="${550 + (i * 23) % 120}" width="60" height="60" transform="rotate(${i * 47} ${90 + (i * 37) % 360} ${580 + (i * 23) % 120})"/>`).join('')}
+        <use href="#bin" x="430" y="320" width="190" height="250"/>
+        <use href="#worm" x="420" y="600" width="130" height="74"/>
+      </g>
+      <use href="#mascot" x="560" y="500" width="190" height="218"/>
+    </svg>
+  </div>`;
+  fallLeaves($('#front'), 10);
+  frontNav('cover', true, 'Mulai');
+}
+
+/* ---------- 2. Apersepsi ---------- */
+function apersepsi() {
+  screen.innerHTML = schoolScene() + `
+    <div class="aper-t"><div class="tg">👀 APERSEPSI</div><h2>Mari kita amati lingkungan<br>sekitar sekolah!</h2></div>
+    <div class="qs">
+      <button class="q"><span class="e">🌳</span>Apa saja yang kamu lihat di halaman sekolah?</button>
+      <button class="q"><span class="e">🍂</span>Dari mana asal daun-daun kering itu?</button>
+      <button class="q"><span class="e">🔥</span>Biasanya diapakan sampah daun di sekolahmu?</button>
+      <button class="q"><span class="e">🌱</span>Bisakah sampah daun dimanfaatkan? Bagaimana?</button>
+    </div>`;
+  const L = $('#leaves');
+  // tumpukan daun di bawah pohon + daun berserakan di halaman
+  [[150, 640], [1780, 640], [560, 620], [1360, 615]].forEach(([cx, cy]) => {
+    for (let i = 0; i < 16; i++) useSym(['leafDry', 'leafDry2', 'leafYel'][i % 3], 60, 60, L, cx + rnd(-110, 110), cy + rnd(-20, 40), `rotate(${rnd(0, 360)}deg) scale(${rnd(.8, 1.2)})`);
+  });
+  for (let i = 0; i < 46; i++) useSym(['leafDry', 'leafDry2', 'leafYel'][i % 3], 60, 60, L, rnd(60, 1860), rnd(660, 960), `rotate(${rnd(0, 360)}deg) scale(${rnd(.8, 1.3)})`);
+  // daun berguguran dari pohon
+  const fx = $('#fx');
+  every(() => {
+    const [tx, ty] = Math.random() < .5 ? [150, 470] : [1780, 470];
+    const x0 = tx + rnd(-120, 120), y0 = ty + rnd(-60, 40);
+    const g = useSym(['leafDry', 'leafYel', 'leafDry2'][Math.floor(rnd(0, 3))], 54, 54, fx, x0, y0);
+    g.animate([{ transform: `translate(${x0}px,${y0}px) rotate(0)` }, { transform: `translate(${x0 + rnd(-60, 60)}px,${(y0 + 640) / 2 + 60}px) rotate(160deg)` }, { transform: `translate(${x0 + rnd(-140, 140)}px,${rnd(640, 720)}px) rotate(${rnd(250, 400)}deg)` }],
+      { duration: rnd(2600, 3600), easing: 'ease-in-out', fill: 'forwards' });
+    later(() => g.remove(), 9000);
+  }, 450);
+  document.querySelectorAll('.q').forEach(q => q.onclick = () => {
+    sfx.click(); document.querySelectorAll('.q').forEach(x => x.classList.remove('on')); q.classList.add('on');
+    const o = S.narr; S.narr = true; speak(q.textContent); S.narr = o;
+  });
+  frontNav('aper');
+  speak('Mari kita amati lingkungan sekitar sekolah!');
+}
+
+/* ---------- 3. Tujuan Pembelajaran ---------- */
+function tujuan() {
+  screen.innerHTML = `<div class="front" id="front">
+    <h1 class="ptitle">🎯 Tujuan Pembelajaran</h1>
+    <div class="tps">
+      <div class="tp"><div class="n">1</div><div class="e">🔍</div><div class="t">Murid mampu <b>mengidentifikasi jenis sampah organik</b> dan dampaknya terhadap pencemaran lingkungan di ekosistem sekolah.</div><div class="chip">Misi 1 & 2</div></div>
+      <div class="tp"><div class="n">2</div><div class="e">🧪</div><div class="t">Murid mampu <b>mempraktikkan langkah-langkah tahapan pembuatan pupuk kompos</b> dari daun kering yang ada di sekitar sekolah dengan benar.</div><div class="chip">Misi 3 & 4</div></div>
+      <div class="tp"><div class="n">3</div><div class="e">💚</div><div class="t">Murid menunjukkan <b>sikap tanggung jawab, peduli, dan cinta</b> terhadap kebersihan serta kelestarian lingkungan sekolah.</div><div class="chip">Ikrar & Refleksi</div></div>
+    </div></div>`;
+  document.querySelectorAll('.tp').forEach((t, i) => t.animate([{ opacity: 0, transform: 'translateX(-80px)' }, { opacity: 1, transform: 'none' }], { duration: 500, delay: i * 220, fill: 'backwards', easing: 'ease-out' }));
+  frontNav('tujuan');
+  speak('Tujuan pembelajaran hari ini.');
+}
+
+/* ---------- 4. Dimensi Profil Lulusan ---------- */
+function profil() {
+  screen.innerHTML = `<div class="front" id="front">
+    <h1 class="ptitle">🌟 Dimensi Profil Lulusan</h1>
+    <div class="pls">
+      <div class="pl"><div class="ab">A</div>
+        <svg viewBox="0 0 600 230"><circle cx="300" cy="115" r="110" fill="#fef9c3"/><text x="300" y="80" text-anchor="middle" font-size="80">💡</text>
+          <use href="#leafDry" x="110" y="110" width="110" height="110"/><text x="250" y="190" font-size="60" font-weight="800" fill="#14532d">➜</text>
+          <use href="#chopped" x="320" y="110" width="100" height="100"/><text x="430" y="190" font-size="60" font-weight="800" fill="#14532d">➜</text>
+          <use href="#compostSack" x="490" y="100" width="100" height="110"/></svg>
+        <h3>Kreativitas</h3>
+        <p>Murid mempraktikkan langkah-langkah tahapan pembuatan pupuk kompos dari daun kering yang ada di sekitar sekolah dengan benar.</p></div>
+      <div class="pl"><div class="ab">B</div>
+        <svg viewBox="0 0 600 230"><circle cx="300" cy="115" r="110" fill="#dcfce7"/>
+          <use href="#kid" x="110" y="20" width="105" height="210" style="color:#dc2626"/><use href="#kid" x="200" y="10" width="110" height="220" style="color:#1d4ed8"/>
+          <use href="#kid" x="290" y="20" width="105" height="210" style="color:#64748b"/><use href="#bin" x="400" y="70" width="125" height="160"/>
+          <text x="20" y="150" font-size="64">🤝</text></svg>
+        <h3>Kolaborasi</h3>
+        <p>Murid bekerja dalam kelompok/tim untuk membuat pupuk kompos dari daun kering secara bersama-sama.</p></div>
+    </div></div>`;
+  document.querySelectorAll('.pl').forEach((t, i) => t.animate([{ opacity: 0, transform: 'translateY(60px)' }, { opacity: 1, transform: 'none' }], { duration: 500, delay: i * 250, fill: 'backwards', easing: 'ease-out' }));
+  frontNav('profil', true, 'Mulai Petualangan');
+  speak('Dimensi profil lulusan: kreativitas dan kolaborasi.');
+}
+
+/* ---------- 5. Mulai Petualangan (menu misi) ---------- */
 function home() {
   const allDone = MISSIONS.every(m => S.done[m.k]);
   screen.innerHTML = `<div class="home" id="home">
-    <h1>Daun Kering Jadi Berkah!</h1>
+    <h1>🚀 Mulai Petualangan!</h1>
     <div class="sub">Ubah daun kering di halaman sekolah menjadi kompos — <b>tanpa membakarnya</b> 🌱</div>
     <div class="mcards">${MISSIONS.map((m, i) => `
       <button class="mcard ${S.done[m.k] ? 'done' : ''}" data-i="${i}">
@@ -651,40 +844,57 @@ function home() {
       </button>`).join('')}
     </div>
     <div class="homeacts">
-      <button class="btn y glow" id="hStart">▶ ${Object.keys(S.done).length ? 'Lanjutkan Petualangan' : 'Mulai Petualangan'}</button>
+      <button class="btn y glow" id="hStart">▶ ${Object.keys(S.done).length ? 'Lanjutkan Petualangan' : 'Mulai Misi 1'}</button>
       <button class="btn r" id="hSmoke">😷 Bahaya Asap Pembakaran</button>
-      <button class="btn w" id="hGoal">🎯 Tujuan Belajar</button>
       ${allDone ? '<button class="btn g" id="hCert">🏆 Sertifikat</button>' : ''}
+      <button class="btn w" id="hRefl">💭 Refleksi</button>
       <button class="btn w sm" id="hReset" style="align-self:center">↺ Ulang</button>
     </div></div>`;
-  const h = $('#home');
-  for (let i = 0; i < 14; i++) {
-    const s = svgEl('svg', { class: 'fall', viewBox: '0 0 120 120' }, h);
-    svgEl('use', { href: '#' + ['leafDry', 'leafDry2', 'leafYel'][i % 3] }, s);
-    s.style.left = rnd(0, 1880) + 'px';
-    s.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${rnd(-150, 150)}px,1080px) rotate(${rnd(-540, 540)}deg)` }],
-      { duration: rnd(7000, 13000), delay: rnd(0, 8000), iterations: Infinity });
-  }
-  h.querySelectorAll('.mcard').forEach(b => b.onclick = () => { sfx.click(); go(MISSIONS[+b.dataset.i].fn); });
+  fallLeaves($('#home'), 14);
+  frontNav('misi', false);
+  $('#home').querySelectorAll('.mcard').forEach(b => b.onclick = () => { sfx.click(); go(MISSIONS[+b.dataset.i].fn); });
   $('#hStart').onclick = () => { sfx.click(); const n = MISSIONS.find(m => !S.done[m.k]); go(n ? n.fn : final); };
   $('#hSmoke').onclick = () => { sfx.click(); smokeFacts([{ label: 'Tutup', cls: 'g' }]); };
-  $('#hGoal').onclick = () => { sfx.click(); goals(); };
+  $('#hRefl').onclick = () => { sfx.click(); go(refleksi); };
   if ($('#hCert')) $('#hCert').onclick = () => go(final);
   $('#hReset').onclick = () => {
     modal({ title: 'Ulang dari awal?', lead: 'Semua skor dan lencana akan dihapus.', tone: 'warn',
       buttons: [{ label: 'Ya, ulang', cls: 'r', on: () => { const snd = S.sound, nar = S.narr; S = JSON.parse(JSON.stringify(S0)); S.sound = snd; S.narr = nar; save(); go(home); } }, { label: 'Batal', cls: 'w' }] });
   };
 }
-function goals() {
-  modal({ title: '🎯 Tujuan Belajar', lead: 'Setelah bermain, siswa diharapkan mampu:',
-    html: `<div class="facts">
-      <div class="fact good"><div class="ic">🔥</div><h4>Menjelaskan bahaya asap</h4>Menyebutkan dampak pembakaran daun bagi kesehatan dan lingkungan.</div>
-      <div class="fact good"><div class="ic">🗂️</div><h4>Memilah sampah</h4>Membedakan bahan kompos (organik), anorganik, dan B3.</div>
-      <div class="fact good"><div class="ic">🔬</div><h4>Membuat kompos</h4>Memahami bahan cokelat–hijau, cacah, kelembapan, aerasi, dan fase pengomposan.</div>
-      <div class="fact good"><div class="ic">🌱</div><h4>Memanfaatkan kompos</h4>Menjelaskan manfaat kompos untuk kesuburan tanah dan tanaman.</div>
-      <div class="fact good"><div class="ic">🤝</div><h4>Bersikap peduli</h4>Berkomitmen tidak membakar sampah dan mengajak teman menjaga lingkungan.</div>
-      <div class="fact good"><div class="ic">👩‍🏫</div><h4>Tips untuk guru</h4>Mainkan bersama di layar besar. Minta siswa bergantian maju, lalu diskusikan setiap pilihan sebelum menekan tombol.</div>
-    </div>`, buttons: [{ label: 'Siap! 👍' }] });
+
+/* ---------- 6. Refleksi ---------- */
+const REFL = [
+  { k: 'senang', f: '😄', l: 'Senang', m: 'Hebat! Terima kasih sudah belajar dengan semangat. Ayo praktikkan membuat kompos di sekolah dan di rumah! 🌱' },
+  { k: 'biasa', f: '😐', l: 'Biasa Saja', m: 'Terima kasih sudah jujur! Bagian mana yang masih membingungkan? Tanyakan pada guru atau ulangi misinya, ya. 👍' },
+  { k: 'lesu', f: '😔', l: 'Tidak Bersemangat', m: 'Tidak apa-apa. Ceritakan pada guru apa yang membuatmu kurang bersemangat, supaya pelajaran berikutnya lebih seru! 💪' },
+];
+function loadRefl() { try { const r = JSON.parse(localStorage.getItem('penjagaBumiRefleksi')); if (r) return r; } catch (e) {} return { senang: 0, biasa: 0, lesu: 0 }; }
+function refleksi() {
+  const R = loadRefl();
+  screen.innerHTML = `<div class="front" id="front">
+    <h1 class="ptitle">💭 Refleksi</h1>
+    <div class="rq">Bagaimana perasaan dan pemahamanmu<br>tentang pembelajaran hari ini?</div>
+    <div class="emos">${REFL.map(r => `<button class="emo" data-k="${r.k}"><span class="f">${r.f}</span><span class="l">${r.l}</span><span class="c" id="rc-${r.k}">👥 ${R[r.k]}</span></button>`).join('')}</div>
+    <div class="rmsg" id="rmsg"></div>
+    <button class="btn w sm" id="rReset" style="position:absolute;right:40px;top:120px">↺ Nol-kan hitungan</button>
+  </div>`;
+  document.querySelectorAll('.emo').forEach(b => b.onclick = () => {
+    const r = REFL.find(x => x.k === b.dataset.k);
+    R[r.k]++; try { localStorage.setItem('penjagaBumiRefleksi', JSON.stringify(R)); } catch (e) {}
+    $('#rc-' + r.k).textContent = '👥 ' + R[r.k];
+    document.querySelectorAll('.emo').forEach(x => x.classList.remove('on', 'hop'));
+    void b.offsetWidth; b.classList.add('on', 'hop');
+    const m = $('#rmsg'); m.textContent = r.m; m.classList.add('show');
+    if (r.k === 'senang') { sfx.win(); confetti(50); } else sfx.good();
+    const o = S.narr; S.narr = true; speak(r.m); S.narr = o;
+  });
+  $('#rReset').onclick = () => {
+    modal({ title: 'Nol-kan hitungan refleksi?', lead: 'Jumlah pilihan emoji akan kembali ke 0 (misalnya untuk kelas berikutnya).', tone: 'warn',
+      buttons: [{ label: 'Ya', cls: 'r', on: () => { try { localStorage.removeItem('penjagaBumiRefleksi'); } catch (e) {} go(refleksi); } }, { label: 'Batal', cls: 'w' }] });
+  };
+  frontNav('refl');
+  speak('Bagaimana perasaan dan pemahamanmu tentang pembelajaran hari ini?');
 }
 
 /* =========================================================
@@ -1500,7 +1710,8 @@ async function final() {
   const pred = !all ? 'Calon Penjaga Bumi' : pct >= .8 ? 'Penjaga Bumi ⭐⭐⭐ Emas' : pct >= .55 ? 'Penjaga Bumi ⭐⭐ Perak' : 'Penjaga Bumi ⭐ Perunggu';
   screen.innerHTML = `<div class="home"></div><div class="cert" id="cert">
     <h1>🏆 SERTIFIKAT PENJAGA BUMI</h1>
-    <div style="font-size:30px;font-weight:600;margin-top:8px">diberikan kepada</div>
+    <div style="font-size:24px;font-weight:700;color:#a16207">IPA Kelas VII · Pencemaran Lingkungan · SMP Negeri 1 Bandar Seikijang</div>
+    <div style="font-size:28px;font-weight:600;margin-top:2px">diberikan kepada</div>
     <div class="nm" id="nmShow">${S.name || 'Sahabat Bumi'}</div>
     <div class="noprint" style="margin:4px 0 6px"><input class="namein" id="nmIn" maxlength="30" placeholder="Ketik nama / kelompok di sini" value="${S.name || ''}"></div>
     <div class="pred">${pred}</div>
@@ -1509,11 +1720,12 @@ async function final() {
     <div class="pledge" id="pledge"><b>🤝 Ikrar Penjaga Bumi</b> <span class="noprint" style="color:#64748b">(sentuh untuk berikrar)</span><br>
       Aku berjanji <b>tidak membakar sampah dan daun</b>, memilah sampah, mengolah daun menjadi kompos, dan mengajak teman-teman menjaga udara tetap bersih.</div>
     <div class="noprint" style="display:flex;gap:20px;justify-content:center;margin-top:12px">
-      <button class="btn g" id="cHome">🏠 Beranda</button><button class="btn w" id="cPrint">🖨️ Cetak</button><button class="btn y" id="cAgain">🔄 Main Lagi</button></div>
+      <button class="btn g" id="cHome">🏠 Beranda</button><button class="btn w" id="cPrint">🖨️ Cetak</button><button class="btn y" id="cRefl">💭 Refleksi</button><button class="btn w" id="cAgain">🔄 Main Lagi</button></div>
   </div>`;
   $('#nmIn').oninput = e => { S.name = e.target.value.trim(); $('#nmShow').textContent = S.name || 'Sahabat Bumi'; save(); };
   $('#cHome').onclick = () => go(home);
   $('#cPrint').onclick = () => window.print();
+  $('#cRefl').onclick = () => go(refleksi);
   $('#cAgain').onclick = () => { const snd = S.sound, nar = S.narr; S = JSON.parse(JSON.stringify(S0)); S.sound = snd; S.narr = nar; save(); go(home); };
   $('#pledge').onclick = () => { $('#pledge').style.background = '#dcfce7'; $('#pledge').style.borderColor = '#16a34a'; sfx.win(); confetti(60); speak('Aku berjanji tidak membakar sampah dan daun, memilah sampah, mengolah daun menjadi kompos, dan mengajak teman-teman menjaga udara tetap bersih.'); };
   if (all) { sfx.win(); confetti(120); await award('bumi'); }
@@ -1523,7 +1735,7 @@ async function final() {
 /* ---------- mulai ---------- */
 if (window.speechSynthesis) speechSynthesis.getVoices();
 document.addEventListener('contextmenu', e => e.preventDefault());
-go(home);
+go(cover);
 </script>
 </body>
 </html>
