@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Penjaga Bumi: Daun Kering Jadi Kompos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1f2937; --muted:#475569; --cream:#fffbeb; --paper:#ffffff;
+  --green:#16a34a; --green-d:#14532d; --green-l:#dcfce7;
+  --amber:#d97706; --amber-l:#fef3c7; --red:#dc2626; --red-l:#fee2e2;
+  --blue:#0284c7; --yellow:#facc15;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;overflow:hidden;background:#0b2e22}
+body{font-family:'Baloo 2','Nunito','Segoe UI Rounded','Segoe UI',system-ui,sans-serif;color:var(--ink)}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--s,1));overflow:hidden;background:#e0f2fe}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+
+/* ---------- top bar ---------- */
+#topbar{position:absolute;inset:0 0 auto 0;height:96px;display:flex;align-items:center;gap:18px;padding:0 24px;background:var(--green-d);color:#fff;z-index:40;box-shadow:0 6px 0 rgba(0,0,0,.18)}
+#topbar .brand{display:flex;align-items:center;gap:14px;font-weight:800;font-size:34px;line-height:1}
+#topbar .brand small{display:block;font-size:20px;font-weight:600;opacity:.8}
+#topbar .sp{flex:1}
+.pill{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.14);border-radius:999px;padding:8px 22px;font-size:32px;font-weight:800}
+.tb{background:rgba(255,255,255,.14);border:none;border-radius:18px;height:68px;min-width:68px;padding:0 18px;font-size:26px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+.tb:active{background:rgba(255,255,255,.3)}
+.tb.off{opacity:.5}
+.tb.fs{background:var(--yellow);color:var(--green-d)}
+#screen{position:absolute;top:96px;left:0;right:0;bottom:0;overflow:hidden}
+
+/* ---------- generic ---------- */
+.btn{border:none;border-radius:24px;padding:18px 38px;font-size:34px;font-weight:800;box-shadow:0 8px 0 rgba(0,0,0,.22);transition:transform .08s,box-shadow .08s;display:inline-flex;align-items:center;gap:12px;justify-content:center}
+.btn:active{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.22)}
+.btn:disabled{opacity:.45;filter:grayscale(.6);pointer-events:none}
+.btn.g{background:var(--green);color:#fff}
+.btn.y{background:var(--yellow);color:var(--green-d)}
+.btn.r{background:var(--red);color:#fff}
+.btn.w{background:#fff;color:var(--green-d)}
+.btn.b{background:var(--blue);color:#fff}
+.btn.sm{font-size:28px;padding:12px 26px;border-radius:18px}
+.glow{animation:glow 1.2s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 8px 0 rgba(0,0,0,.22),0 0 0 14px rgba(250,204,21,.45)}}
+.m-tag{position:absolute;left:24px;top:18px;z-index:12;background:var(--green-d);color:#fff;font-weight:800;font-size:28px;padding:8px 24px;border-radius:999px;box-shadow:0 5px 0 rgba(0,0,0,.2)}
+.scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* narrator */
+.narrator{position:absolute;left:24px;top:76px;z-index:12;display:flex;align-items:flex-start;gap:6px;max-width:1080px;pointer-events:none}
+.narrator svg.mascot{width:120px;height:136px;flex:none;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-3deg)}}
+.bubble{pointer-events:auto;position:relative;background:#fff;border:5px solid var(--green-d);border-radius:28px;padding:16px 26px;font-size:30px;font-weight:600;line-height:1.3;margin-top:14px;box-shadow:0 6px 0 rgba(0,0,0,.15)}
+.bubble:before{content:"";position:absolute;left:-22px;top:30px;border:14px solid transparent;border-right:18px solid var(--green-d)}
+.bubble b{color:var(--green)}
+.bubble .spk{position:absolute;right:-22px;bottom:-22px;width:56px;height:56px;border-radius:50%;border:4px solid var(--green-d);background:var(--yellow);font-size:26px}
+.bubble.pop{animation:popin .35s ease}
+@keyframes popin{0%{transform:scale(.85);opacity:.3}100%{transform:scale(1);opacity:1}}
+
+/* modal */
+#modal{position:absolute;inset:0;z-index:60;background:rgba(6,30,22,.66);display:none;align-items:center;justify-content:center}
+#modal.show{display:flex}
+#modal .card{width:1560px;max-height:960px;overflow:auto;background:var(--cream);border-radius:40px;border:8px solid var(--green-d);padding:34px 48px 40px;box-shadow:0 20px 0 rgba(0,0,0,.25);animation:popin .35s ease}
+#modal .card.bad{border-color:#7f1d1d}
+#modal .card.warn{border-color:#92400e}
+#modal h2{margin:0 0 10px;font-size:56px;line-height:1.1}
+#modal .lead{font-size:30px;margin:0 0 18px;color:var(--muted);font-weight:600}
+#modal .acts{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px;position:sticky;bottom:-40px;background:var(--cream);padding:16px 0 4px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.fact{background:#fff;border-radius:24px;padding:18px 22px;border:4px solid #e5e7eb;font-size:24px;line-height:1.3}
+.fact .ic{font-size:54px;line-height:1}
+.fact h4{margin:6px 0 6px;font-size:30px;line-height:1.1}
+.fact.bad{border-color:#fecaca}.fact.bad h4{color:#b91c1c}
+.fact.good{border-color:#bbf7d0}.fact.good h4{color:#15803d}
+.fact.warn{border-color:#fde68a}.fact.warn h4{color:#b45309}
+.note{margin-top:18px;background:#fff7ed;border-left:10px solid #ea580c;border-radius:16px;padding:14px 22px;font-size:25px;line-height:1.35}
+.note.g{background:#f0fdf4;border-color:var(--green)}
+.row{display:flex;gap:22px;align-items:stretch}
+
+/* toast & points */
+#toast{position:absolute;left:50%;top:120px;transform:translateX(-50%) translateY(-30px);opacity:0;z-index:70;background:var(--green-d);color:#fff;font-size:32px;font-weight:700;padding:14px 34px;border-radius:999px;transition:.3s;pointer-events:none;max-width:1500px;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.bad{background:#991b1b}
+.pts{position:absolute;z-index:80;font-size:48px;font-weight:800;color:#facc15;-webkit-text-stroke:2px #14532d;pointer-events:none;animation:ptsUp 1.2s ease-out forwards}
+.pts.neg{color:#fca5a5;-webkit-text-stroke:2px #7f1d1d}
+@keyframes ptsUp{0%{transform:translate(-50%,0) scale(.6);opacity:0}20%{transform:translate(-50%,-20px) scale(1.15);opacity:1}100%{transform:translate(-50%,-140px) scale(1);opacity:0}}
+#badgePop{position:absolute;inset:0;z-index:75;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45)}
+#badgePop.show{display:flex}
+#badgePop .bp{background:#fff;border-radius:40px;border:8px solid #ca8a04;padding:36px 70px;text-align:center;animation:badgeIn .6s cubic-bezier(.2,1.6,.4,1)}
+#badgePop .bp .medal{font-size:150px;line-height:1;animation:spinY 1.6s ease}
+#badgePop .bp h3{font-size:30px;margin:6px 0 0;color:#a16207}
+#badgePop .bp h2{font-size:56px;margin:0 0 6px}
+#badgePop .bp p{font-size:28px;margin:0 0 20px;color:var(--muted)}
+@keyframes badgeIn{0%{transform:scale(.2) rotate(-20deg)}100%{transform:scale(1)}}
+@keyframes spinY{0%{transform:rotateY(0)}100%{transform:rotateY(720deg)}}
+.confetti{position:absolute;top:-30px;width:18px;height:28px;z-index:90;pointer-events:none;border-radius:4px}
+
+/* ---------- home ---------- */
+.home{position:absolute;inset:0;background:linear-gradient(#7dd3fc,#e0f2fe 55%,#bbf7d0 55%,#86efac)}
+.home h1{position:absolute;left:0;right:0;top:104px;text-align:center;margin:0;font-size:78px;line-height:1;color:var(--green-d);text-shadow:0 6px 0 #fff}
+.home .sub{position:absolute;left:0;right:0;top:192px;text-align:center;font-size:32px;font-weight:600;color:#0f172a}
+.mcards{position:absolute;left:70px;right:70px;top:268px;display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+.mcard{position:relative;background:#fff;border:6px solid var(--green-d);border-radius:36px;padding:20px 22px 24px;text-align:center;box-shadow:0 12px 0 rgba(20,83,45,.35);transition:transform .15s}
+.mcard:active{transform:translateY(8px);box-shadow:0 4px 0 rgba(20,83,45,.35)}
+.mcard .num{position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:var(--yellow);border:5px solid var(--green-d);border-radius:999px;font-weight:800;font-size:28px;padding:2px 26px;white-space:nowrap}
+.mcard svg.ill{width:210px;height:180px;display:block;margin:14px auto 4px}
+.mcard h3{margin:0;font-size:38px;line-height:1.05;color:var(--green-d)}
+.mcard p{margin:8px 0 0;font-size:24px;line-height:1.25;color:var(--muted);font-weight:600;min-height:62px}
+.mcard .st{margin-top:12px;font-size:26px;font-weight:800;color:#a16207;min-height:36px}
+.mcard.done{border-color:var(--green);background:#f0fdf4}
+.homeacts{position:absolute;left:0;right:0;bottom:46px;display:flex;justify-content:center;gap:26px}
+.fall{position:absolute;top:-80px;width:60px;height:60px;pointer-events:none;opacity:.9}
+
+/* ---------- halaman depan ---------- */
+.front{position:absolute;inset:0;background:linear-gradient(#7dd3fc,#e0f2fe 58%,#bbf7d0 58%,#86efac);overflow:hidden}
+.fnav{position:absolute;top:16px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:30;background:rgba(255,255,255,.92);padding:8px;border-radius:999px;box-shadow:0 6px 0 rgba(0,0,0,.12);border:4px solid var(--green-d);white-space:nowrap}
+.fnav button{border:none;border-radius:999px;padding:8px 20px;font-size:25px;font-weight:800;background:transparent;color:var(--green-d)}
+.fnav button.on{background:var(--green-d);color:#fff}
+.fnav button:active{background:var(--green-l)}
+.parrows{position:absolute;left:40px;right:40px;bottom:34px;display:flex;justify-content:space-between;z-index:25;pointer-events:none}
+.parrows .btn{pointer-events:auto}
+.cov{position:absolute;left:80px;top:118px;width:1080px;height:720px;background:#fff;border:8px solid var(--green-d);border-radius:48px;padding:46px 56px;box-shadow:0 14px 0 rgba(20,83,45,.3)}
+.covtag{display:inline-block;background:var(--yellow);color:var(--green-d);font-size:30px;font-weight:800;padding:6px 26px;border-radius:999px;border:4px solid var(--green-d)}
+.covtopic{margin-top:22px;font-size:38px;font-weight:800;color:#b45309}
+.cov h1{margin:6px 0 0;font-size:72px;line-height:1.05;color:var(--green-d)}
+.covmeta{position:absolute;left:56px;right:56px;bottom:44px;display:grid;gap:14px}
+.covmeta div{display:flex;flex-direction:column;background:#f0fdf4;border-left:12px solid var(--green);border-radius:18px;padding:10px 24px}
+.covmeta span{font-size:24px;font-weight:700;color:var(--muted)}
+.covmeta b{font-size:38px;line-height:1.15;color:#0f172a}
+.covart{position:absolute;left:1190px;top:120px;width:700px;height:700px}
+.aper-t{position:absolute;left:30px;top:104px;z-index:12;background:rgba(255,255,255,.94);border:6px solid var(--green-d);border-radius:32px;padding:12px 30px;box-shadow:0 8px 0 rgba(0,0,0,.15)}
+.aper-t .tg{font-size:26px;font-weight:800;color:#b45309}
+.aper-t h2{margin:0;font-size:50px;line-height:1.05;color:var(--green-d)}
+.qs{position:absolute;left:340px;right:340px;bottom:30px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;z-index:12}
+.q{background:rgba(255,255,255,.95);border:5px solid var(--green-d);border-radius:26px;padding:12px 16px;font-size:24px;font-weight:700;line-height:1.2;text-align:left;box-shadow:0 6px 0 rgba(0,0,0,.18);transition:transform .15s}
+.q .e{font-size:44px;line-height:1;display:block;margin-bottom:4px}
+.q.on{background:var(--yellow);transform:translateY(-10px)}
+.ptitle{position:absolute;left:0;right:0;top:108px;text-align:center;margin:0;font-size:72px;line-height:1;color:var(--green-d);text-shadow:0 6px 0 #fff}
+.tps{position:absolute;left:170px;right:170px;top:220px;display:grid;gap:24px}
+.tp{display:flex;align-items:center;gap:28px;background:#fff;border:6px solid var(--green-d);border-radius:36px;padding:20px 34px;box-shadow:0 10px 0 rgba(20,83,45,.25);text-align:left}
+.tp .n{flex:none;width:96px;height:96px;border-radius:50%;background:var(--yellow);border:6px solid var(--green-d);font-size:52px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--green-d)}
+.tp .e{flex:none;font-size:80px;line-height:1}
+.tp .t{flex:1;font-size:35px;line-height:1.28;font-weight:600}
+.tp .t b{color:var(--green)}
+.tp .chip{flex:none;font-size:22px;font-weight:800;background:var(--green-l);color:var(--green-d);border-radius:999px;padding:6px 18px}
+.pls{position:absolute;left:110px;right:110px;top:215px;display:grid;grid-template-columns:1fr 1fr;gap:44px}
+.pl{position:relative;background:#fff;border:8px solid var(--green-d);border-radius:44px;padding:30px 44px 36px;box-shadow:0 12px 0 rgba(20,83,45,.28);text-align:center}
+.pl .ab{position:absolute;top:-34px;left:40px;width:84px;height:84px;border-radius:50%;background:var(--yellow);border:6px solid var(--green-d);font-size:46px;font-weight:800;color:var(--green-d);display:flex;align-items:center;justify-content:center}
+.pl svg{width:100%;height:230px;display:block}
+.pl h3{margin:6px 0 10px;font-size:58px;line-height:1;color:var(--green-d)}
+.pl p{margin:0;font-size:32px;line-height:1.32;font-weight:600;color:#1f2937}
+.rq{position:absolute;left:120px;right:120px;top:200px;text-align:center;font-size:46px;font-weight:800;line-height:1.2;color:#0f172a}
+.emos{position:absolute;left:0;right:0;top:310px;display:flex;justify-content:center;gap:60px}
+.emo{width:400px;background:#fff;border:8px solid var(--green-d);border-radius:48px;padding:20px 10px 26px;box-shadow:0 12px 0 rgba(20,83,45,.28);transition:transform .12s}
+.emo:active{transform:translateY(8px);box-shadow:0 4px 0 rgba(20,83,45,.28)}
+.emo .f{font-size:160px;line-height:1.1;display:block}
+.emo .l{display:block;font-size:40px;font-weight:800;color:var(--green-d)}
+.emo .c{display:inline-block;margin-top:10px;font-size:28px;font-weight:800;background:#f1f5f9;border-radius:999px;padding:4px 22px}
+.emo.on{background:#fef9c3;border-color:#ca8a04}
+.emo.hop .f{animation:hop .6s ease}
+@keyframes hop{30%{transform:translateY(-40px) scale(1.15)}60%{transform:translateY(0) scale(.95)}}
+.rmsg{position:absolute;left:260px;right:260px;bottom:120px;text-align:center;font-size:34px;font-weight:700;line-height:1.3;background:rgba(255,255,255,.95);border:5px solid var(--green);border-radius:30px;padding:16px 30px;opacity:0;transition:opacity .3s}
+.rmsg.show{opacity:1}
+
+/* ---------- mission 1 ---------- */
+.choices{position:absolute;left:0;right:0;bottom:28px;display:flex;justify-content:center;gap:34px;z-index:12}
+.choice{width:400px;height:170px;border:6px solid rgba(0,0,0,.25);border-radius:34px;font-size:40px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:16px;box-shadow:0 10px 0 rgba(0,0,0,.25);transition:transform .1s}
+.choice span{font-size:84px}
+.choice small{display:block;font-size:22px;font-weight:600;opacity:.85;line-height:1.1}
+.choice:active{transform:translateY(8px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.choice.burn{background:#fecaca;color:#7f1d1d}
+.choice.dump{background:#e5e7eb;color:#1f2937}
+.choice.comp{background:#bbf7d0;color:#14532d}
+.choice.seen{position:relative}
+.choice.seen:after{content:"✓ sudah dicoba";position:absolute;top:-20px;right:16px;font-size:20px;background:#1f2937;color:#fff;border-radius:999px;padding:2px 14px}
+.choices.lock .choice{pointer-events:none;opacity:.55}
+.aqi{position:absolute;right:24px;top:18px;z-index:12;width:440px;background:#fff;border:5px solid var(--green-d);border-radius:26px;padding:12px 20px;box-shadow:0 6px 0 rgba(0,0,0,.15)}
+.aqi .t{font-size:24px;font-weight:800}
+.aqi .bar{position:relative;height:28px;border-radius:14px;background:linear-gradient(90deg,#22c55e,#facc15 35%,#f97316 60%,#dc2626 80%,#7e22ce);margin:6px 0}
+.aqi .bar i{position:absolute;top:-10px;left:6%;width:12px;height:48px;border-radius:6px;background:#111827;border:3px solid #fff;transform:translateX(-50%);transition:left 3s ease}
+.aqi .l{font-size:28px;font-weight:800}
+.kid-shake{animation:cough .25s linear infinite}
+@keyframes cough{0%,100%{translate:0 0}25%{translate:-5px 2px}75%{translate:5px -2px}}
+.flick{animation:flick .18s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes flick{from{scale:1 1}to{scale:1.08 .9}}
+.sway{animation:sway 3s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes sway{50%{rotate:2deg}}
+.drift{animation:drift 40s linear infinite}
+@keyframes drift{from{translate:-300px 0}to{translate:2200px 0}}
+.flag{animation:flag 1.5s ease-in-out infinite;transform-box:fill-box;transform-origin:0 50%}
+@keyframes flag{50%{scale:.92 1}}
+.pmviz{display:flex;align-items:center;gap:16px;background:#fff;border:4px solid #e5e7eb;border-radius:24px;padding:12px 20px;margin-top:16px;font-size:24px}
+
+/* ---------- mission 2 ---------- */
+.item{position:absolute;width:150px;height:170px;margin:-75px 0 0 -75px;touch-action:none;z-index:5;text-align:center;cursor:grab}
+.item svg{width:130px;height:130px;filter:drop-shadow(0 6px 0 rgba(0,0,0,.18));pointer-events:none}
+.item .nm{display:inline-block;font-size:20px;font-weight:800;background:rgba(255,255,255,.92);border-radius:999px;padding:0 12px;white-space:nowrap;pointer-events:none}
+.item.drag{z-index:30;cursor:grabbing}
+.item.drag svg{transform:scale(1.18);filter:drop-shadow(0 16px 6px rgba(0,0,0,.3))}
+.item.back{transition:left .45s ease,top .45s ease}
+.item.wiggle{animation:wig .6s ease 2}
+@keyframes wig{25%{rotate:-8deg}75%{rotate:8deg}}
+.bin{position:absolute;top:590px;width:460px;height:380px;margin-left:-230px;text-align:center;z-index:4}
+.bin svg{width:330px;height:285px;display:block;margin:0 auto;overflow:visible}
+.bin .lid{transition:transform .3s;transform-box:fill-box;transform-origin:0% 100%}
+.bin.open .lid{transform:rotate(-28deg) translate(-10px,-10px)}
+.bin .lbl{margin-top:-6px;display:inline-block;color:#fff;font-weight:800;font-size:30px;line-height:1.05;border-radius:18px;padding:6px 22px;box-shadow:0 5px 0 rgba(0,0,0,.2)}
+.bin .lbl small{display:block;font-size:20px;font-weight:600;opacity:.9}
+.bin .cnt{position:absolute;right:58px;top:8px;width:66px;height:66px;border-radius:50%;background:#fff;border:5px solid #1f2937;font-size:32px;font-weight:800;line-height:56px}
+.bin.hover svg{transform:scale(1.08)}
+.bin.shake{animation:wig .4s ease 2}
+.fb{position:absolute;right:24px;top:76px;width:700px;z-index:12;background:#fff;border:5px solid var(--green-d);border-radius:26px;padding:14px 22px;font-size:26px;line-height:1.3;min-height:100px;box-shadow:0 6px 0 rgba(0,0,0,.15)}
+.fb.ok{border-color:var(--green);background:#f0fdf4}
+.fb.no{border-color:var(--red);background:#fef2f2}
+.fb b{font-size:28px}
+.prog{position:absolute;right:24px;top:18px;z-index:12;background:#fff;border:5px solid var(--green-d);border-radius:999px;padding:4px 24px;font-size:28px;font-weight:800}
+
+/* ---------- mission 3 ---------- */
+.lab{position:absolute;inset:0;background:linear-gradient(#ecfeff,#cffafe 70%,#a5f3fc)}
+.lab .bench{position:absolute;left:0;right:0;bottom:0;height:120px;background:#92400e;border-top:14px solid #b45309}
+.labviz{position:absolute;left:20px;top:70px;width:640px;height:900px}
+.panel{position:absolute;left:680px;right:24px;top:20px;bottom:24px;background:#fff;border:6px solid var(--green-d);border-radius:36px;padding:22px 34px;display:flex;flex-direction:column;box-shadow:0 10px 0 rgba(0,0,0,.15)}
+.stepper{display:flex;gap:10px;margin-bottom:10px}
+.stepper div{flex:1;text-align:center;font-size:21px;font-weight:800;padding:8px 4px;border-radius:16px;background:#f1f5f9;color:#94a3b8;line-height:1.1}
+.stepper div.on{background:var(--yellow);color:var(--green-d)}
+.stepper div.ok{background:var(--green-l);color:var(--green)}
+.panel h2{margin:4px 0 2px;font-size:46px;line-height:1.05;color:var(--green-d)}
+.panel .desc{font-size:27px;line-height:1.3;color:var(--muted);font-weight:600;margin:0 0 14px}
+.pbody{flex:1;position:relative;min-height:0}
+.pfoot{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:12px}
+.ings{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.ing{background:#f8fafc;border:5px solid #e2e8f0;border-radius:24px;padding:10px 6px 12px;text-align:center;font-size:23px;font-weight:800;line-height:1.1;min-height:214px;transition:transform .1s}
+.ing:active{transform:scale(.95)}
+.ing .ic{font-size:72px;line-height:104px;height:104px;display:flex;align-items:center;justify-content:center}
+.ing .ic svg{width:100px;height:100px}
+.ing.pick{background:var(--green-l);border-color:var(--green)}
+.ing.no{background:var(--red-l);border-color:var(--red);animation:wig .4s ease 2}
+.ing .tg{display:block;font-size:17px;color:#64748b;margin-top:4px}
+.info{margin-top:16px;border-radius:22px;padding:14px 22px;font-size:27px;line-height:1.3;background:#f1f5f9;border-left:12px solid #94a3b8;min-height:92px}
+.info.ok{background:#f0fdf4;border-color:var(--green)}
+.info.no{background:#fef2f2;border-color:var(--red)}
+.info.warn{background:#fffbeb;border-color:var(--amber)}
+.chk{display:flex;gap:16px;font-size:26px;font-weight:800}
+.chk span{padding:6px 18px;border-radius:999px;background:#f1f5f9;color:#94a3b8}
+.chk span.ok{background:var(--green-l);color:var(--green)}
+.chop{position:relative;height:430px;border-radius:30px;background:#fde68a;border:6px dashed #b45309;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:manipulation}
+.chop .bigleaf{width:340px;height:340px;transition:transform .2s}
+.chop .piece{position:absolute;width:70px;height:70px;pointer-events:none}
+.meterbar{position:relative;height:56px;border-radius:28px;background:#e2e8f0;overflow:hidden;border:4px solid #334155}
+.meterbar .fill{position:absolute;left:0;top:0;bottom:0;background:var(--green);transition:width .3s}
+.meterbar .zone{position:absolute;top:0;bottom:0;background:rgba(22,163,74,.25);border-left:4px dashed var(--green);border-right:4px dashed var(--green)}
+.meterbar .val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#0f172a}
+input.big{-webkit-appearance:none;appearance:none;width:100%;height:40px;border-radius:20px;background:linear-gradient(90deg,#b45309,#65a30d);outline:none;margin:24px 0}
+input.big::-webkit-slider-thumb{-webkit-appearance:none;width:84px;height:84px;border-radius:50%;background:var(--yellow);border:7px solid var(--green-d);box-shadow:0 5px 0 rgba(0,0,0,.25)}
+input.big::-moz-range-thumb{width:72px;height:72px;border-radius:50%;background:var(--yellow);border:7px solid var(--green-d)}
+.ratio{display:flex;gap:10px;align-items:flex-end;justify-content:center;height:190px}
+.ratio i{display:block;width:96px;border-radius:14px 14px 4px 4px;border:4px solid rgba(0,0,0,.25)}
+.simgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.gauge{background:#f8fafc;border:4px solid #e2e8f0;border-radius:22px;padding:10px 16px}
+.gauge .h{display:flex;justify-content:space-between;font-size:24px;font-weight:800}
+.gauge .h b{font-size:34px}
+.gauge .meterbar{height:30px;margin-top:6px}
+.daybox{font-size:30px;font-weight:800;display:flex;align-items:center;gap:14px}
+.phase{display:inline-block;padding:4px 18px;border-radius:999px;color:#fff;font-size:26px}
+.chart{width:100%;height:230px;background:#f8fafc;border:4px solid #e2e8f0;border-radius:22px;margin-top:12px}
+.simbtns{display:flex;gap:14px;flex-wrap:wrap}
+
+/* ---------- mission 4 ---------- */
+.tools{position:absolute;left:0;right:0;bottom:22px;display:flex;justify-content:center;gap:22px;z-index:12}
+.tool{width:250px;height:150px;border-radius:30px;border:6px solid var(--green-d);background:#fff;font-size:28px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 0 rgba(0,0,0,.2);line-height:1.1}
+.tool span{font-size:62px;line-height:1}
+.tool.sel{background:var(--yellow);transform:translateY(-12px)}
+.bed-hit{cursor:pointer}
+.fruit{cursor:pointer}
+.basket{position:absolute;right:24px;top:18px;z-index:12;background:#fff;border:5px solid var(--green-d);border-radius:999px;padding:4px 26px;font-size:36px;font-weight:800}
+.grow-pop{animation:growpop .6s ease;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes growpop{0%{scale:.85}60%{scale:1.06}100%{scale:1}}
+
+/* ---------- final ---------- */
+.cert{position:absolute;left:180px;right:180px;top:30px;bottom:30px;background:#fffbeb;border:14px double #a16207;border-radius:40px;text-align:center;padding:18px 60px}
+.cert h1{margin:0;font-size:64px;color:var(--green-d);line-height:1}
+.cert .nm{font-size:58px;font-weight:800;color:#a16207;border-bottom:5px dashed #d97706;display:inline-block;min-width:700px;padding:0 30px;margin:8px 0}
+.cert .badges{display:flex;justify-content:center;gap:22px;margin:10px 0}
+.cert .bd{width:200px;background:#fff;border:5px solid #e5e7eb;border-radius:26px;padding:10px 8px;font-size:21px;font-weight:800;line-height:1.1}
+.cert .bd .e{font-size:54px;line-height:1.15}
+.cert .bd.no{opacity:.35;filter:grayscale(1)}
+.cert .pred{font-size:42px;font-weight:800;color:var(--green)}
+.namein{font:inherit;font-size:34px;font-weight:700;padding:6px 24px;border-radius:20px;border:5px solid var(--green-d);width:640px;text-align:center;-webkit-user-select:text;user-select:text}
+.pledge{font-size:26px;line-height:1.3;background:#fff;border-radius:24px;padding:14px 28px;border:4px solid #bbf7d0;margin:10px auto;max-width:1300px;text-align:left}
+@media print{
+  body{background:#fff}
+  #topbar,.noprint{display:none!important}
+}
+</style>
+</head>
+<body>
+<!-- ===== Sprite simbol SVG (sebagian diambil dari folder animasi/) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="leafDry" viewBox="0 0 120 120">
+      <path d="M20,95 C15,55 45,15 100,15 C100,70 65,105 20,95 Z" fill="#d97706" stroke="#78350f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M12,105 L92,23" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+      <path d="M40,75 L35,48 M60,55 L52,32 M50,65 L78,60 M32,83 L62,80" stroke="#92400e" stroke-width="3.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="leafDry2" viewBox="0 0 120 120">
+      <path d="M20,95 C15,55 45,15 100,15 C100,70 65,105 20,95 Z" fill="#b45309" stroke="#78350f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M12,105 L92,23" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+      <path d="M40,75 L35,48 M60,55 L52,32 M50,65 L78,60" stroke="#78350f" stroke-width="3.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="leafYel" viewBox="0 0 120 120">
+      <path d="M20,95 C15,55 45,15 100,15 C100,70 65,105 20,95 Z" fill="#eab308" stroke="#854d0e" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M12,105 L92,23" stroke="#854d0e" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="leafGreen" viewBox="0 0 120 120">
+      <path d="M25,85 C15,45 50,20 95,25 C90,70 60,95 25,85 Z" fill="#22c55e" stroke="#14532d" stroke-width="4"/>
+      <path d="M20,90 L85,32" stroke="#15803d" stroke-width="4" stroke-linecap="round"/>
+      <path d="M60,55 Q85,55 95,85 Q70,100 50,80 Z" fill="#84cc16" stroke="#14532d" stroke-width="3.5"/>
+    </symbol>
+    <symbol id="chopped" viewBox="0 0 120 120">
+      <polygon points="20,40 45,25 55,50 30,60" fill="#b45309" stroke="#78350f" stroke-width="3"/>
+      <polygon points="65,20 95,30 85,55 60,45" fill="#d97706" stroke="#78350f" stroke-width="3"/>
+      <polygon points="35,75 65,65 75,90 40,100" fill="#92400e" stroke="#78350f" stroke-width="3"/>
+      <polygon points="75,65 105,70 95,95 75,85" fill="#f59e0b" stroke="#78350f" stroke-width="3"/>
+      <circle cx="52" cy="38" r="4" fill="#78350f"/><circle cx="82" cy="78" r="4" fill="#78350f"/>
+    </symbol>
+    <symbol id="fire" viewBox="0 0 120 140">
+      <path d="M60,10 C85,45 110,70 100,105 C92,128 75,135 60,135 C45,135 28,128 20,105 C10,70 35,45 60,10 Z" fill="#ef4444" stroke="#991b1b" stroke-width="4"/>
+      <path d="M60,38 C75,62 92,80 84,108 C78,122 68,128 60,128 C52,128 42,122 36,108 C28,80 45,62 60,38 Z" fill="#f97316"/>
+      <path d="M60,68 C68,82 78,95 72,114 C68,122 64,125 60,125 C56,125 52,122 48,114 C42,95 52,82 60,68 Z" fill="#facc15"/>
+    </symbol>
+    <symbol id="smoke" viewBox="0 0 140 100">
+      <path d="M35,80 C15,80 10,60 22,48 C18,30 38,15 58,25 C70,10 100,12 108,32 C125,35 132,58 118,72 C112,80 95,80 35,80 Z" fill="#475569" stroke="#1e293b" stroke-width="4"/>
+      <circle cx="52" cy="48" r="6" fill="#ef4444"/><circle cx="86" cy="48" r="6" fill="#ef4444"/>
+      <path d="M55,66 Q70,54 85,66" fill="none" stroke="#f8fafc" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="smokePlain" viewBox="0 0 140 100">
+      <path d="M35,80 C15,80 10,60 22,48 C18,30 38,15 58,25 C70,10 100,12 108,32 C125,35 132,58 118,72 C112,80 95,80 35,80 Z" fill="#6b7280"/>
+    </symbol>
+    <symbol id="worm" viewBox="0 0 140 80">
+      <path d="M15,55 Q35,20 65,45 T115,35" fill="none" stroke="#f43f5e" stroke-width="16" stroke-linecap="round"/>
+      <path d="M15,55 Q35,20 65,45 T115,35" fill="none" stroke="#fb7185" stroke-width="10" stroke-linecap="round" stroke-dasharray="6 10"/>
+      <circle cx="118" cy="32" r="3" fill="#1e293b"/>
+      <path d="M114,40 Q120,44 123,38" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="twig" viewBox="0 0 120 120">
+      <path d="M15,102 L105,22" stroke="#78350f" stroke-width="11" stroke-linecap="round"/>
+      <path d="M52,69 L38,32 M74,50 L104,58 M34,86 L14,62" stroke="#92400e" stroke-width="7" stroke-linecap="round"/>
+      <path d="M38,32 C30,22 40,14 46,24 Z" fill="#a16207"/>
+    </symbol>
+    <symbol id="grass" viewBox="0 0 120 120">
+      <path d="M20,108 C25,70 18,45 8,25 C30,45 38,70 36,108 Z" fill="#4ade80" stroke="#166534" stroke-width="3"/>
+      <path d="M40,108 C45,60 52,35 62,10 C64,45 58,80 58,108 Z" fill="#22c55e" stroke="#166534" stroke-width="3"/>
+      <path d="M62,108 C70,75 85,50 108,32 C95,58 84,85 80,108 Z" fill="#16a34a" stroke="#166534" stroke-width="3"/>
+      <path d="M85,108 C90,90 100,80 114,74 C106,88 100,98 100,108 Z" fill="#4ade80" stroke="#166534" stroke-width="3"/>
+      <rect x="10" y="104" width="100" height="8" rx="4" fill="#166534"/>
+    </symbol>
+    <symbol id="banana" viewBox="0 0 120 120">
+      <rect x="53" y="10" width="14" height="28" rx="5" fill="#4d7c0f"/>
+      <path d="M60,36 C38,52 22,82 12,108 C40,98 54,74 60,56 Z" fill="#facc15" stroke="#a16207" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M60,36 C82,52 98,82 108,108 C80,98 66,74 60,56 Z" fill="#fde047" stroke="#a16207" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M60,40 C56,70 54,92 58,112 C64,92 66,70 60,40 Z" fill="#fef9c3" stroke="#a16207" stroke-width="4" stroke-linejoin="round"/>
+      <circle cx="30" cy="94" r="3" fill="#78350f"/><circle cx="88" cy="90" r="3" fill="#78350f"/>
+    </symbol>
+    <symbol id="carrot" viewBox="0 0 120 120">
+      <path d="M78,30 C70,10 82,6 88,18 C92,6 106,10 98,24 C112,22 112,36 96,38 Z" fill="#22c55e" stroke="#166534" stroke-width="3"/>
+      <path d="M86,32 C100,44 96,56 86,62 L20,108 C14,110 10,106 12,100 L58,34 C66,26 78,26 86,32 Z" fill="#f97316" stroke="#9a3412" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M52,58 L62,62 M40,76 L50,80 M30,92 L38,95" stroke="#9a3412" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="egg" viewBox="0 0 120 120">
+      <path d="M14,64 Q14,108 54,108 Q78,108 86,86 L76,82 L80,70 L66,72 L64,60 L52,68 L42,56 L36,68 L24,60 Z" fill="#fef3c7" stroke="#a8a29e" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M70,40 Q82,18 100,30 Q112,40 106,58 L96,54 L94,64 L84,56 L78,64 L72,52 Z" fill="#fde7c7" stroke="#a8a29e" stroke-width="4" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="bottle" viewBox="0 0 120 120">
+      <rect x="47" y="6" width="26" height="16" rx="4" fill="#2563eb"/>
+      <path d="M44,22 H76 V36 Q94,46 94,68 V108 Q94,116 86,116 H34 Q26,116 26,108 V68 Q26,46 44,36 Z" fill="#bae6fd" stroke="#0284c7" stroke-width="4"/>
+      <rect x="26" y="62" width="68" height="26" fill="#38bdf8"/>
+      <path d="M36,50 V100" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+    </symbol>
+    <symbol id="bag" viewBox="0 0 120 120">
+      <path d="M36,44 C34,14 54,8 56,40 M64,40 C66,8 86,14 84,44" fill="none" stroke="#94a3b8" stroke-width="7" stroke-linecap="round"/>
+      <path d="M22,40 H98 L106,110 Q60,120 14,110 Z" fill="#f8fafc" stroke="#94a3b8" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M40,60 L46,100 M80,60 L74,100" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="60" cy="74" r="12" fill="none" stroke="#22c55e" stroke-width="4"/>
+    </symbol>
+    <symbol id="can" viewBox="0 0 120 120">
+      <rect x="32" y="18" width="56" height="92" rx="10" fill="#ef4444" stroke="#7f1d1d" stroke-width="4"/>
+      <ellipse cx="60" cy="20" rx="28" ry="8" fill="#cbd5e1" stroke="#64748b" stroke-width="3"/>
+      <rect x="32" y="50" width="56" height="24" fill="#fff"/>
+      <path d="M40,62 Q60,50 80,62" stroke="#ef4444" stroke-width="5" fill="none"/>
+    </symbol>
+    <symbol id="cup" viewBox="0 0 120 120">
+      <path d="M70,22 L84,0" stroke="#f472b6" stroke-width="7" stroke-linecap="round"/>
+      <path d="M28,28 H92 L82,114 H38 Z" fill="#fff" stroke="#94a3b8" stroke-width="4" stroke-linejoin="round"/>
+      <rect x="22" y="18" width="76" height="14" rx="5" fill="#e2e8f0" stroke="#94a3b8" stroke-width="3"/>
+      <rect x="33" y="60" width="54" height="22" fill="#fda4af"/>
+    </symbol>
+    <symbol id="battery" viewBox="0 0 120 120">
+      <rect x="50" y="10" width="20" height="12" rx="3" fill="#9ca3af"/>
+      <rect x="34" y="20" width="52" height="92" rx="9" fill="#1f2937"/>
+      <rect x="34" y="20" width="52" height="30" rx="9" fill="#f59e0b"/>
+      <rect x="34" y="40" width="52" height="10" fill="#f59e0b"/>
+      <path d="M60,64 V92 M46,78 H74" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="bulb" viewBox="0 0 120 120">
+      <circle cx="60" cy="46" r="34" fill="#fef9c3" stroke="#ca8a04" stroke-width="4"/>
+      <path d="M46,48 L53,60 L60,46 L67,60 L74,48" stroke="#ca8a04" stroke-width="4" fill="none" stroke-linejoin="round"/>
+      <rect x="43" y="78" width="34" height="28" rx="5" fill="#9ca3af" stroke="#4b5563" stroke-width="3"/>
+      <path d="M43,88 H77 M43,97 H77" stroke="#4b5563" stroke-width="3"/>
+      <path d="M38,26 L30,18" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="soil" viewBox="0 0 120 120">
+      <path d="M8,104 C14,62 40,40 62,40 C86,40 108,64 112,104 Z" fill="#57534e" stroke="#292524" stroke-width="4"/>
+      <circle cx="40" cy="80" r="5" fill="#a8a29e"/><circle cx="70" cy="62" r="4" fill="#a8a29e"/><circle cx="84" cy="88" r="6" fill="#78716c"/>
+      <path d="M44,96 Q54,86 64,96" stroke="#fb7185" stroke-width="6" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="sack" viewBox="0 0 120 130">
+      <path d="M38,22 Q60,30 82,22 L78,8 Q60,16 42,8 Z" fill="#a8a29e" stroke="#57534e" stroke-width="4"/>
+      <path d="M30,26 Q60,36 90,26 Q118,70 106,118 Q60,130 14,118 Q2,70 30,26 Z" fill="#e7e5e4" stroke="#57534e" stroke-width="4"/>
+      <path d="M40,60 Q60,66 80,60" stroke="#a8a29e" stroke-width="4" fill="none"/>
+    </symbol>
+    <symbol id="compostSack" viewBox="0 0 120 130">
+      <path d="M30,26 Q60,36 90,26 Q118,70 106,118 Q60,130 14,118 Q2,70 30,26 Z" fill="#16a34a" stroke="#14532d" stroke-width="4"/>
+      <path d="M34,26 Q60,6 86,26 Q60,40 34,26 Z" fill="#3f2a1d"/>
+      <rect x="24" y="62" width="72" height="30" rx="8" fill="#fff"/>
+      <text x="60" y="85" font-size="20" font-weight="800" text-anchor="middle" fill="#14532d" font-family="sans-serif">KOMPOS</text>
+    </symbol>
+    <symbol id="bin" viewBox="0 0 200 260">
+      <rect x="25" y="46" width="150" height="200" rx="20" fill="#16a34a" stroke="#14532d" stroke-width="6"/>
+      <rect x="14" y="24" width="172" height="32" rx="12" fill="#15803d" stroke="#14532d" stroke-width="6"/>
+      <rect x="80" y="10" width="40" height="18" rx="6" fill="#14532d"/>
+      <rect x="44" y="110" width="112" height="52" rx="12" fill="#fff"/>
+      <text x="100" y="146" font-size="28" font-weight="800" text-anchor="middle" fill="#14532d" font-family="sans-serif">KOMPOS</text>
+      <circle cx="50" cy="80" r="6" fill="#14532d"/><circle cx="100" cy="80" r="6" fill="#14532d"/><circle cx="150" cy="80" r="6" fill="#14532d"/>
+      <circle cx="50" cy="200" r="6" fill="#14532d"/><circle cx="100" cy="200" r="6" fill="#14532d"/><circle cx="150" cy="200" r="6" fill="#14532d"/>
+    </symbol>
+    <symbol id="truck" viewBox="0 0 360 200">
+      <rect x="10" y="30" width="230" height="120" rx="10" fill="#ea580c" stroke="#7c2d12" stroke-width="6"/>
+      <text x="125" y="105" font-size="40" font-weight="800" text-anchor="middle" fill="#fff" font-family="sans-serif">SAMPAH</text>
+      <path d="M244,64 H302 L346,110 V152 H244 Z" fill="#f59e0b" stroke="#7c2d12" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M262,78 H296 L326,110 H262 Z" fill="#bae6fd" stroke="#7c2d12" stroke-width="4"/>
+      <circle cx="80" cy="160" r="28" fill="#1f2937"/><circle cx="80" cy="160" r="11" fill="#9ca3af"/>
+      <circle cx="292" cy="160" r="28" fill="#1f2937"/><circle cx="292" cy="160" r="11" fill="#9ca3af"/>
+      <path d="M350,140 h8" stroke="#fde047" stroke-width="10"/>
+    </symbol>
+    <symbol id="kid" viewBox="0 0 100 200">
+      <rect x="32" y="146" width="14" height="40" rx="6" fill="#e0ac69"/><rect x="54" y="146" width="14" height="40" rx="6" fill="#e0ac69"/>
+      <ellipse cx="38" cy="190" rx="13" ry="8" fill="#111827"/><ellipse cx="62" cy="190" rx="13" ry="8" fill="#111827"/>
+      <rect x="10" y="74" width="14" height="50" rx="7" fill="#e0ac69"/><rect x="76" y="74" width="14" height="50" rx="7" fill="#e0ac69"/>
+      <rect x="26" y="118" width="48" height="36" rx="8" fill="currentColor"/>
+      <rect x="20" y="68" width="60" height="58" rx="16" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+      <path d="M44,70 L50,82 L56,70" fill="currentColor"/>
+      <circle cx="50" cy="40" r="28" fill="#e0ac69"/>
+      <path d="M22,40 Q22,8 50,10 Q80,8 78,40 Q72,22 50,22 Q30,22 22,40 Z" fill="#1f2937"/>
+      <circle cx="40" cy="42" r="4" fill="#111827"/><circle cx="60" cy="42" r="4" fill="#111827"/>
+      <path d="M40,54 Q50,62 60,54" stroke="#7c2d12" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="mascot" viewBox="0 0 140 160">
+      <path d="M70,140 Q72,152 64,158" stroke="#15803d" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M70,8 C122,28 138,92 70,144 C2,92 18,28 70,8 Z" fill="#22c55e" stroke="#14532d" stroke-width="6"/>
+      <path d="M70,24 C100,40 110,78 92,106" stroke="#86efac" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <circle cx="52" cy="70" r="13" fill="#fff"/><circle cx="88" cy="70" r="13" fill="#fff"/>
+      <circle cx="55" cy="72" r="7" fill="#111827"/><circle cx="91" cy="72" r="7" fill="#111827"/>
+      <circle cx="57" cy="69" r="2.5" fill="#fff"/><circle cx="93" cy="69" r="2.5" fill="#fff"/>
+      <ellipse cx="38" cy="92" rx="9" ry="6" fill="#f9a8d4"/><ellipse cx="102" cy="92" rx="9" ry="6" fill="#f9a8d4"/>
+      <path d="M52,96 Q70,118 88,96 Z" fill="#7f1d1d" stroke="#14532d" stroke-width="4" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="stage">
+  <header id="topbar">
+    <button class="tb" id="bHome" title="Beranda">🏠 Beranda</button>
+    <div class="brand"><svg width="60" height="68"><use href="#mascot"/></svg><div>Penjaga Bumi<small>IPA Kelas VII · SMP Negeri 1 Bandar Seikijang</small></div></div>
+    <div class="sp"></div>
+    <div class="pill" title="Skor">⭐ <span id="score">0</span></div>
+    <div class="pill" title="Lencana">🏅 <span id="badges">0</span>/5</div>
+    <button class="tb" id="bNarr" title="Narasi suara">🗣️ Narasi</button>
+    <button class="tb" id="bSnd" title="Efek suara">🔊</button>
+    <button class="tb fs" id="bFs" title="Layar penuh">⛶ Layar Penuh</button>
+  </header>
+  <main id="screen"></main>
+  <div id="modal"><div class="card" id="mcard"></div></div>
+  <div id="badgePop"><div class="bp"><div class="medal" id="bpE">🏅</div><h3>LENCANA BARU!</h3><h2 id="bpT"></h2><p id="bpD"></p><button class="btn g" id="bpOk">Hore! 🎉</button></div></div>
+  <div id="toast"></div>
+</div>
+
+<script>
+/* =========================================================
+   PENJAGA BUMI — game edukasi kompos vs pembakaran daun
+   ========================================================= */
+const NS = 'http://www.w3.org/2000/svg';
+const $ = s => document.querySelector(s);
+const stage = $('#stage'), screen = $('#screen');
+const rnd = (a, b) => a + Math.random() * (b - a);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+/* ---------- penskalaan panggung 1920x1080 ---------- */
+let SCALE = 1;
+function fit() {
+  SCALE = Math.min(innerWidth / 1920, innerHeight / 1080);
+  stage.style.setProperty('--s', SCALE);
+}
+addEventListener('resize', fit); fit();
+function toStage(e) {
+  const r = stage.getBoundingClientRect();
+  return { x: (e.clientX - r.left) / SCALE, y: (e.clientY - r.top) / SCALE };
+}
+
+/* ---------- state & penyimpanan ---------- */
+const MAX = { m1: 120, m2: 150, m3: 150, m4: 120 };
+const S0 = { ms: {}, done: {}, badges: {}, sound: true, narr: false, name: '', compost: null };
+let S = load();
+function load() {
+  try { const s = JSON.parse(localStorage.getItem('penjagaBumi')); if (s && s.ms) return Object.assign(JSON.parse(JSON.stringify(S0)), s); } catch (e) {}
+  return JSON.parse(JSON.stringify(S0));
+}
+function save() { try { localStorage.setItem('penjagaBumi', JSON.stringify(S)); } catch (e) {} }
+
+let curMission = null, cur = 0;
+function totalScore() {
+  let t = 0;
+  for (const m in MAX) t += (m === curMission) ? Math.max(cur, S.ms[m] || 0) : (S.ms[m] || 0);
+  return t;
+}
+function updateHud() {
+  $('#score').textContent = totalScore();
+  $('#badges').textContent = Object.keys(S.badges).length;
+  $('#bSnd').classList.toggle('off', !S.sound); $('#bSnd').textContent = S.sound ? '🔊' : '🔇';
+  $('#bNarr').classList.toggle('off', !S.narr);
+}
+function addPts(n, x, y) {
+  cur += n; updateHud();
+  if (x != null) {
+    const d = document.createElement('div');
+    d.className = 'pts' + (n < 0 ? ' neg' : ''); d.textContent = (n > 0 ? '+' : '') + n;
+    d.style.left = x + 'px'; d.style.top = y + 'px';
+    stage.appendChild(d); setTimeout(() => d.remove(), 1300);
+  }
+}
+function finishMission(m) {
+  S.ms[m] = Math.max(S.ms[m] || 0, cur); S.done[m] = true; save(); updateHud();
+}
+
+/* ---------- timer yang dibersihkan saat ganti layar ---------- */
+let timers = [], runId = 0;
+function later(fn, ms) { const id = setTimeout(fn, ms); timers.push(id); return id; }
+function every(fn, ms) { const id = setInterval(fn, ms); timers.push(id); return id; }
+function clearTimers() { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = []; }
+function sleep(ms) { return new Promise(r => later(r, ms)); }
+
+/* ---------- suara ---------- */
+let AC = null;
+function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (AC && AC.state === 'suspended') AC.resume(); return AC; }
+function tone(f, d = .15, type = 'sine', v = .18, delay = 0, f2) {
+  const a = ac(); if (!a || !S.sound) return;
+  const t = a.currentTime + delay, o = a.createOscillator(), g = a.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
+  g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + d);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t + d + .05);
+}
+function noise(d = .6, v = .12, lp = 1200) {
+  const a = ac(); if (!a || !S.sound) return;
+  const len = a.sampleRate * d, buf = a.createBuffer(1, len, a.sampleRate), ch = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) ch[i] = (Math.random() * 2 - 1) * (Math.random() < .08 ? 1 : .3);
+  const src = a.createBufferSource(), g = a.createGain(), f = a.createBiquadFilter();
+  f.type = 'lowpass'; f.frequency.value = lp; src.buffer = buf;
+  g.gain.setValueAtTime(v, a.currentTime); g.gain.exponentialRampToValueAtTime(.001, a.currentTime + d);
+  src.connect(f).connect(g).connect(a.destination); src.start();
+}
+const sfx = {
+  click: () => tone(620, .08, 'triangle', .14),
+  good: () => { tone(660, .12, 'triangle'); tone(990, .2, 'triangle', .18, .1); },
+  bad: () => tone(220, .3, 'sawtooth', .1, 0, 140),
+  pop: () => tone(500, .1, 'sine', .16, 0, 1100),
+  win: () => [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, .28, 'triangle', .18, i * .11)),
+  cough: () => { noise(.18, .2, 900); later(() => noise(.16, .18, 800), 260); },
+  water: () => { for (let i = 0; i < 5; i++) tone(rnd(900, 1600), .06, 'sine', .08, i * .05); },
+};
+
+/* ---------- narasi (Text-to-Speech) ---------- */
+function speak(t) {
+  if (!S.narr || !('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(t.replace(/<[^>]+>/g, '').replace(/[\u{1F300}-\u{1FAFF}☀-➿]/gu, ''));
+    u.lang = 'id-ID'; u.rate = 1;
+    const v = speechSynthesis.getVoices().find(v => /^id/i.test(v.lang)); if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function narrator(text) {
+  return `<div class="narrator"><svg class="mascot" viewBox="0 0 140 160"><use href="#mascot"/></svg><div class="bubble" id="say"><span id="sayT">${text || ''}</span><button class="spk" id="spk" title="Bacakan">🔊</button></div></div>`;
+}
+function say(text) {
+  const b = $('#say'), t = $('#sayT'); if (!t) return;
+  t.innerHTML = text; b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+  speak(text);
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('#spk')) { const t = $('#sayT'); if (t) { const o = S.narr; S.narr = true; speak(t.innerHTML); S.narr = o; } }
+});
+
+/* ---------- toast, modal, lencana, confetti ---------- */
+let toastT;
+function toast(msg, bad) {
+  const t = $('#toast'); t.innerHTML = msg; t.className = 'show' + (bad ? ' bad' : '');
+  clearTimeout(toastT); toastT = setTimeout(() => t.className = '', 2600);
+}
+function modal({ title, lead = '', html = '', tone = '', buttons = [] }) {
+  const c = $('#mcard'); c.className = 'card ' + tone;
+  c.innerHTML = `<h2>${title}</h2>${lead ? `<p class="lead">${lead}</p>` : ''}${html}<div class="acts"></div>`;
+  const acts = c.querySelector('.acts');
+  buttons.forEach(b => {
+    const el = document.createElement('button'); el.className = 'btn ' + (b.cls || 'g'); el.innerHTML = b.label;
+    el.onclick = () => { sfx.click(); if (b.keep !== true) closeModal(); b.on && b.on(); };
+    acts.appendChild(el);
+  });
+  $('#modal').classList.add('show'); c.scrollTop = 0;
+  speak(title + '. ' + lead);
+}
+function closeModal() { $('#modal').classList.remove('show'); }
+
+const BADGES = {
+  udara:   { e: '🌬️', t: 'Pahlawan Udara Bersih', d: 'Memilih mengompos daun, bukan membakarnya.' },
+  pemilah: { e: '🗂️', t: 'Pemilah Jitu', d: 'Memilah sampah organik, anorganik, dan B3 dengan tepat.' },
+  ilmuwan: { e: '🔬', t: 'Ilmuwan Kompos', d: 'Berhasil membuat kompos matang di laboratorium.' },
+  petani:  { e: '🌻', t: 'Petani Hijau', d: 'Menyuburkan kebun sekolah dengan kompos buatan sendiri.' },
+  bumi:    { e: '🌍', t: 'Penjaga Bumi', d: 'Menuntaskan semua misi. Bumi bangga padamu!' },
+};
+function award(k) {
+  return new Promise(res => {
+    if (S.badges[k]) return res();
+    S.badges[k] = true; save(); updateHud();
+    const b = BADGES[k]; $('#bpE').textContent = b.e; $('#bpT').textContent = b.t; $('#bpD').textContent = b.d;
+    $('#badgePop').classList.add('show'); sfx.win(); confetti(60); speak('Lencana baru! ' + b.t);
+    $('#bpOk').onclick = () => { $('#badgePop').classList.remove('show'); res(); };
+  });
+}
+function confetti(n = 80) {
+  const cols = ['#facc15', '#22c55e', '#38bdf8', '#f472b6', '#f97316', '#a78bfa'];
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('div'); d.className = 'confetti';
+    d.style.left = rnd(0, 1920) + 'px'; d.style.background = cols[i % cols.length];
+    stage.appendChild(d);
+    d.animate([{ transform: `translate(0,0) rotate(0)` }, { transform: `translate(${rnd(-200, 200)}px,${rnd(1000, 1200)}px) rotate(${rnd(360, 1080)}deg)` }],
+      { duration: rnd(1800, 3200), delay: rnd(0, 600), easing: 'cubic-bezier(.3,.6,.6,1)', fill: 'forwards' }).onfinish = () => d.remove();
+  }
+}
+
+/* ---------- helper SVG ---------- */
+function svgEl(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function useSym(id, w, h, parent, x = 0, y = 0, extra = '') {
+  const g = svgEl('g', {}, parent);
+  svgEl('use', { href: '#' + id, width: w, height: h, x: -w / 2, y: -h / 2 }, g);
+  g.style.transform = `translate(${x}px,${y}px) ${extra}`; return g;
+}
+const ic = (id, vb = '0 0 120 120') => `<svg viewBox="${vb}"><use href="#${id}"/></svg>`;
+
+/* ---------- tombol topbar ---------- */
+function isFs() { return document.fullscreenElement || document.webkitFullscreenElement; }
+$('#bFs').onclick = () => {
+  sfx.click();
+  const el = document.documentElement;
+  if (!isFs()) { (el.requestFullscreen || el.webkitRequestFullscreen || function () {}).call(el); }
+  else { (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
+};
+function fsLabel() { $('#bFs').innerHTML = isFs() ? '🗗 Keluar Layar Penuh' : '⛶ Layar Penuh'; setTimeout(fit, 120); }
+document.addEventListener('fullscreenchange', fsLabel); document.addEventListener('webkitfullscreenchange', fsLabel);
+$('#bSnd').onclick = () => { S.sound = !S.sound; save(); updateHud(); sfx.click(); };
+$('#bNarr').onclick = () => { S.narr = !S.narr; save(); updateHud(); if (!S.narr && window.speechSynthesis) speechSynthesis.cancel(); else { const t = $('#sayT'); t && speak(t.innerHTML); } };
+$('#bHome').onclick = () => { sfx.click(); go(cover); };
+
+function go(fn) {
+  clearTimers(); runId++; closeModal(); curMission = null; cur = 0;
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  screen.innerHTML = ''; fn(); updateHud();
+}
+
+/* =========================================================
+   BERANDA
+   ========================================================= */
+const MISSIONS = [
+  { k: 'm1', fn: () => m1(), t: 'Selamatkan Halaman Sekolah', d: 'Daun kering menumpuk! Bakar, buang, atau olah jadi kompos?',
+    ill: `<svg class="ill" viewBox="0 0 230 200"><use href="#leafDry" x="10" y="80" width="110" height="110"/><use href="#fire" x="110" y="40" width="80" height="94"/><use href="#smoke" x="120" y="0" width="100" height="70"/><use href="#bin" x="140" y="100" width="80" height="100"/></svg>` },
+  { k: 'm2', fn: () => m2(), t: 'Petugas Pemilah Daun', d: 'Seret daun, ranting, plastik & sampah lain ke wadah yang benar.',
+    ill: `<svg class="ill" viewBox="0 0 230 200"><use href="#leafGreen" x="0" y="20" width="80" height="80"/><use href="#bottle" x="75" y="10" width="80" height="80"/><use href="#battery" x="150" y="20" width="70" height="70"/><use href="#twig" x="20" y="100" width="90" height="90"/><use href="#can" x="120" y="100" width="90" height="90"/></svg>` },
+  { k: 'm3', fn: () => m3(), t: 'Laboratorium Kompos', d: 'Campur bahan, atur kelembapan & udara, amati daun berubah jadi kompos.',
+    ill: `<svg class="ill" viewBox="0 0 230 200"><use href="#bin" x="40" y="10" width="150" height="190"/><use href="#worm" x="120" y="140" width="100" height="60"/><use href="#chopped" x="0" y="110" width="80" height="80"/></svg>` },
+  { k: 'm4', fn: () => m4(), t: 'Kebun Sekolah Hijau', d: 'Pakai kompos matang untuk menyuburkan tanaman & panen hasilnya.',
+    ill: `<svg class="ill" viewBox="0 0 230 200"><rect x="10" y="150" width="210" height="40" rx="12" fill="#5b3a1e"/><path d="M115 150 V60" stroke="#15803d" stroke-width="8"/><ellipse cx="90" cy="100" rx="30" ry="12" fill="#22c55e" transform="rotate(-25 90 100)"/><ellipse cx="140" cy="80" rx="30" ry="12" fill="#22c55e" transform="rotate(25 140 80)"/><circle cx="100" cy="125" r="14" fill="#ef4444"/><circle cx="132" cy="112" r="14" fill="#ef4444"/><use href="#compostSack" x="160" y="90" width="70" height="76"/></svg>` },
+];
+/* =========================================================
+   HALAMAN DEPAN: Sampul → Apersepsi → Tujuan → Profil → Petualangan → Refleksi
+   ========================================================= */
+const PAGES = [
+  { k: 'cover', l: '📘 Sampul', s: 'Sampul', fn: () => cover() },
+  { k: 'aper', l: '👀 Apersepsi', s: 'Apersepsi', fn: () => apersepsi() },
+  { k: 'tujuan', l: '🎯 Tujuan', s: 'Tujuan', fn: () => tujuan() },
+  { k: 'profil', l: '🌟 Profil Lulusan', s: 'Profil Lulusan', fn: () => profil() },
+  { k: 'misi', l: '🚀 Petualangan', s: 'Petualangan', fn: () => home() },
+  { k: 'refl', l: '💭 Refleksi', s: 'Refleksi', fn: () => refleksi() },
+  { k: 'ases', l: '📝 Asesmen', s: 'Asesmen', fn: () => { location.href = 'asesmen.html'; } },
+];
+function frontNav(k, arrows = true, nextLabel) {
+  const i = PAGES.findIndex(p => p.k === k);
+  const nav = document.createElement('div'); nav.className = 'fnav';
+  nav.innerHTML = PAGES.map((p, j) => `<button class="${j === i ? 'on' : ''}" data-j="${j}">${p.l}</button>`).join('');
+  nav.querySelectorAll('button').forEach(b => b.onclick = () => { sfx.click(); go(PAGES[+b.dataset.j].fn); });
+  screen.appendChild(nav);
+  if (!arrows) return;
+  const d = document.createElement('div'); d.className = 'parrows';
+  d.innerHTML = (i > 0 ? `<button class="btn w" id="pPrev">⬅ ${PAGES[i - 1].s}</button>` : '<span></span>') +
+    (i < PAGES.length - 1 ? `<button class="btn y glow" id="pNext">${nextLabel || PAGES[i + 1].s} ➜</button>` : '<span></span>');
+  screen.appendChild(d);
+  if (i > 0) $('#pPrev').onclick = () => { sfx.click(); go(PAGES[i - 1].fn); };
+  if (i < PAGES.length - 1) $('#pNext').onclick = () => { sfx.click(); go(PAGES[i + 1].fn); };
+}
+function fallLeaves(host, n = 14) {
+  for (let i = 0; i < n; i++) {
+    const s = svgEl('svg', { class: 'fall', viewBox: '0 0 120 120' }, host);
+    svgEl('use', { href: '#' + ['leafDry', 'leafDry2', 'leafYel'][i % 3] }, s);
+    s.style.left = rnd(0, 1880) + 'px';
+    s.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${rnd(-150, 150)}px,1080px) rotate(${rnd(-540, 540)}deg)` }],
+      { duration: rnd(7000, 13000), delay: rnd(0, 8000), iterations: Infinity });
+  }
+}
+
+/* ---------- 1. Sampul ---------- */
+function cover() {
+  screen.innerHTML = `<div class="front" id="front">
+    <div class="cov">
+      <div class="covtag">📗 PELAJARAN IPA · KELAS VII SMP</div>
+      <div class="covtopic">🌍 Pencemaran Lingkungan</div>
+      <h1>Pembuatan Pupuk Kompos dari Sampah Daun yang Ada di Sekitar Sekolah</h1>
+      <div class="covmeta">
+        <div><span>👩‍🏫 Nama Guru</span><b>Lisa Hayati, S.Si.</b></div>
+        <div><span>🏫 Satuan Pendidikan</span><b>SMP Negeri 1 Bandar Seikijang</b></div>
+      </div>
+    </div>
+    <svg class="covart" viewBox="0 0 760 760">
+      <defs><clipPath id="covc"><circle cx="380" cy="370" r="332"/></clipPath></defs>
+      <circle cx="380" cy="370" r="340" fill="#dcfce7" stroke="#14532d" stroke-width="10"/>
+      <g clip-path="url(#covc)">
+        <circle cx="620" cy="150" r="60" fill="#fde047"/>
+        <rect y="500" width="760" height="260" fill="#84cc16"/>
+        <path d="M0 540 Q380 500 760 540 V760 H0Z" fill="#e7d8b5"/>
+        <rect x="200" y="250" width="56" height="300" rx="16" fill="#92400e"/>
+        <g class="sway"><circle cx="228" cy="220" r="140" fill="#15803d"/><circle cx="120" cy="290" r="90" fill="#16a34a"/><circle cx="340" cy="290" r="90" fill="#16a34a"/><circle cx="228" cy="130" r="90" fill="#22c55e"/>
+        <circle cx="170" cy="250" r="16" fill="#f59e0b"/><circle cx="290" cy="190" r="14" fill="#d97706"/><circle cx="250" cy="300" r="13" fill="#eab308"/></g>
+        ${Array.from({ length: 16 }, (_, i) => `<use href="#${['leafDry', 'leafDry2', 'leafYel'][i % 3]}" x="${60 + (i * 37) % 360}" y="${550 + (i * 23) % 120}" width="60" height="60" transform="rotate(${i * 47} ${90 + (i * 37) % 360} ${580 + (i * 23) % 120})"/>`).join('')}
+        <use href="#bin" x="430" y="320" width="190" height="250"/>
+        <use href="#worm" x="420" y="600" width="130" height="74"/>
+      </g>
+      <use href="#mascot" x="560" y="500" width="190" height="218"/>
+    </svg>
+  </div>`;
+  fallLeaves($('#front'), 10);
+  frontNav('cover', true, 'Mulai');
+}
+
+/* ---------- 2. Apersepsi ---------- */
+function apersepsi() {
+  screen.innerHTML = schoolScene() + `
+    <div class="aper-t"><div class="tg">👀 APERSEPSI</div><h2>Mari kita amati lingkungan<br>sekitar sekolah!</h2></div>
+    <div class="qs">
+      <button class="q"><span class="e">🌳</span>Apa saja yang kamu lihat di halaman sekolah?</button>
+      <button class="q"><span class="e">🍂</span>Dari mana asal daun-daun kering itu?</button>
+      <button class="q"><span class="e">🔥</span>Biasanya diapakan sampah daun di sekolahmu?</button>
+      <button class="q"><span class="e">🌱</span>Bisakah sampah daun dimanfaatkan? Bagaimana?</button>
+    </div>`;
+  const L = $('#leaves');
+  // tumpukan daun di bawah pohon + daun berserakan di halaman
+  [[150, 640], [1780, 640], [560, 620], [1360, 615]].forEach(([cx, cy]) => {
+    for (let i = 0; i < 16; i++) useSym(['leafDry', 'leafDry2', 'leafYel'][i % 3], 60, 60, L, cx + rnd(-110, 110), cy + rnd(-20, 40), `rotate(${rnd(0, 360)}deg) scale(${rnd(.8, 1.2)})`);
+  });
+  for (let i = 0; i < 46; i++) useSym(['leafDry', 'leafDry2', 'leafYel'][i % 3], 60, 60, L, rnd(60, 1860), rnd(660, 960), `rotate(${rnd(0, 360)}deg) scale(${rnd(.8, 1.3)})`);
+  // daun berguguran dari pohon
+  const fx = $('#fx');
+  every(() => {
+    const [tx, ty] = Math.random() < .5 ? [150, 470] : [1780, 470];
+    const x0 = tx + rnd(-120, 120), y0 = ty + rnd(-60, 40);
+    const g = useSym(['leafDry', 'leafYel', 'leafDry2'][Math.floor(rnd(0, 3))], 54, 54, fx, x0, y0);
+    g.animate([{ transform: `translate(${x0}px,${y0}px) rotate(0)` }, { transform: `translate(${x0 + rnd(-60, 60)}px,${(y0 + 640) / 2 + 60}px) rotate(160deg)` }, { transform: `translate(${x0 + rnd(-140, 140)}px,${rnd(640, 720)}px) rotate(${rnd(250, 400)}deg)` }],
+      { duration: rnd(2600, 3600), easing: 'ease-in-out', fill: 'forwards' });
+    later(() => g.remove(), 9000);
+  }, 450);
+  document.querySelectorAll('.q').forEach(q => q.onclick = () => {
+    sfx.click(); document.querySelectorAll('.q').forEach(x => x.classList.remove('on')); q.classList.add('on');
+    const o = S.narr; S.narr = true; speak(q.textContent); S.narr = o;
+  });
+  frontNav('aper');
+  speak('Mari kita amati lingkungan sekitar sekolah!');
+}
+
+/* ---------- 3. Tujuan Pembelajaran ---------- */
+function tujuan() {
+  screen.innerHTML = `<div class="front" id="front">
+    <h1 class="ptitle">🎯 Tujuan Pembelajaran</h1>
+    <div class="tps">
+      <div class="tp"><div class="n">1</div><div class="e">🔍</div><div class="t">Murid mampu <b>mengidentifikasi jenis sampah organik</b> dan dampaknya terhadap pencemaran lingkungan di ekosistem sekolah.</div><div class="chip">Misi 1 & 2</div></div>
+      <div class="tp"><div class="n">2</div><div class="e">🧪</div><div class="t">Murid mampu <b>mempraktikkan langkah-langkah tahapan pembuatan pupuk kompos</b> dari daun kering yang ada di sekitar sekolah dengan benar.</div><div class="chip">Misi 3 & 4</div></div>
+      <div class="tp"><div class="n">3</div><div class="e">💚</div><div class="t">Murid menunjukkan <b>sikap tanggung jawab, peduli, dan cinta</b> terhadap kebersihan serta kelestarian lingkungan sekolah.</div><div class="chip">Ikrar & Refleksi</div></div>
+    </div></div>`;
+  document.querySelectorAll('.tp').forEach((t, i) => t.animate([{ opacity: 0, transform: 'translateX(-80px)' }, { opacity: 1, transform: 'none' }], { duration: 500, delay: i * 220, fill: 'backwards', easing: 'ease-out' }));
+  frontNav('tujuan');
+  speak('Tujuan pembelajaran hari ini.');
+}
+
+/* ---------- 4. Dimensi Profil Lulusan ---------- */
+function profil() {
+  screen.innerHTML = `<div class="front" id="front">
+    <h1 class="ptitle">🌟 Dimensi Profil Lulusan</h1>
+    <div class="pls">
+      <div class="pl"><div class="ab">A</div>
+        <svg viewBox="0 0 600 230"><circle cx="300" cy="115" r="110" fill="#fef9c3"/><text x="300" y="80" text-anchor="middle" font-size="80">💡</text>
+          <use href="#leafDry" x="110" y="110" width="110" height="110"/><text x="250" y="190" font-size="60" font-weight="800" fill="#14532d">➜</text>
+          <use href="#chopped" x="320" y="110" width="100" height="100"/><text x="430" y="190" font-size="60" font-weight="800" fill="#14532d">➜</text>
+          <use href="#compostSack" x="490" y="100" width="100" height="110"/></svg>
+        <h3>Kreativitas</h3>
+        <p>Murid mempraktikkan langkah-langkah tahapan pembuatan pupuk kompos dari daun kering yang ada di sekitar sekolah dengan benar.</p></div>
+      <div class="pl"><div class="ab">B</div>
+        <svg viewBox="0 0 600 230"><circle cx="300" cy="115" r="110" fill="#dcfce7"/>
+          <use href="#kid" x="110" y="20" width="105" height="210" style="color:#dc2626"/><use href="#kid" x="200" y="10" width="110" height="220" style="color:#1d4ed8"/>
+          <use href="#kid" x="290" y="20" width="105" height="210" style="color:#64748b"/><use href="#bin" x="400" y="70" width="125" height="160"/>
+          <text x="20" y="150" font-size="64">🤝</text></svg>
+        <h3>Kolaborasi</h3>
+        <p>Murid bekerja dalam kelompok/tim untuk membuat pupuk kompos dari daun kering secara bersama-sama.</p></div>
+    </div></div>`;
+  document.querySelectorAll('.pl').forEach((t, i) => t.animate([{ opacity: 0, transform: 'translateY(60px)' }, { opacity: 1, transform: 'none' }], { duration: 500, delay: i * 250, fill: 'backwards', easing: 'ease-out' }));
+  frontNav('profil', true, 'Mulai Petualangan');
+  speak('Dimensi profil lulusan: kreativitas dan kolaborasi.');
+}
+
+/* ---------- 5. Mulai Petualangan (menu misi) ---------- */
+function home() {
+  const allDone = MISSIONS.every(m => S.done[m.k]);
+  screen.innerHTML = `<div class="home" id="home">
+    <h1>🚀 Mulai Petualangan!</h1>
+    <div class="sub">Ubah daun kering di halaman sekolah menjadi kompos — <b>tanpa membakarnya</b> 🌱</div>
+    <div class="mcards">${MISSIONS.map((m, i) => `
+      <button class="mcard ${S.done[m.k] ? 'done' : ''}" data-i="${i}">
+        <div class="num">MISI ${i + 1}</div>${m.ill}<h3>${m.t}</h3><p>${m.d}</p>
+        <div class="st">${S.done[m.k] ? `✅ Selesai · ⭐ ${S.ms[m.k] || 0}/${MAX[m.k]}` : '▶ Mainkan'}</div>
+      </button>`).join('')}
+    </div>
+    <div class="homeacts">
+      <button class="btn y glow" id="hStart">▶ ${Object.keys(S.done).length ? 'Lanjutkan Petualangan' : 'Mulai Misi 1'}</button>
+      <button class="btn r" id="hSmoke">😷 Bahaya Asap Pembakaran</button>
+      ${allDone ? '<button class="btn g" id="hCert">🏆 Sertifikat</button>' : ''}
+      <button class="btn g" id="hAses">📝 Asesmen</button>
+      <button class="btn w" id="hRefl">💭 Refleksi</button>
+      <button class="btn w sm" id="hReset" style="align-self:center">↺ Ulang</button>
+    </div></div>`;
+  fallLeaves($('#home'), 14);
+  frontNav('misi', false);
+  $('#home').querySelectorAll('.mcard').forEach(b => b.onclick = () => { sfx.click(); go(MISSIONS[+b.dataset.i].fn); });
+  $('#hStart').onclick = () => { sfx.click(); const n = MISSIONS.find(m => !S.done[m.k]); go(n ? n.fn : final); };
+  $('#hSmoke').onclick = () => { sfx.click(); smokeFacts([{ label: 'Tutup', cls: 'g' }]); };
+  $('#hRefl').onclick = () => { sfx.click(); go(refleksi); };
+  $('#hAses').onclick = () => { location.href = 'asesmen.html'; };
+  if ($('#hCert')) $('#hCert').onclick = () => go(final);
+  $('#hReset').onclick = () => {
+    modal({ title: 'Ulang dari awal?', lead: 'Semua skor dan lencana akan dihapus.', tone: 'warn',
+      buttons: [{ label: 'Ya, ulang', cls: 'r', on: () => { const snd = S.sound, nar = S.narr; S = JSON.parse(JSON.stringify(S0)); S.sound = snd; S.narr = nar; save(); go(home); } }, { label: 'Batal', cls: 'w' }] });
+  };
+}
+
+/* ---------- 6. Refleksi ---------- */
+const REFL = [
+  { k: 'senang', f: '😄', l: 'Senang', m: 'Hebat! Terima kasih sudah belajar dengan semangat. Ayo praktikkan membuat kompos di sekolah dan di rumah! 🌱' },
+  { k: 'biasa', f: '😐', l: 'Biasa Saja', m: 'Terima kasih sudah jujur! Bagian mana yang masih membingungkan? Tanyakan pada guru atau ulangi misinya, ya. 👍' },
+  { k: 'lesu', f: '😔', l: 'Tidak Bersemangat', m: 'Tidak apa-apa. Ceritakan pada guru apa yang membuatmu kurang bersemangat, supaya pelajaran berikutnya lebih seru! 💪' },
+];
+function loadRefl() { try { const r = JSON.parse(localStorage.getItem('penjagaBumiRefleksi')); if (r) return r; } catch (e) {} return { senang: 0, biasa: 0, lesu: 0 }; }
+function refleksi() {
+  const R = loadRefl();
+  screen.innerHTML = `<div class="front" id="front">
+    <h1 class="ptitle">💭 Refleksi</h1>
+    <div class="rq">Bagaimana perasaan dan pemahamanmu<br>tentang pembelajaran hari ini?</div>
+    <div class="emos">${REFL.map(r => `<button class="emo" data-k="${r.k}"><span class="f">${r.f}</span><span class="l">${r.l}</span><span class="c" id="rc-${r.k}">👥 ${R[r.k]}</span></button>`).join('')}</div>
+    <div class="rmsg" id="rmsg"></div>
+    <button class="btn w sm" id="rReset" style="position:absolute;right:40px;top:120px">↺ Nol-kan hitungan</button>
+  </div>`;
+  document.querySelectorAll('.emo').forEach(b => b.onclick = () => {
+    const r = REFL.find(x => x.k === b.dataset.k);
+    R[r.k]++; try { localStorage.setItem('penjagaBumiRefleksi', JSON.stringify(R)); } catch (e) {}
+    $('#rc-' + r.k).textContent = '👥 ' + R[r.k];
+    document.querySelectorAll('.emo').forEach(x => x.classList.remove('on', 'hop'));
+    void b.offsetWidth; b.classList.add('on', 'hop');
+    const m = $('#rmsg'); m.textContent = r.m; m.classList.add('show');
+    if (r.k === 'senang') { sfx.win(); confetti(50); } else sfx.good();
+    const o = S.narr; S.narr = true; speak(r.m); S.narr = o;
+  });
+  $('#rReset').onclick = () => {
+    modal({ title: 'Nol-kan hitungan refleksi?', lead: 'Jumlah pilihan emoji akan kembali ke 0 (misalnya untuk kelas berikutnya).', tone: 'warn',
+      buttons: [{ label: 'Ya', cls: 'r', on: () => { try { localStorage.removeItem('penjagaBumiRefleksi'); } catch (e) {} go(refleksi); } }, { label: 'Batal', cls: 'w' }] });
+  };
+  frontNav('refl');
+  speak('Bagaimana perasaan dan pemahamanmu tentang pembelajaran hari ini?');
+}
+
+/* =========================================================
+   FAKTA: BAHAYA ASAP / TPA / KOMPOS
+   ========================================================= */
+function smokeFacts(buttons, lead) {
+  modal({ title: '😷 Dampak Negatif Asap Pembakaran Daun', tone: 'bad',
+    lead: lead || 'Membakar daun memang cepat, tapi asapnya berbahaya bagi tubuh kita dan bumi.',
+    html: `<div class="facts">
+      <div class="fact bad"><div class="ic">🫁</div><h4>Merusak saluran napas</h4>Asap membawa partikel super halus <b>PM2.5</b> yang masuk jauh ke paru-paru. Memicu batuk, sesak napas, <b>ISPA</b>, dan kambuhnya asma.</div>
+      <div class="fact bad"><div class="ic">😵</div><h4>Gas karbon monoksida (CO)</h4>Gas beracun yang tak berwarna & tak berbau. Mengurangi oksigen dalam darah: pusing, mual, lemas, sulit konsentrasi belajar.</div>
+      <div class="fact bad"><div class="ic">👁️</div><h4>Iritasi mata & tenggorokan</h4>Mata perih, merah, berair. Hidung dan tenggorokan terasa gatal dan panas.</div>
+      <div class="fact bad"><div class="ic">☠️</div><h4>Racun dioksin & furan</h4>Jika plastik ikut terbakar bersama daun, muncul zat beracun pemicu kanker yang bisa menempel di tanah, air, dan makanan.</div>
+      <div class="fact bad"><div class="ic">🌡️</div><h4>Memperparah pemanasan global</h4>Melepas CO₂ dan jelaga (karbon hitam) ke udara, menambah polusi dan kabut asap.</div>
+      <div class="fact bad"><div class="ic">🌱</div><h4>Tanah kehilangan nutrisi</h4>Unsur hara dalam daun lenyap jadi asap & abu, mikroba tanah mati, dan api bisa merambat menjadi kebakaran.</div>
+    </div>
+    <div class="pmviz">
+      <svg width="420" height="130" viewBox="0 0 420 130"><circle cx="70" cy="65" r="60" fill="#fde68a" stroke="#a16207" stroke-width="3"/><text x="70" y="70" text-anchor="middle" font-size="16" font-weight="700">Rambut</text>
+      <circle cx="210" cy="65" r="9" fill="#94a3b8"/><circle cx="330" cy="65" r="3" fill="#334155"/>
+      <text x="210" y="105" text-anchor="middle" font-size="16" font-weight="700">PM10</text><text x="330" y="105" text-anchor="middle" font-size="16" font-weight="700">PM2.5</text></svg>
+      <div><b>Seberapa kecil PM2.5?</b> Sekitar <b>30 kali lebih kecil</b> dari tebal sehelai rambut! Karena itu ia lolos dari bulu hidung dan masuk ke paru-paru, bahkan ke aliran darah. <b>Anak-anak paling rentan</b> karena bernapas lebih cepat dan paru-parunya masih berkembang.</div>
+    </div>
+    <div class="note">⚖️ <b>Tahukah kamu?</b> Undang-Undang No. 18 Tahun 2008 tentang Pengelolaan Sampah (Pasal 29) <b>melarang membakar sampah</b> yang tidak sesuai persyaratan teknis pengelolaan sampah.</div>`,
+    buttons });
+}
+function dumpFacts(buttons) {
+  modal({ title: '🚛 Dibuang ke TPA? Belum yang terbaik…', tone: 'warn',
+    lead: 'Halaman memang bersih, tetapi masalahnya hanya berpindah ke Tempat Pemrosesan Akhir (TPA).',
+    html: `<div class="row"><svg width="330" height="300" viewBox="0 0 330 300" style="flex:none">
+      <rect width="330" height="300" rx="24" fill="#e0f2fe"/><path d="M0 300 L60 150 Q90 110 130 140 L170 90 Q200 60 230 110 L330 210 V300 Z" fill="#78716c"/>
+      <use href="#bottle" x="80" y="160" width="50" height="50"/><use href="#bag" x="180" y="140" width="60" height="60"/><use href="#leafDry2" x="130" y="200" width="60" height="60"/><use href="#can" x="240" y="200" width="45" height="45"/>
+      <g font-weight="800" font-size="22" fill="#7f1d1d"><text x="110" y="70">CH₄</text><text x="200" y="40">CH₄</text><text x="250" y="90">CH₄</text></g></svg>
+      <div class="facts" style="grid-template-columns:1fr 1fr;flex:1">
+        <div class="fact warn"><div class="ic">🫧</div><h4>Menghasilkan gas metana</h4>Daun yang tertimbun tanpa udara membusuk dan menghasilkan <b>metana (CH₄)</b>, gas rumah kaca yang jauh lebih kuat memerangkap panas dibanding CO₂.</div>
+        <div class="fact warn"><div class="ic">⛰️</div><h4>TPA cepat penuh</h4>Lahan TPA terbatas. Sampah organik justru menjadi bagian terbesar sampah di TPA.</div>
+        <div class="fact warn"><div class="ic">💧</div><h4>Air lindi</h4>Cairan dari tumpukan sampah bisa mencemari air tanah dan sungai di sekitarnya.</div>
+        <div class="fact warn"><div class="ic">💸</div><h4>Boros & sia-sia</h4>Butuh truk, bahan bakar, dan biaya. Padahal daun bisa jadi pupuk gratis untuk kebun sekolah!</div>
+      </div></div>`, buttons });
+}
+function compostFacts(buttons, lead) {
+  modal({ title: '🌱 Pilihan Tepat: Jadikan Kompos!', lead: lead || 'Daun kering diurai oleh mikroba, jamur, dan cacing menjadi pupuk alami.',
+    html: `<div class="facts">
+      <div class="fact good"><div class="ic">🌬️</div><h4>Udara tetap bersih</h4>Tanpa asap, tanpa CO, tanpa PM2.5. Teman-teman bisa belajar dengan nyaman.</div>
+      <div class="fact good"><div class="ic">🪱</div><h4>Tanah jadi subur & gembur</h4>Kompos menambah unsur hara (N, P, K) dan bahan organik, serta membantu tanah menahan air.</div>
+      <div class="fact good"><div class="ic">♻️</div><h4>Sampah berkurang</h4>Lebih sedikit sampah dikirim ke TPA, lebih sedikit gas metana.</div>
+      <div class="fact good"><div class="ic">💰</div><h4>Hemat biaya</h4>Sekolah tidak perlu banyak membeli pupuk untuk taman dan kebun.</div>
+      <div class="fact good"><div class="ic">🌻</div><h4>Kebun sekolah hijau</h4>Kompos dapat dipakai untuk taman, apotek hidup, dan kebun sayur sekolah.</div>
+      <div class="fact good"><div class="ic">📚</div><h4>Jadi bahan belajar</h4>Pengomposan adalah laboratorium alam: belajar mikroba, siklus materi, dan peduli lingkungan.</div>
+    </div>`, buttons });
+}
+
+/* =========================================================
+   MISI 1 — SELAMATKAN HALAMAN SEKOLAH
+   ========================================================= */
+function schoolScene() {
+  let win = '';
+  for (let r = 0; r < 2; r++) for (let c = 0; c < 6; c++) {
+    if (r === 1 && (c === 2 || c === 3)) continue;
+    win += `<rect x="${600 + c * 125}" y="${300 + r * 130}" width="80" height="80" rx="8" fill="#bae6fd" stroke="#92400e" stroke-width="5"/><path d="M${640 + c * 125} ${300 + r * 130}v80" stroke="#92400e" stroke-width="4"/>`;
+  }
+  const tree = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s})"><rect x="-22" y="-40" width="44" height="200" rx="14" fill="#92400e"/><g class="sway"><circle cx="0" cy="-90" r="110" fill="#15803d"/><circle cx="-80" cy="-40" r="80" fill="#16a34a"/><circle cx="80" cy="-40" r="80" fill="#16a34a"/><circle cx="0" cy="-150" r="70" fill="#22c55e"/><circle cx="-40" cy="-60" r="16" fill="#f59e0b"/><circle cx="50" cy="-110" r="14" fill="#d97706"/><circle cx="60" cy="-20" r="12" fill="#eab308"/></g></g>`;
+  return `<svg class="scene" id="sc" viewBox="0 0 1920 984" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#e0f2fe"/></linearGradient></defs>
+    <rect width="1920" height="984" fill="url(#skyG)"/>
+    <circle id="sun" cx="1500" cy="140" r="70" fill="#fde047" stroke="#facc15" stroke-width="14"/>
+    <g class="drift"><ellipse cx="200" cy="130" rx="110" ry="40" fill="#fff"/><ellipse cx="260" cy="110" rx="70" ry="45" fill="#fff"/></g>
+    <g class="drift" style="animation-duration:60s;animation-delay:-30s"><ellipse cx="200" cy="200" rx="90" ry="32" fill="#fff"/><ellipse cx="150" cy="185" rx="60" ry="35" fill="#fff"/></g>
+    <path d="M0 520 Q300 430 640 500 T1300 480 T1920 500 V600 H0Z" fill="#86efac"/>
+    <g id="school">
+      <rect x="560" y="250" width="800" height="340" fill="#fef3c7" stroke="#92400e" stroke-width="6"/>
+      <polygon points="520,262 960,120 1400,262" fill="#dc2626" stroke="#7f1d1d" stroke-width="6" stroke-linejoin="round"/>
+      ${win}
+      <rect x="860" y="440" width="200" height="150" fill="#b45309" stroke="#78350f" stroke-width="6"/><path d="M960 440v150" stroke="#78350f" stroke-width="5"/>
+      <rect x="800" y="180" width="320" height="56" rx="12" fill="#14532d"/><text x="960" y="218" text-anchor="middle" font-size="30" font-weight="800" fill="#fff" font-family="inherit">SEKOLAH ADIWIYATA</text>
+    </g>
+    <g><rect x="416" y="160" width="8" height="430" fill="#64748b"/><g class="flag"><rect x="424" y="166" width="100" height="32" fill="#dc2626"/><rect x="424" y="198" width="100" height="32" fill="#fff" stroke="#e5e7eb"/></g></g>
+    <rect y="580" width="1920" height="404" fill="#84cc16"/>
+    <polygon points="260,600 1660,600 1920,984 0,984" fill="#e7d8b5"/>
+    <path d="M260 600 L0 984 M1660 600 L1920 984" stroke="#a8a29e" stroke-width="6"/>
+    ${tree(150, 560, 1)}${tree(1780, 560, 1.05)}
+    <g id="flowers"></g>
+    <g id="leaves"></g>
+    <g id="fx"></g>
+    <g id="kids"></g>
+    <rect id="haze" width="1920" height="984" fill="#57534e" opacity="0" pointer-events="none" style="transition:opacity 3s"/>
+    <g id="smokeL"></g>
+  </svg>`;
+}
+const KIDPOS = [[430, 740, '#dc2626'], [690, 775, '#1d4ed8'], [1380, 765, '#dc2626'], [1610, 730, '#64748b']];
+
+function m1() {
+  curMission = 'm1'; cur = 0;
+  const st = { first: null, seen: {}, won: false };
+  render();
+  function render() {
+    clearTimers();
+    screen.innerHTML = `<div class="m-tag">MISI 1 · Selamatkan Halaman Sekolah</div>${schoolScene()}${narrator()}
+      <div class="aqi"><div class="t">🌫️ Kualitas Udara</div><div class="bar"><i id="aqiP"></i></div><div class="l" id="aqiL">Baik 😊</div></div>
+      <div class="choices" id="ch">
+        <button class="choice burn ${st.seen.burn ? 'seen' : ''}" data-c="burn"><span>🔥</span><div>Bakar<small>biar cepat bersih</small></div></button>
+        <button class="choice dump ${st.seen.dump ? 'seen' : ''}" data-c="dump"><span>🚛</span><div>Buang<small>angkut ke TPA</small></div></button>
+        <button class="choice comp" data-c="comp"><span>♻️</span><div>Kompos<small>olah jadi pupuk</small></div></button>
+      </div>`;
+    const L = $('#leaves');
+    st.leaves = [];
+    for (let i = 0; i < 46; i++) {
+      const x = rnd(120, 1800), y = rnd(640, 960), r = rnd(0, 360), s = rnd(.8, 1.3);
+      const g = useSym(['leafDry', 'leafDry2', 'leafYel'][i % 3], 64, 64, L, x, y, `rotate(${r}deg) scale(${s})`);
+      g.dataset.r = r; g.dataset.s = s; st.leaves.push(g);
+    }
+    const K = $('#kids'); st.kids = [];
+    KIDPOS.forEach(([x, y, c]) => { const g = useSym('kid', 90, 180, K, x, y - 90); g.style.color = c; st.kids.push(g); });
+    say(st.won ? 'Kamu sudah menyelamatkan halaman! Coba lihat juga apa yang terjadi dengan pilihan lain.' :
+      'Wah, halaman sekolah kita <b>penuh daun kering</b>! Apa yang sebaiknya kita lakukan dengan daun-daun ini? Pilih salah satu tombol di bawah.');
+    document.querySelectorAll('.choice').forEach(b => b.onclick = () => { sfx.click(); choose(b.dataset.c); });
+  }
+  function aqi(p, label) { $('#aqiP').style.left = p + '%'; $('#aqiL').innerHTML = label; }
+  function leavesTo(fx, fy, spreadX, spreadY, dur = 1200) {
+    st.leaves.forEach((g, i) => {
+      g.style.transition = `transform ${dur}ms cubic-bezier(.5,0,.3,1) ${i * 12}ms`;
+      g.style.transform = `translate(${fx + rnd(-spreadX, spreadX)}px,${fy + rnd(-spreadY, spreadY)}px) rotate(${rnd(0, 360)}deg) scale(${g.dataset.s})`;
+    });
+  }
+  async function choose(c) {
+    if (!st.first) st.first = c;
+    const id = runId;
+    $('#ch').classList.add('lock');
+    if (c === 'burn') await burn(id);
+    else if (c === 'dump') await dump(id);
+    else await comp(id);
+  }
+  async function burn(id) {
+    say('Daun-daun dikumpulkan lalu… <b>dibakar</b>! Perhatikan apa yang terjadi pada udara dan teman-teman kita.');
+    leavesTo(960, 800, 130, 40); await sleep(1500); if (id !== runId) return;
+    const fx = $('#fx'), fires = [];
+    [[900, 760, 1], [960, 740, 1.3], [1030, 765, 1.05], [940, 790, .8], [1000, 795, .85]].forEach(([x, y, s], i) => {
+      const g = useSym('fire', 120 * s, 140 * s, fx, x, y);
+      g.firstChild.classList.add('flick'); g.style.opacity = 0; g.style.transition = 'opacity .6s'; fires.push(g);
+      later(() => g.style.opacity = 1, i * 200);
+    });
+    noise(1.5, .1, 700); every(() => noise(.6, .06, 600), 700);
+    $('#haze').setAttribute('opacity', .45);
+    aqi(55, 'Tidak Sehat 😟');
+    later(() => st.leaves.forEach(g => g.style.filter = 'brightness(.25)'), 1800);
+    let n = 0;
+    every(() => {
+      const sm = useSym(n % 3 ? 'smokePlain' : 'smoke', 180, 130, $('#smokeL'), 0, 0);
+      const x0 = rnd(880, 1040), dx = rnd(-500, 500);
+      sm.animate([{ transform: `translate(${x0}px,720px) scale(.4)`, opacity: .95 }, { transform: `translate(${x0 + dx}px,${rnd(80, 260)}px) scale(${rnd(2.2, 3.6)})`, opacity: 0.15 }],
+        { duration: 5200, easing: 'ease-out', fill: 'forwards' });
+      n++;
+    }, 240);
+    await sleep(1800); if (id !== runId) return;
+    aqi(88, 'Berbahaya ☠️'); $('#haze').setAttribute('opacity', .62);
+    say('Uhuk! Uhuk! Asapnya <b>menyebar ke kelas</b>. Teman-teman batuk, mata perih, dan udara jadi kotor!');
+    st.kids.forEach((k, i) => {
+      k.firstChild.classList.add('kid-shake');
+      const t = svgEl('text', { x: 0, y: -120, 'text-anchor': 'middle', 'font-size': 34, 'font-weight': 800, fill: '#7f1d1d', stroke: '#fff', 'stroke-width': 6, 'paint-order': 'stroke' }, k);
+      t.textContent = ['Uhuk! 😷', 'Mataku perih! 😣', 'Sesak… 😵', 'Uhuk uhuk!'][i];
+    });
+    sfx.cough(); every(sfx.cough, 1400);
+    await sleep(3600); if (id !== runId) return;
+    clearTimers();
+    if (!st.seen.burn) { st.seen.burn = true; addPts(10, 960, 400); }
+    smokeFacts(afterBad(), 'Itulah yang terjadi jika daun dibakar. Asapnya membahayakan kesehatan dan lingkungan.');
+  }
+  async function dump(id) {
+    say('Daun-daun disapu dan dimasukkan ke karung, lalu <b>diangkut truk ke TPA</b>…');
+    leavesTo(900, 720, 220, 30); await sleep(1300); if (id !== runId) return;
+    const fx = $('#fx'), sacks = [];
+    [760, 900, 1040].forEach((x, i) => { const s = useSym('sack', 120, 130, fx, x, 700, 'scale(0)'); sacks.push(s); later(() => { s.style.transition = 'transform .4s'; s.style.transform = `translate(${x}px,700px) scale(1)`; sfx.pop(); }, i * 200); });
+    later(() => st.leaves.forEach(g => { g.style.transition = 'opacity .5s'; g.style.opacity = 0; }), 300);
+    await sleep(1000); if (id !== runId) return;
+    const tr = useSym('truck', 360, 200, fx, 2200, 700);
+    tone(90, 1.4, 'sawtooth', .06);
+    await tr.animate([{ transform: 'translate(2200px,700px)' }, { transform: 'translate(1220px,700px)' }], { duration: 1600, easing: 'ease-out', fill: 'forwards' }).finished;
+    if (id !== runId) return;
+    sacks.forEach((s, i) => s.animate([{ transform: s.style.transform }, { transform: `translate(${1150}px,640px) scale(.5)`, opacity: 0 }], { duration: 500, delay: i * 200, fill: 'forwards' }));
+    await sleep(1000); if (id !== runId) return;
+    tone(90, 1.4, 'sawtooth', .06);
+    say('Halaman bersih… tapi daunnya hanya <b>pindah tempat</b>. Ke mana perginya?');
+    await tr.animate([{ transform: 'translate(1220px,700px)' }, { transform: 'translate(-400px,700px)' }], { duration: 2000, easing: 'ease-in', fill: 'forwards' }).finished;
+    if (id !== runId) return;
+    aqi(25, 'Sedang 😐');
+    if (!st.seen.dump) { st.seen.dump = true; addPts(10, 960, 400); }
+    dumpFacts(afterBad());
+  }
+  async function comp(id) {
+    say('Ide bagus! Kita kumpulkan daun ke <b>komposter</b> untuk diolah menjadi pupuk alami.');
+    const fx = $('#fx');
+    const bin = useSym('bin', 200, 260, fx, 1180, 640, 'scale(0)');
+    bin.style.transition = 'transform .5s cubic-bezier(.2,1.6,.4,1)';
+    later(() => { bin.style.transform = 'translate(1180px,640px) scale(1)'; sfx.pop(); }, 50);
+    await sleep(700); if (id !== runId) return;
+    st.leaves.forEach((g, i) => {
+      later(() => {
+        const m = g.style.transform.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)/);
+        const x0 = +m[1], y0 = +m[2];
+        g.style.transition = 'none';
+        g.animate([{ transform: `translate(${x0}px,${y0}px) scale(1)` }, { transform: `translate(${(x0 + 1180) / 2}px,${Math.min(y0, 650) - 160}px) rotate(200deg) scale(.9)` }, { transform: 'translate(1180px,550px) rotate(400deg) scale(.3)', opacity: 0 }],
+          { duration: 900, easing: 'ease-in-out', fill: 'forwards' });
+        if (i % 4 === 0) sfx.pop();
+      }, i * 60);
+    });
+    await sleep(46 * 60 + 1000); if (id !== runId) return;
+    bin.animate([{ transform: 'translate(1180px,640px) scale(1)' }, { transform: 'translate(1180px,640px) scale(1.12,.9)' }, { transform: 'translate(1180px,640px) scale(1)' }], { duration: 500 });
+    const fl = $('#flowers');
+    for (let i = 0; i < 26; i++) {
+      const x = rnd(40, 1880), y = i % 2 ? rnd(590, 640) : rnd(900, 975);
+      const g = svgEl('g', { transform: `translate(${x} ${y})` }, fl);
+      svgEl('path', { d: 'M0 0 V-34', stroke: '#15803d', 'stroke-width': 5 }, g);
+      const col = ['#f472b6', '#facc15', '#fb923c', '#a78bfa', '#fff'][i % 5];
+      const h = svgEl('g', { transform: 'translate(0 -38)' }, g);
+      for (let p = 0; p < 5; p++) svgEl('circle', { cx: Math.cos(p * 1.256) * 10, cy: Math.sin(p * 1.256) * 10, r: 8, fill: col }, h);
+      svgEl('circle', { r: 6, fill: '#ca8a04' }, h);
+      g.animate([{ opacity: 0, transform: `translate(${x}px,${y + 30}px)` }, { opacity: 1, transform: `translate(${x}px,${y}px)` }], { duration: 600, delay: i * 60, fill: 'backwards' });
+    }
+    $('#sun').animate([{ r: 70 }, { r: 90 }, { r: 70 }], { duration: 1200 });
+    st.kids.forEach(k => k.animate([{ translate: '0 0' }, { translate: '0 -40px' }, { translate: '0 0' }], { duration: 500, iterations: 3 }));
+    sfx.win(); aqi(6, 'Baik 😊');
+    say('Hore! Halaman bersih, udara tetap <b>segar</b>, dan daun akan menjadi <b>pupuk kompos</b>!');
+    await sleep(1500); if (id !== runId) return;
+    if (!st.won) {
+      st.won = true;
+      addPts(st.first === 'comp' ? 100 : 70, 1180, 380);
+      finishMission('m1');
+      await award('udara');
+    }
+    compostFacts(afterWin());
+  }
+  function afterBad() {
+    const b = [{ label: '🔄 Coba pilihan lain', cls: 'y', on: () => { render(); say('Ayo coba pilihan lain. Mana yang paling baik untuk bumi?'); } }];
+    if (st.won) b.push({ label: '➡️ Lanjut ke Misi 2', cls: 'g', on: () => go(m2) });
+    return b;
+  }
+  function afterWin() {
+    const b = [{ label: '➡️ Lanjut ke Misi 2', cls: 'g', on: () => go(m2) }];
+    if (!st.seen.burn) b.push({ label: '🔥 Lihat jika dibakar (+10)', cls: 'r', on: () => { render(); choose('burn'); } });
+    if (!st.seen.dump) b.push({ label: '🚛 Lihat jika dibuang (+10)', cls: 'w', on: () => { render(); choose('dump'); } });
+    return b;
+  }
+}
+
+/* =========================================================
+   MISI 2 — PETUGAS PEMILAH DAUN
+   ========================================================= */
+const ITEMS = [
+  { s: 'leafDry', n: 'Daun kering', b: 'kompos', tip: 'Daun kering adalah bahan <b>cokelat</b> kaya karbon — bahan utama kompos!' },
+  { s: 'leafDry2', n: 'Daun kering', b: 'kompos', tip: 'Semakin banyak daun kering terkumpul, semakin banyak kompos yang bisa dibuat.' },
+  { s: 'leafYel', n: 'Daun gugur', b: 'kompos', tip: 'Daun gugur yang menguning juga bahan kompos.' },
+  { s: 'twig', n: 'Ranting kecil', b: 'kompos', tip: 'Ranting kecil boleh dikompos, tapi <b>dipotong kecil</b> dulu agar cepat terurai.' },
+  { s: 'leafGreen', n: 'Daun hijau', b: 'kompos', tip: 'Daun hijau & sisa tanaman adalah bahan <b>hijau</b> kaya nitrogen.' },
+  { s: 'grass', n: 'Potongan rumput', b: 'kompos', tip: 'Potongan rumput segar mempercepat proses pengomposan.' },
+  { s: 'banana', n: 'Kulit pisang', b: 'kompos', tip: 'Kulit buah mudah terurai dan kaya kalium.' },
+  { s: 'carrot', n: 'Sisa sayur', b: 'kompos', tip: 'Sisa sayur dari kantin bisa jadi bahan kompos.' },
+  { s: 'egg', n: 'Cangkang telur', b: 'kompos', tip: 'Cangkang telur menambah kalsium. Remukkan dulu, ya!' },
+  { s: 'bottle', n: 'Botol plastik', b: 'daur', tip: 'Plastik tidak bisa diurai mikroba. Kumpulkan untuk <b>bank sampah / daur ulang</b>.' },
+  { s: 'bag', n: 'Kantong plastik', b: 'daur', tip: 'Kantong plastik butuh ratusan tahun untuk terurai — jangan dibakar, daur ulang!' },
+  { s: 'can', n: 'Kaleng minuman', b: 'daur', tip: 'Kaleng aluminium bisa dilebur dan didaur ulang berkali-kali.' },
+  { s: 'cup', n: 'Gelas plastik', b: 'daur', tip: 'Gelas & sedotan plastik masuk wadah anorganik.' },
+  { s: 'battery', n: 'Baterai bekas', b: 'b3', tip: 'Baterai mengandung logam berat beracun. Masuk wadah <b>B3</b>, jangan dibakar atau dikompos!' },
+  { s: 'bulb', n: 'Lampu bekas', b: 'b3', tip: 'Lampu bekas bisa mengandung merkuri. Termasuk sampah <b>B3</b>.' },
+];
+const BINS = {
+  kompos: { x: 380, c: '#16a34a', d: '#14532d', t: 'BAHAN KOMPOS', s: 'organik mudah terurai', e: '🍂' },
+  daur:   { x: 960, c: '#eab308', d: '#854d0e', t: 'DAUR ULANG', s: 'anorganik: plastik, kaleng', e: '♻️' },
+  b3:     { x: 1540, c: '#dc2626', d: '#7f1d1d', t: 'B3', s: 'bahan berbahaya & beracun', e: '☣️' },
+};
+function m2() {
+  curMission = 'm2'; cur = 0;
+  let placed = 0, mistakes = 0, firstOk = 0;
+  const items = shuffle(ITEMS.slice());
+  screen.innerHTML = `<div class="m-tag">MISI 2 · Petugas Pemilah Daun</div>
+    <svg class="scene" viewBox="0 0 1920 984" preserveAspectRatio="none">
+      <rect width="1920" height="984" fill="#bae6fd"/><path d="M0 380 Q480 330 960 370 T1920 360 V984 H0Z" fill="#a3e635"/>
+      <rect y="570" width="1920" height="414" fill="#d6c7a1"/><rect y="566" width="1920" height="12" fill="#a8a29e"/>
+      ${Array.from({ length: 13 }, (_, i) => `<rect x="${i * 150 + 20}" y="300" width="14" height="90" fill="#fff"/>`).join('')}<rect y="318" width="1920" height="12" fill="#fff"/><rect y="352" width="1920" height="12" fill="#fff"/>
+    </svg>
+    ${narrator()}
+    <div class="prog" id="prog">Terpilah: 0/${items.length}</div>
+    <div class="fb" id="fb"><b>👉 Cara bermain:</b> Sentuh dan <b>seret</b> setiap benda ke wadah yang tepat. Bisa dimainkan beberapa siswa bersamaan!</div>
+    ${Object.entries(BINS).map(([k, b]) => `<div class="bin" id="bin-${k}" style="left:${b.x}px">
+      <svg viewBox="0 0 300 260"><g class="lid"><rect x="18" y="24" width="264" height="36" rx="14" fill="${b.d}"/><rect x="118" y="8" width="64" height="22" rx="9" fill="${b.d}"/></g>
+      <path d="M38 64 H262 L242 252 H58 Z" fill="${b.c}" stroke="${b.d}" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M100 90 V228 M150 90 V228 M200 90 V228" stroke="${b.d}" stroke-width="6" opacity=".35" stroke-linecap="round"/>
+      <circle cx="150" cy="158" r="54" fill="#fff" opacity=".92"/><text x="150" y="180" text-anchor="middle" font-size="62">${b.e}</text></svg>
+      <div class="lbl" style="background:${b.d}">${b.t}<small>${b.s}</small></div><div class="cnt" id="cnt-${k}">0</div></div>`).join('')}`;
+  say('Ayo jadi <b>petugas pemilah</b>! Tidak semua sampah di halaman boleh masuk komposter. Seret ke wadah yang tepat.');
+  const cnt = { kompos: 0, daur: 0, b3: 0 };
+  items.forEach((it, i) => {
+    const pos = posFor(i);
+    const d = document.createElement('div'); d.className = 'item';
+    d.innerHTML = `${ic(it.s)}<div class="nm">${it.n}</div>`;
+    d.style.left = pos.x + 'px'; d.style.top = pos.y + 'px';
+    d.dataset.hx = pos.x; d.dataset.hy = pos.y; it.miss = 0;
+    screen.appendChild(d); drag(d, it);
+  });
+  function posFor(i) {
+    const r = i < 8 ? 0 : 1, c = r ? i - 8 : i;
+    return { x: 140 + c * 235 + (r ? 117 : 0) + rnd(-15, 15), y: 330 + r * 165 + rnd(-8, 8) };
+  }
+  function binAt(p) {
+    for (const k in BINS) { const b = BINS[k]; if (p.x > b.x - 240 && p.x < b.x + 240 && p.y > 560 && p.y < 984) return k; }
+    return null;
+  }
+  function drag(el, it) {
+    let off = null, pid = null;
+    el.addEventListener('pointerdown', e => {
+      if (pid !== null) return; pid = e.pointerId; el.setPointerCapture(pid);
+      const p = toStage(e); off = { x: p.x - parseFloat(el.style.left), y: p.y - parseFloat(el.style.top) };
+      el.classList.remove('back', 'wiggle'); el.classList.add('drag'); sfx.pop();
+    });
+    el.addEventListener('pointermove', e => {
+      if (e.pointerId !== pid) return;
+      const p = toStage(e); el.style.left = (p.x - off.x) + 'px'; el.style.top = (p.y - off.y) + 'px';
+      const k = binAt(p); document.querySelectorAll('.bin').forEach(b => b.classList.toggle('open', b.id === 'bin-' + k));
+    });
+    const up = e => {
+      if (e.pointerId !== pid) return; pid = null; el.classList.remove('drag');
+      document.querySelectorAll('.bin').forEach(b => b.classList.remove('open'));
+      const p = toStage(e), k = binAt(p);
+      if (!k) { el.classList.add('back'); el.style.left = el.dataset.hx + 'px'; el.style.top = el.dataset.hy + 'px'; return; }
+      const fb = $('#fb');
+      if (k === it.b) {
+        const bin = $('#bin-' + k); bin.classList.add('open');
+        el.style.pointerEvents = 'none';
+        el.animate([{ transform: 'scale(1)' }, { transform: `translate(${BINS[k].x - parseFloat(el.style.left)}px,${700 - parseFloat(el.style.top)}px) scale(.2)`, opacity: 0 }], { duration: 380, fill: 'forwards' });
+        setTimeout(() => { el.remove(); bin.classList.remove('open'); }, 420);
+        cnt[k]++; $('#cnt-' + k).textContent = cnt[k]; placed++; $('#prog').textContent = `Terpilah: ${placed}/${items.length}`;
+        if (!it.miss) firstOk++;
+        addPts(it.miss ? 4 : 10, BINS[k].x, 560); sfx.good();
+        fb.className = 'fb ok'; fb.innerHTML = `<b>✅ Tepat! ${it.n}</b><br>${it.tip}`;
+        if (placed === items.length) later(done, 900);
+      } else {
+        it.miss++; mistakes++; sfx.bad();
+        const bin = $('#bin-' + k); bin.classList.add('shake'); setTimeout(() => bin.classList.remove('shake'), 800);
+        fb.className = 'fb no'; fb.innerHTML = `<b>❌ Ups! ${it.n} bukan untuk wadah ${BINS[k].t}.</b><br>${it.miss > 1 ? 'Petunjuk: coba wadah <b>' + BINS[it.b].t + '</b>.' : 'Pikirkan lagi: apakah benda ini bisa diurai mikroba?'}`;
+        el.classList.add('back', 'wiggle'); el.style.left = el.dataset.hx + 'px'; el.style.top = el.dataset.hy + 'px';
+      }
+    };
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+  }
+  async function done() {
+    const acc = Math.round(firstOk / items.length * 100);
+    finishMission('m2');
+    say('Kerja bagus! Semua sampah sudah terpilah.');
+    if (acc >= 60) await award('pemilah');
+    modal({ title: acc >= 60 ? '🗂️ Pemilahan Selesai!' : '🗂️ Selesai, tapi bisa lebih jitu!',
+      lead: `Ketepatan percobaan pertama: <b>${acc}%</b> · Salah tempat: ${mistakes} kali`,
+      html: `<div class="facts">
+        <div class="fact good"><div class="ic">🍂</div><h4>Bahan Kompos (${cnt.kompos})</h4>Daun, ranting kecil, rumput, sisa sayur & buah, cangkang telur. Bisa diurai mikroba menjadi pupuk.</div>
+        <div class="fact warn"><div class="ic">♻️</div><h4>Daur Ulang (${cnt.daur})</h4>Plastik & kaleng tidak bisa jadi kompos. Setorkan ke <b>bank sampah</b> sekolah.</div>
+        <div class="fact bad"><div class="ic">☣️</div><h4>B3 (${cnt.b3})</h4>Baterai & lampu bekas berbahaya. Kumpulkan terpisah dan serahkan ke pengelola B3.</div>
+      </div>
+      <div class="note">🔥 <b>Ingat!</b> Saat sampah tercampur lalu dibakar, plastik & baterai melepaskan <b>asap beracun (dioksin, logam berat)</b>. Karena itu, memilah adalah langkah pertama sebelum mengompos.</div>`,
+      buttons: [{ label: '➡️ Lanjut ke Misi 3', cls: 'g', on: () => go(m3) }, { label: '🔄 Ulangi Misi 2', cls: 'w', on: () => go(m2) }] });
+  }
+}
+
+/* =========================================================
+   MISI 3 — LABORATORIUM KOMPOS
+   ========================================================= */
+const ING = [
+  { k: 'daun', n: 'Daun kering', i: ic('leafDry'), ok: true, t: 'c', col: '#b45309', tg: 'cokelat', tip: '<b>Bahan COKELAT</b> kaya karbon (C): sumber energi bagi mikroba pengurai.' },
+  { k: 'sayur', n: 'Sisa sayur & buah', i: ic('carrot'), ok: true, t: 'n', col: '#65a30d', tg: 'hijau', tip: '<b>Bahan HIJAU</b> kaya nitrogen (N): untuk membangun tubuh mikroba.' },
+  { k: 'rumput', n: 'Rumput segar', i: ic('grass'), ok: true, t: 'n', col: '#4d7c0f', tg: 'hijau', tip: '<b>Bahan HIJAU</b>: rumput segar membantu tumpukan cepat menghangat.' },
+  { k: 'kandang', n: 'Pupuk kandang', i: '🐄', ok: true, t: 'n', col: '#57534e', tg: 'hijau', tip: 'Kotoran sapi/kambing kaya nitrogen dan membawa banyak mikroba pengurai.' },
+  { k: 'tanah', n: 'Tanah / kompos lama', i: ic('soil'), ok: true, t: 's', col: '#44403c', tg: 'starter', tip: '<b>STARTER</b>: segenggam tanah atau kompos lama membawa jutaan mikroba pengurai.' },
+  { k: 'em4', n: 'Larutan EM4 + air gula', i: '🧪', ok: true, t: 's', col: '#a16207', tg: 'aktivator', tip: '<b>AKTIVATOR</b>: berisi mikroba + gula sebagai makanan awal, mempercepat pengomposan.' },
+  { k: 'daging', n: 'Sisa daging & tulang', i: '🍖', ok: false, tg: '?', why: 'Daging & tulang membusuk berbau, mengundang <b>lalat, tikus, dan kucing</b>.' },
+  { k: 'minyak', n: 'Minyak & santan', i: '🍳', ok: false, tg: '?', why: 'Minyak melapisi bahan sehingga <b>sulit diurai</b> dan menimbulkan bau tengik.' },
+  { k: 'plastik', n: 'Plastik', i: ic('bag'), ok: false, tg: '?', why: 'Plastik <b>tidak bisa diurai</b> mikroba — butuh ratusan tahun! Masukkan ke daur ulang.' },
+  { k: 'kucing', n: 'Kotoran kucing / anjing', i: '🐈', ok: false, tg: '?', why: 'Bisa mengandung <b>cacing & kuman penyakit</b>. Tidak aman untuk kompos kebun sayur.' },
+];
+function m3() {
+  curMission = 'm3'; cur = 0;
+  const st = { step: 0, picked: new Set(), bad: 0, chop: 0, ratio: 1, moist: 15, layers: 0 };
+  const STEPS = ['1 · Bahan', '2 · Cacah', '3 · Rasio', '4 · Kelembapan', '5 · Pengomposan'];
+  screen.innerHTML = `<div class="lab"><div class="bench"></div></div>
+    <div class="m-tag">MISI 3 · Laboratorium Kompos</div>
+    <svg class="labviz" viewBox="0 0 600 840">
+      <defs><clipPath id="inside"><rect x="92" y="132" width="416" height="606" rx="20"/></clipPath>
+      <pattern id="crumb" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="6" cy="8" r="4" fill="#1c1917"/><circle cx="20" cy="22" r="3" fill="#57534e"/><circle cx="24" cy="6" r="2" fill="#78716c"/></pattern></defs>
+      <g id="steam"></g>
+      <rect x="80" y="120" width="440" height="630" rx="30" fill="#ecfeff" opacity=".6"/>
+      <g clip-path="url(#inside)"><g id="pile"><g id="layers"></g><rect id="ripe" x="92" y="738" width="416" height="0" fill="#2b1d14" opacity="0"/><rect id="ripe2" x="92" y="738" width="416" height="0" fill="url(#crumb)" opacity="0"/><g id="worms"></g></g><rect id="dry" x="92" y="132" width="416" height="606" fill="#fef3c7" opacity="0"/></g>
+      <rect x="80" y="120" width="440" height="630" rx="30" fill="none" stroke="#166534" stroke-width="12"/>
+      ${[200, 330, 460, 590].map(y => `<circle cx="80" cy="${y}" r="9" fill="#166534"/><circle cx="520" cy="${y}" r="9" fill="#166534"/>`).join('')}
+      <g id="lid" style="transition:transform .4s;transform-box:fill-box;transform-origin:0% 100%"><rect x="62" y="92" width="476" height="40" rx="14" fill="#15803d" stroke="#14532d" stroke-width="6"/><rect x="260" y="70" width="80" height="26" rx="10" fill="#14532d"/></g>
+      <rect x="120" y="750" width="40" height="70" fill="#166534"/><rect x="440" y="750" width="40" height="70" fill="#166534"/>
+      <path d="M300 750 v28 h40" stroke="#64748b" stroke-width="12" fill="none"/><text x="300" y="44" text-anchor="middle" font-size="34" font-weight="800" fill="#14532d" font-family="inherit">KOMPOSTER</text>
+      <g id="flies"></g>
+      <text id="lvlTxt" x="300" y="440" text-anchor="middle" font-size="30" font-weight="700" fill="#64748b" font-family="inherit">masih kosong</text>
+    </svg>
+    <div class="panel" id="panel"></div>`;
+  const P = $('#panel');
+  const lid = (open) => $('#lid').style.transform = open ? 'rotate(-14deg) translate(-10px,-30px)' : '';
+  let topY = 738;
+  function addLayer(col, h = 46, kind) {
+    $('#lvlTxt').style.display = 'none';
+    if (topY - h < 150) return;
+    topY -= h; lid(true); setTimeout(() => lid(false), 600);
+    const g = svgEl('g', {}, $('#layers'));
+    svgEl('rect', { x: 92, y: topY, width: 416, height: h, fill: col }, g);
+    for (let i = 0; i < 9; i++) {
+      if (kind === 'c') svgEl('use', { href: '#chopped', x: 92 + i * 46 + rnd(-8, 8), y: topY + rnd(-6, h - 34), width: 40, height: 40 }, g);
+      else svgEl('circle', { cx: 100 + i * 48 + rnd(0, 20), cy: topY + rnd(6, h - 6), r: rnd(3, 7), fill: 'rgba(0,0,0,.25)' }, g);
+    }
+    g.animate([{ transform: 'translateY(-420px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], { duration: 550, easing: 'cubic-bezier(.3,1.4,.5,1)' });
+    sfx.pop(); st.layers++;
+  }
+  function shell(title, desc, body, foot) {
+    P.innerHTML = `<div class="stepper">${STEPS.map((s, i) => `<div class="${i < st.step ? 'ok' : i === st.step ? 'on' : ''}">${i < st.step ? '✓ ' : ''}${s}</div>`).join('')}</div>
+      <h2>${title}</h2><p class="desc">${desc}</p><div class="pbody">${body}</div><div class="pfoot">${foot}</div>`;
+    speak(title + '. ' + desc);
+  }
+  function next() { st.step++; sfx.good(); [s1, s2, s3, s4, s5][st.step](); }
+
+  /* ---- langkah 1: pilih bahan ---- */
+  function s1() {
+    shell('🧺 Pilih Bahan Kompos', 'Sentuh bahan yang <b>boleh</b> dimasukkan ke komposter. Hati-hati, ada bahan yang dilarang!',
+      `<div class="ings">${ING.map((g, i) => `<button class="ing" data-i="${i}"><div class="ic">${g.i}</div>${g.n}</button>`).join('')}</div>
+       <div class="info" id="info">💡 Kompos yang baik butuh 3 kelompok bahan: <b>cokelat</b> (karbon), <b>hijau</b> (nitrogen), dan <b>starter</b> mikroba.</div>`,
+      `<div class="chk"><span id="kc">🍂 Cokelat</span><span id="kn">🥬 Hijau</span><span id="ks">🦠 Starter</span></div><button class="btn g" id="nx" disabled>Lanjut ➜</button>`);
+    P.querySelectorAll('.ing').forEach(b => b.onclick = () => {
+      const g = ING[+b.dataset.i], info = $('#info');
+      if (st.picked.has(g.k)) return;
+      if (g.ok) {
+        st.picked.add(g.k); b.classList.add('pick'); b.insertAdjacentHTML('beforeend', `<span class="tg">✓ ${g.tg}</span>`);
+        addLayer(g.col, 40, g.t); addPts(5, 1000, 300);
+        info.className = 'info ok'; info.innerHTML = '✅ ' + g.tip; sfx.good();
+      } else {
+        st.bad++; b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); sfx.bad();
+        info.className = 'info no'; info.innerHTML = `⛔ <b>${g.n} dilarang!</b> ${g.why}`;
+      }
+      const has = t => ING.some(x => x.t === t && st.picked.has(x.k));
+      $('#kc').classList.toggle('ok', has('c')); $('#kn').classList.toggle('ok', has('n')); $('#ks').classList.toggle('ok', has('s'));
+      const ready = has('c') && has('n') && has('s');
+      $('#nx').disabled = !ready; $('#nx').classList.toggle('glow', ready);
+      if (ready && !st.toldReady) { st.toldReady = 1; say('Bahan sudah lengkap! Kamu boleh menambah bahan baik lainnya, lalu tekan <b>Lanjut</b>.'); }
+    });
+    $('#nx').onclick = next;
+    say('Selamat datang di <b>Laboratorium Kompos</b>! Pilih bahan yang tepat untuk komposter kita.');
+  }
+
+  /* ---- langkah 2: cacah daun ---- */
+  function s2() {
+    shell('✂️ Cacah Daun Kering', 'Ketuk daun berkali-kali untuk memotongnya kecil-kecil (sekitar <b>2–5 cm</b>).',
+      `<div class="chop" id="chop"><svg class="bigleaf" id="bl" viewBox="0 0 120 120"><use href="#leafDry"/></svg></div>
+       <div class="meterbar" style="margin-top:18px"><div class="fill" id="cf" style="width:0%"></div><div class="val" id="cv">0%</div></div>
+       <div class="info" id="info">🔍 <b>Mengapa dicacah?</b> Potongan kecil punya <b>permukaan lebih luas</b>, sehingga mikroba lebih mudah "memakan" daun dan kompos lebih cepat matang.</div>`,
+      `<span></span><button class="btn g" id="nx" disabled>Lanjut ➜</button>`);
+    const box = $('#chop'), N = 8;
+    box.onpointerdown = e => {
+      if (st.chop >= N) return;
+      st.chop++; tone(rnd(300, 500), .07, 'square', .08); noise(.08, .1, 3000);
+      const p = toStage(e), r = box.getBoundingClientRect(), bx = (r.left - stage.getBoundingClientRect().left) / SCALE, by = (r.top - stage.getBoundingClientRect().top) / SCALE;
+      for (let i = 0; i < 4; i++) {
+        const s = document.createElementNS(NS, 'svg'); s.setAttribute('viewBox', '0 0 120 120'); s.setAttribute('class', 'piece');
+        svgEl('use', { href: '#chopped' }, s); s.style.left = (p.x - bx - 35) + 'px'; s.style.top = (p.y - by - 35) + 'px'; box.appendChild(s);
+        s.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${rnd(-300, 300)}px,${rnd(60, 180)}px) rotate(${rnd(-200, 200)}deg)` }], { duration: 700, easing: 'ease-out', fill: 'forwards' });
+      }
+      $('#bl').style.transform = `scale(${1 - st.chop / N * .8}) rotate(${st.chop * 25}deg)`;
+      const pct = Math.round(st.chop / N * 100); $('#cf').style.width = pct + '%'; $('#cv').textContent = pct + '%';
+      if (st.chop >= N) {
+        $('#bl').style.transform = 'scale(0)'; addPts(10, 1250, 400); sfx.good();
+        $('#info').className = 'info ok'; $('#info').innerHTML = '✅ Daun sudah tercacah! Daun kecil-kecil akan terurai <b>jauh lebih cepat</b> daripada daun utuh.';
+        $('#nx').disabled = false; $('#nx').classList.add('glow');
+      }
+    };
+    $('#nx').onclick = next;
+    say('Daun utuh lama sekali terurai. Ayo <b>cacah</b> daun keringnya dulu!');
+  }
+
+  /* ---- langkah 3: rasio cokelat:hijau ---- */
+  function s3() {
+    shell('⚖️ Atur Rasio Cokelat : Hijau', 'Geser untuk menentukan berapa bagian <b>bahan cokelat</b> (daun kering) untuk setiap 1 bagian <b>bahan hijau</b>.',
+      `<div class="ratio" id="rv"></div>
+       <input type="range" class="big" id="rr" min="1" max="5" step="1" value="${st.ratio}">
+       <div style="display:flex;justify-content:space-between;font-size:24px;font-weight:800;color:#64748b;margin-top:-14px"><span>1 : 1</span><span>2 : 1</span><span>3 : 1</span><span>4 : 1</span><span>5 : 1</span></div>
+       <div class="info" id="info"></div>`,
+      `<div style="font-size:34px;font-weight:800" id="rt"></div><button class="btn g glow" id="nx">Masukkan Berlapis ➜</button>`);
+    const upd = () => {
+      st.ratio = +$('#rr').value;
+      $('#rv').innerHTML = Array.from({ length: st.ratio }, () => '<i style="height:150px;background:#b45309"></i>').join('') + '<i style="height:150px;background:#65a30d;margin-left:30px"></i>';
+      $('#rt').innerHTML = `Cokelat : Hijau = <span style="color:#b45309">${st.ratio}</span> : <span style="color:#65a30d">1</span>`;
+      const info = $('#info');
+      if (st.ratio === 1) { info.className = 'info no'; info.innerHTML = '⚠️ <b>Terlalu banyak bahan hijau.</b> Tumpukan jadi becek dan berbau amonia (pesing).'; }
+      else if (st.ratio <= 3) { info.className = 'info ok'; info.innerHTML = '✅ <b>Pas!</b> Perbandingan 2–3 bagian cokelat : 1 bagian hijau membuat mikroba bekerja optimal (rasio C/N sekitar 25–30 : 1).'; }
+      else { info.className = 'info warn'; info.innerHTML = '⚠️ <b>Terlalu banyak bahan cokelat.</b> Mikroba kekurangan nitrogen, pengomposan berjalan sangat lambat.'; }
+    };
+    $('#rr').oninput = () => { upd(); tone(300 + st.ratio * 80, .05, 'triangle', .1); }; upd();
+    $('#nx').onclick = async () => {
+      $('#nx').disabled = true;
+      if (st.ratio >= 2 && st.ratio <= 3) addPts(20, 1250, 400);
+      const seq = [];
+      for (let r = 0; r < 2; r++) { for (let i = 0; i < Math.min(st.ratio, 3); i++) seq.push(['#b45309', 'c']); seq.push(['#65a30d', 'n']); }
+      for (const [c, t] of seq) { addLayer(c, 34, t); await sleep(260); }
+      next();
+    };
+    say('Kompos butuh keseimbangan. Berapa banyak <b>daun kering</b> dibanding <b>bahan hijau</b>?');
+  }
+
+  /* ---- langkah 4: kelembapan ---- */
+  function s4() {
+    shell('💧 Atur Kelembapan', 'Kelembapan ideal <b>40–60%</b>, seperti spons yang sudah diperas. Gunakan tombol di bawah, lalu lakukan <b>uji genggam</b>.',
+      `<div class="meterbar" style="height:80px"><div class="zone" style="left:40%;width:20%"></div><div class="fill" id="mf" style="background:#0ea5e9"></div><div class="val" id="mv"></div></div>
+       <div style="display:flex;justify-content:space-between;font-size:22px;font-weight:800;color:#64748b"><span>0% kering kerontang</span><span>ideal 40–60%</span><span>100% banjir</span></div>
+       <div style="display:flex;gap:20px;justify-content:center;margin-top:22px">
+         <button class="btn b" id="bw">💧 Siram air</button><button class="btn y" id="bd">🍂 Tambah daun kering</button><button class="btn w" id="bt">✊ Uji Genggam</button></div>
+       <div class="info" id="info">🧪 <b>Uji genggam:</b> ambil segenggam bahan lalu remas. Lihat apa yang terjadi!</div>`,
+      `<span></span><button class="btn g" id="nx" disabled>Mulai Pengomposan ➜</button>`);
+    const upd = () => {
+      $('#mf').style.width = st.moist + '%'; $('#mv').textContent = 'Kelembapan ' + st.moist + '%';
+      const ok = st.moist >= 40 && st.moist <= 60; $('#nx').disabled = !ok; $('#nx').classList.toggle('glow', ok);
+      $('#dry').setAttribute('opacity', st.moist < 30 ? .35 : 0);
+    };
+    $('#bw').onclick = () => {
+      st.moist = clamp(st.moist + 9, 0, 100); sfx.water(); upd(); lid(true); setTimeout(() => lid(false), 500);
+      for (let i = 0; i < 8; i++) { const d = svgEl('circle', { r: 7, fill: '#38bdf8' }, $('#steam')); d.animate([{ transform: `translate(${rnd(150, 450)}px,40px)` }, { transform: `translate(${rnd(150, 450)}px,${topY}px)`, opacity: .2 }], { duration: 600, delay: i * 40, fill: 'forwards' }).onfinish = () => d.remove(); }
+    };
+    $('#bd').onclick = () => { st.moist = clamp(st.moist - 8, 0, 100); sfx.pop(); upd(); };
+    $('#bt').onclick = () => {
+      const info = $('#info'); sfx.click();
+      if (st.moist < 40) { info.className = 'info warn'; info.innerHTML = '✊ <b>Bahan remah berhamburan</b>, tidak menggumpal. Terlalu kering — mikroba tidak bisa bekerja. Tambah air!'; }
+      else if (st.moist <= 60) { info.className = 'info ok'; info.innerHTML = '✊ <b>Bahan menggumpal dan hanya keluar 1–2 tetes air.</b> Sempurna! Mikroba senang.'; }
+      else { info.className = 'info no'; info.innerHTML = '✊ <b>Air mengucur deras!</b> Terlalu basah — udara tidak masuk dan kompos jadi busuk. Tambah daun kering!'; }
+    };
+    $('#nx').onclick = () => { addPts(15, 1250, 400); next(); };
+    upd();
+    say('Mikroba butuh air untuk hidup, tetapi <b>jangan terlalu basah</b>. Atur kelembapannya!');
+  }
+
+  /* ---- langkah 5: simulasi pengomposan ---- */
+  function s5() {
+    const PH = [
+      { n: 'Mesofilik', c: '#0ea5e9', d: 'Bakteri <b>mesofilik</b> mulai mengurai gula dan bahan yang mudah terurai. Suhu naik perlahan dari suhu ruang.' },
+      { n: 'Termofilik', c: '#dc2626', d: 'Suhu <b>50–65°C</b>! Bakteri termofilik bekerja paling cepat dan membunuh biji gulma serta kuman. Butuh banyak oksigen — rajin <b>diaduk</b>!' },
+      { n: 'Pendinginan', c: '#d97706', d: 'Bahan mudah urai mulai habis, suhu turun. <b>Jamur dan aktinomiset</b> mengurai bagian keras daun (selulosa & lignin).' },
+      { n: 'Pematangan', c: '#16a34a', d: '<b>Cacing tanah</b> dan organisme kecil datang. Kompos menjadi gembur, gelap, dan berbau seperti tanah.' },
+    ];
+    let day = 0, prog = 0, o2 = 100, temp = 29, badDays = 0, running = false, speed = 1, phase = -1, iv = null, pts = [[0, 29]], lastWarn = '';
+    shell('🔬 Amati Proses Pengomposan', 'Jaga kondisi komposter tetap ideal: <b>kelembapan 40–60%</b> dan <b>oksigen cukup</b>. Tekan tombol saat dibutuhkan!',
+      `<div style="display:flex;justify-content:space-between;align-items:center">
+         <div class="daybox">📅 Hari ke-<span id="dd" style="font-size:44px">0</span> <span class="phase" id="ph">Siap</span></div>
+         <div class="daybox">Kematangan <div class="meterbar" style="width:300px;height:44px"><div class="fill" id="pf" style="width:0%;background:#3f2a1d"></div><div class="val" id="pv" style="color:#fff;mix-blend-mode:difference">0%</div></div></div></div>
+       <div class="simgrid" style="margin-top:12px">
+         <div class="gauge"><div class="h">🌡️ Suhu <b id="gt">29°C</b></div><div class="meterbar"><div class="fill" id="tf" style="background:#ef4444"></div></div></div>
+         <div class="gauge"><div class="h">💧 Kelembapan <b id="gm"></b></div><div class="meterbar"><div class="zone" style="left:40%;width:20%"></div><div class="fill" id="mf2" style="background:#0ea5e9"></div></div></div>
+         <div class="gauge"><div class="h">🌬️ Oksigen <b id="go"></b></div><div class="meterbar"><div class="zone" style="left:40%;width:60%"></div><div class="fill" id="of" style="background:#22c55e"></div></div></div>
+       </div>
+       <svg class="chart" id="chart" viewBox="0 0 1100 230" preserveAspectRatio="none">
+         <rect x="60" y="${y2(65)}" width="1030" height="${y2(50) - y2(65)}" fill="#fee2e2"/><text x="1080" y="${y2(63)}" text-anchor="end" font-size="20" fill="#b91c1c" font-weight="700">zona termofilik 50–65°C</text>
+         ${[30, 40, 50, 60, 70].map(t => `<line x1="60" x2="1090" y1="${y2(t)}" y2="${y2(t)}" stroke="#e2e8f0"/><text x="50" y="${y2(t) + 7}" text-anchor="end" font-size="20" fill="#64748b">${t}°</text>`).join('')}
+         <polyline id="pl" fill="none" stroke="#dc2626" stroke-width="5" stroke-linejoin="round"/>
+         <text x="575" y="226" text-anchor="middle" font-size="20" fill="#64748b">hari →</text></svg>
+       <div class="info" id="info">▶ Tekan <b>Mulai</b> untuk menjalankan waktu. Setiap detik = 1 hari.</div>`,
+      `<div class="simbtns"><button class="btn g" id="bp">▶ Mulai</button><button class="btn w sm" id="bs">⏩ x1</button></div>
+       <div class="simbtns"><button class="btn b" id="bw">💧 Siram</button><button class="btn y" id="ba">🔄 Aduk</button><button class="btn w" id="bd">🍂 + Daun</button></div>`);
+    function y2(t) { return 210 - (t - 25) / 45 * 200; }
+    const upd = () => {
+      $('#dd').textContent = day;
+      $('#gt').textContent = Math.round(temp) + '°C'; $('#tf').style.width = clamp((temp - 20) / 50 * 100, 0, 100) + '%';
+      $('#gm').textContent = Math.round(st.moist) + '%'; $('#mf2').style.width = st.moist + '%';
+      $('#go').textContent = Math.round(o2) + '%'; $('#of').style.width = o2 + '%';
+      $('#pf').style.width = Math.min(prog, 100) + '%'; $('#pv').textContent = Math.floor(Math.min(prog, 100)) + '%';
+      $('#pl').setAttribute('points', pts.map(([d, t]) => `${60 + d / 45 * 1030},${y2(t)}`).join(' '));
+      const k = 1 - .38 * Math.min(prog, 100) / 100, base = 738;
+      $('#pile').setAttribute('transform', `translate(0 ${base * (1 - k)}) scale(1 ${k})`);
+      const H = base - topY;
+      ['#ripe', '#ripe2'].forEach(s => { $(s).setAttribute('y', topY); $(s).setAttribute('height', H); });
+      $('#ripe').setAttribute('opacity', clamp(prog / 100, 0, 1) * .95); $('#ripe2').setAttribute('opacity', clamp((prog - 40) / 60, 0, 1));
+      $('#dry').setAttribute('opacity', st.moist < 30 ? .35 : 0);
+    };
+    function setPhase(p) {
+      if (p === phase) return; phase = p;
+      $('#ph').textContent = 'Fase ' + PH[p].n; $('#ph').style.background = PH[p].c;
+      const info = $('#info'); info.className = 'info'; info.innerHTML = `🔎 <b>Fase ${PH[p].n}:</b> ${PH[p].d}`; say(`Fase <b>${PH[p].n}</b>! ` + PH[p].d.split('.')[0] + '.');
+      if (p === 3) for (let i = 0; i < 5; i++) { const w = svgEl('use', { href: '#worm', width: 90, height: 52, x: rnd(110, 400), y: rnd(topY + 40, 690) }, $('#worms')); w.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${rnd(-40, 40)}px)` }], { duration: 1500, direction: 'alternate', iterations: Infinity }); }
+    }
+    function steam(on) {
+      const s = $('#steam'); if (!on) return;
+      const p = svgEl('use', { href: '#smokePlain', width: 120, height: 80, x: -60, y: -40, opacity: .5 }, s);
+      p.style.filter = 'brightness(2.2)';
+      p.animate([{ transform: `translate(${rnd(180, 420)}px,100px) scale(.5)`, opacity: .6 }, { transform: `translate(${rnd(150, 450)}px,-20px) scale(1.4)`, opacity: 0 }], { duration: 1800, fill: 'forwards' }).onfinish = () => p.remove();
+    }
+    function flies(on) {
+      const f = $('#flies'); if (!on) { f.innerHTML = ''; return; }
+      if (f.childNodes.length) return;
+      for (let i = 0; i < 4; i++) {
+        const t = svgEl('text', { 'font-size': 40, x: 0, y: 0 }, f); t.textContent = i < 3 ? '🪰' : '🤢';
+        t.animate([{ transform: `translate(${rnd(120, 480)}px,${rnd(60, 160)}px)` }, { transform: `translate(${rnd(120, 480)}px,${rnd(40, 140)}px)` }], { duration: rnd(500, 900), direction: 'alternate', iterations: Infinity });
+      }
+    }
+    function warn(msg, cls) { if (msg === lastWarn) return; lastWarn = msg; const i = $('#info'); i.className = 'info ' + cls; i.innerHTML = msg; if (cls === 'no') sfx.bad(); }
+    function tick() {
+      day++;
+      const hot = temp > 48;
+      st.moist = clamp(st.moist - (hot ? 2.2 : 1.3) + (st.ratio === 1 ? .9 : 0), 0, 100);
+      o2 = clamp(o2 - (hot ? 7 : 4.5), 0, 100);
+      const mf = st.moist >= 40 && st.moist <= 60 ? 1 : (st.moist >= 30 && st.moist <= 70 ? .6 : .2);
+      const of = o2 >= 40 ? 1 : o2 >= 20 ? .6 : .2;
+      const rf = st.ratio === 2 || st.ratio === 3 ? 1 : st.ratio === 4 ? .75 : st.ratio === 1 ? .8 : .6;
+      const f = Math.min(mf, of);
+      if (f < .6) badDays++;
+      prog += 100 / 30 * rf * f;
+      const p = Math.min(prog, 100);
+      const tgt = p < 12 ? 30 + p / 12 * 22 : p < 55 ? 52 + Math.min(12, (p - 12) * .5) : p < 85 ? 64 - (p - 55) : 34 - (p - 85) * .25;
+      temp = clamp(temp + ((tgt * (.6 + .4 * f)) - temp) * .6, 27, 68);
+      pts.push([day, temp]);
+      setPhase(p < 12 ? 0 : p < 55 ? 1 : p < 85 ? 2 : 3);
+      if (of < 1) warn('😷 <b>Bau busuk!</b> Oksigen menipis, mikroba sulit bernapas. Ayo <b>ADUK</b> komposnya!', of < .6 ? 'no' : 'warn');
+      else if (st.moist < 40) warn('🏜️ <b>Terlalu kering!</b> Mikroba melambat. <b>SIRAM</b> sedikit air.', mf < .6 ? 'no' : 'warn');
+      else if (st.moist > 60) warn('💦 <b>Terlalu basah & becek!</b> Tambah <b>daun kering</b> atau aduk.', mf < .6 ? 'no' : 'warn');
+      else if (lastWarn) { lastWarn = ''; const i = $('#info'); i.className = 'info ok'; i.innerHTML = `👍 Kondisi ideal! Mikroba bekerja dengan baik. <br>🔎 <b>Fase ${PH[phase].n}:</b> ${PH[phase].d}`; }
+      flies(of < .6 || st.moist > 66);
+      if (temp > 48) { steam(true); later(() => steam(true), 300); }
+      upd();
+      if (prog >= 100) { stop(); later(finish, 600); }
+    }
+    function start() { running = true; $('#bp').innerHTML = '⏸ Jeda'; iv = every(tick, 1000 / speed); }
+    function stop() { running = false; $('#bp').innerHTML = '▶ Lanjut'; clearInterval(iv); }
+    $('#bp').onclick = () => { sfx.click(); running ? stop() : start(); };
+    $('#bs').onclick = () => { speed = speed === 1 ? 2 : speed === 2 ? 3 : 1; $('#bs').innerHTML = '⏩ x' + speed; if (running) { clearInterval(iv); iv = every(tick, 1000 / speed); } sfx.click(); };
+    $('#bw').onclick = () => { st.moist = clamp(st.moist + 10, 0, 100); sfx.water(); lid(true); setTimeout(() => lid(false), 400); upd(); };
+    $('#bd').onclick = () => { st.moist = clamp(st.moist - 8, 0, 100); sfx.pop(); upd(); };
+    $('#ba').onclick = () => {
+      o2 = 100; st.moist = clamp(st.moist - 3, 0, 100); tone(180, .3, 'triangle', .12, 0, 360);
+      $('#layers').animate([{ transform: 'rotate(0)' }, { transform: 'translate(10px,-6px) rotate(1deg)' }, { transform: 'translate(-10px,4px) rotate(-1deg)' }, { transform: 'rotate(0)' }], { duration: 500 });
+      upd();
+    };
+    upd();
+    say('Sekarang biarkan <b>mikroba</b> bekerja. Tugasmu: jaga kelembapan dan rajin <b>mengaduk</b> agar ada oksigen!');
+    async function finish() {
+      const stars = badDays <= 3 ? 3 : badDays <= 8 ? 2 : 1;
+      S.compost = { stars, days: day }; save();
+      addPts(stars * 25, 340, 400);
+      finishMission('m3');
+      sfx.win(); confetti(50);
+      await award('ilmuwan');
+      modal({ title: '🎉 Kompos Sudah Matang!', lead: `Kompos matang dalam <b>${day} hari</b> simulasi · Kualitas: ${'⭐'.repeat(stars)}${'☆'.repeat(3 - stars)} ${badDays ? `(kondisi buruk selama ${badDays} hari)` : '(kondisi selalu ideal!)'}`,
+        html: `<div class="row"><svg width="300" height="260" viewBox="0 0 300 260" style="flex:none"><ellipse cx="150" cy="200" rx="140" ry="50" fill="#2b1d14"/><path d="M20 200 Q150 60 280 200Z" fill="#3f2a1d"/><rect x="40" y="120" width="220" height="80" fill="url(#crumb)" opacity=".001"/>
+          ${Array.from({ length: 30 }, () => `<circle cx="${rnd(50, 250)}" cy="${rnd(140, 220)}" r="${rnd(3, 7)}" fill="#1c1917"/>`).join('')}<use href="#worm" x="150" y="150" width="90" height="50"/></svg>
+          <div class="facts" style="grid-template-columns:1fr 1fr;flex:1">
+            <div class="fact good"><div class="ic">🟫</div><h4>Warna</h4>Cokelat kehitaman, seperti tanah.</div>
+            <div class="fact good"><div class="ic">👃</div><h4>Bau</h4>Berbau tanah segar, tidak busuk.</div>
+            <div class="fact good"><div class="ic">🤏</div><h4>Tekstur</h4>Remah & gembur, bentuk daun asli tak terlihat lagi.</div>
+            <div class="fact good"><div class="ic">🌡️</div><h4>Suhu</h4>Sudah dingin, sama dengan suhu sekitar.</div>
+          </div></div>
+          <div class="note g">📅 Di dunia nyata, kompos daun yang dicacah dan rajin diaduk biasanya matang dalam <b>4–8 minggu</b>. Tanpa dicacah & diaduk bisa sampai berbulan-bulan.</div>`,
+        buttons: [{ label: '🌱 Lanjut ke Misi 4', cls: 'g', on: () => go(m4) }, { label: '🔄 Ulangi Misi 3', cls: 'w', on: () => go(m3) }] });
+    }
+  }
+  s1();
+}
+
+/* =========================================================
+   MISI 4 — KEBUN SEKOLAH HIJAU
+   ========================================================= */
+function m4() {
+  curMission = 'm4'; cur = 0;
+  const BY = 560;
+  const stars = (S.compost && S.compost.stars) || 2;
+  const BEDS = [
+    { n: 'Cabai', x: 300, fr: 'chili', col: '#dc2626' },
+    { n: 'Tomat', x: 740, fr: 'round', col: '#ef4444' },
+    { n: 'Terong', x: 1180, fr: 'egg', col: '#7e22ce' },
+    { n: 'Tomat (tanpa kompos)', x: 1620, fr: 'round', col: '#ef4444', ctrl: true },
+  ].map(b => Object.assign(b, { comp: false, seed: !!b.ctrl, water: !!b.ctrl, stage: b.ctrl ? 1 : 0 }));
+  let tool = null, harvested = 0, totalFruit = 0, grown = false;
+  screen.innerHTML = `<div class="m-tag">MISI 4 · Kebun Sekolah Hijau</div>
+    <svg class="scene" id="gd" viewBox="0 0 1920 984" preserveAspectRatio="xMidYMid slice">
+      <defs><linearGradient id="sk4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#e0f2fe"/></linearGradient></defs>
+      <rect width="1920" height="984" fill="url(#sk4)"/>
+      <g id="sun4"><circle cx="0" cy="0" r="70" fill="#fde047" stroke="#facc15" stroke-width="14"/></g>
+      <path d="M0 470 Q400 400 900 450 T1920 430 V984 H0Z" fill="#86efac"/>
+      ${Array.from({ length: 20 }, (_, i) => `<rect x="${i * 100 + 10}" y="440" width="22" height="120" rx="6" fill="#fef3c7" stroke="#a16207" stroke-width="3"/>`).join('')}
+      <rect y="470" width="1920" height="14" fill="#fef3c7"/><rect y="520" width="1920" height="14" fill="#fef3c7"/>
+      <rect y="560" width="1920" height="424" fill="#65a30d"/>
+      <g id="beds"></g>
+      <rect id="night" width="1920" height="984" fill="#0f172a" opacity="0" pointer-events="none"/>
+      <g id="fx4"></g>
+    </svg>
+    ${narrator()}
+    <div class="basket" id="bk">🧺 Panen: 0</div>
+    <div class="tools" id="tools">
+      <button class="tool" data-t="comp"><span>${ic('compostSack', '0 0 120 130').replace('<svg', '<svg width="70" height="70"')}</span>Kompos</button>
+      <button class="tool" data-t="seed"><span>🌱</span>Bibit</button>
+      <button class="tool" data-t="water"><span>🚿</span>Siram</button>
+      <button class="btn y" id="grow" disabled style="height:150px;border-radius:30px">☀️ Tunggu 4 Minggu</button>
+    </div>`;
+  const sun = $('#sun4'); sun.setAttribute('transform', 'translate(1700 130)');
+  const G = $('#beds');
+  BEDS.forEach((b, i) => {
+    const g = svgEl('g', { transform: `translate(${b.x} ${BY})` }, G);
+    svgEl('rect', { x: -12, y: -40, width: 10, height: 130, fill: '#a16207' }, g);
+    const sign = svgEl('g', { transform: 'translate(-110 -10)' }, g);
+    svgEl('rect', { x: -100 + (b.ctrl ? -40 : 0), y: 170, width: b.ctrl ? 330 : 220, height: 52, rx: 12, fill: b.ctrl ? '#fef3c7' : '#fff', stroke: '#a16207', 'stroke-width': 4 }, sign);
+    const tx = svgEl('text', { x: 10 + (b.ctrl ? 25 : 0), y: 206, 'text-anchor': 'middle', 'font-size': 28, 'font-weight': 800, fill: '#14532d' }, sign); tx.textContent = b.n;
+    b.soil = svgEl('path', { d: 'M-190 60 Q0 20 190 60 L200 130 H-200 Z', fill: '#c08a52', stroke: '#78350f', 'stroke-width': 6 }, g);
+    b.plant = svgEl('g', { transform: 'translate(0 50)' }, g);
+    const hit = svgEl('rect', { x: -200, y: -320, width: 400, height: 460, fill: 'transparent', class: 'bed-hit' }, g);
+    hit.addEventListener('click', () => useTool(b));
+    b.g = g; drawPlant(b);
+  });
+  function drawPlant(b, pop) {
+    const P = b.plant; P.innerHTML = '';
+    if (!b.stage) return;
+    const healthy = !b.ctrl, k = healthy ? 1 : .55;
+    const H = [0, 36, 100, 175, 250][b.stage] * k;
+    const leaf = healthy ? '#16a34a' : '#a3a635', leaf2 = healthy ? '#22c55e' : '#bef264';
+    svgEl('path', { d: `M0 0 Q${b.stage > 2 ? 10 : 4} ${-H / 2} 0 ${-H}`, stroke: healthy ? '#15803d' : '#84cc16', 'stroke-width': 4 + b.stage * 2 * k, fill: 'none', 'stroke-linecap': 'round' }, P);
+    const n = b.stage === 1 ? 1 : b.stage * 2;
+    for (let j = 1; j <= n; j++) {
+      const y = -H * j / (n + .4), side = j % 2 ? 1 : -1, L = (18 + b.stage * 9) * k;
+      svgEl('ellipse', { cx: side * L * .8, cy: y, rx: L, ry: L * .38, fill: j % 2 ? leaf : leaf2, transform: `rotate(${side * -25} ${side * L * .8} ${y})`, stroke: '#14532d', 'stroke-width': 2 }, P);
+    }
+    if (b.stage === 4 && !b.ctrl && !b.harvest) {
+      b.fruits = 2 + stars; b.harvest = true; totalFruit += b.fruits;
+    }
+    if (b.stage === 4 && !b.ctrl) {
+      for (let j = 0; j < b.left; j++) {
+        const y = -H * (j + 1) / (b.fruits + 1.5) - 10, x = (j % 2 ? 1 : -1) * (30 + (j % 3) * 8);
+        let f;
+        if (b.fr === 'chili') f = svgEl('ellipse', { cx: x, cy: y + 20, rx: 9, ry: 26, fill: b.col, stroke: '#7f1d1d', 'stroke-width': 3, transform: `rotate(${x > 0 ? -15 : 15} ${x} ${y + 20})` }, P);
+        else if (b.fr === 'round') f = svgEl('circle', { cx: x, cy: y + 14, r: 20, fill: b.col, stroke: '#7f1d1d', 'stroke-width': 3 }, P);
+        else f = svgEl('ellipse', { cx: x, cy: y + 22, rx: 15, ry: 28, fill: b.col, stroke: '#3b0764', 'stroke-width': 3 }, P);
+        f.setAttribute('class', 'fruit');
+        f.addEventListener('click', e => { e.stopPropagation(); pick(b, f); });
+      }
+    }
+    if (pop) P.firstChild && P.classList.add('grow-pop'), setTimeout(() => P.classList.remove('grow-pop'), 650);
+  }
+  function selTool(t) {
+    tool = t; document.querySelectorAll('.tool').forEach(x => x.classList.toggle('sel', x.dataset.t === t)); sfx.click();
+    const msg = { comp: 'Sentuh bedengan untuk <b>menaburkan dan mencampur kompos</b> ke tanah.', seed: 'Sentuh bedengan yang sudah diberi kompos untuk <b>menanam bibit</b>.', water: 'Sentuh bedengan yang sudah ditanami untuk <b>menyiram</b>.' }[t];
+    say(msg);
+  }
+  document.querySelectorAll('.tool').forEach(x => x.onclick = () => selTool(x.dataset.t));
+  function particles(b, color, n = 18, fromY = -200) {
+    for (let i = 0; i < n; i++) {
+      const c = svgEl('circle', { r: rnd(5, 10), fill: color }, $('#fx4'));
+      c.animate([{ transform: `translate(${b.x + rnd(-60, 60)}px,${BY + fromY}px)` }, { transform: `translate(${b.x + rnd(-170, 170)}px,${rnd(BY + 50, BY + 90)}px)`, opacity: .3 }], { duration: rnd(500, 900), delay: i * 25, fill: 'forwards' }).onfinish = () => c.remove();
+    }
+  }
+  function useTool(b) {
+    if (grown) return;
+    if (b.ctrl) { toast('🔬 Bedengan ini <b>pembanding</b>: sengaja tidak diberi kompos. Kita lihat bedanya nanti!'); return; }
+    if (!tool) { toast('👇 Pilih alat dulu di bawah: Kompos, Bibit, atau Siram.'); return; }
+    if (tool === 'comp') {
+      if (b.comp) return toast('Bedengan ini sudah diberi kompos 👍');
+      b.comp = true; particles(b, '#3f2a1d', 26); b.soil.setAttribute('fill', '#4a2f1b'); addPts(5, b.x, BY - 200); sfx.good();
+    } else if (tool === 'seed') {
+      if (!b.comp) { sfx.bad(); return toast('🟫 Campurkan <b>kompos</b> ke tanah dulu sebelum menanam!', true); }
+      if (b.seed) return toast('Bibit sudah ditanam 🌱');
+      b.seed = true; b.stage = 1; drawPlant(b, true); addPts(5, b.x, BY - 200); sfx.pop();
+    } else if (tool === 'water') {
+      if (!b.seed) { sfx.bad(); return toast('🌱 Tanam <b>bibit</b> dulu, baru disiram.', true); }
+      if (b.water) return toast('Sudah disiram 💧');
+      b.water = true; particles(b, '#38bdf8', 22, -260); sfx.water(); addPts(5, b.x, BY - 200);
+    }
+    const ready = BEDS.every(x => x.ctrl || (x.comp && x.seed && x.water));
+    if (ready) { $('#grow').disabled = false; $('#grow').classList.add('glow'); say('Semua bedengan siap! Tekan <b>☀️ Tunggu 4 Minggu</b> dan lihat apa yang terjadi.'); }
+  }
+  $('#grow').onclick = async () => {
+    const id = runId; $('#grow').disabled = true; $('#grow').classList.remove('glow'); grown = true; tool = null;
+    document.querySelectorAll('.tool').forEach(x => x.classList.remove('sel'));
+    for (let w = 1; w <= 4; w++) {
+      say(`⏳ Minggu ke-<b>${w}</b>… tanaman menyerap unsur hara dari kompos.`);
+      sun.animate([{ transform: 'translate(150px,500px)' }, { transform: 'translate(960px,100px)' }, { transform: 'translate(1770px,500px)' }], { duration: 1400 });
+      $('#night').animate([{ opacity: .55 }, { opacity: 0 }, { opacity: 0 }, { opacity: .55 }], { duration: 1400 });
+      await sleep(1400); if (id !== runId) return;
+      BEDS.forEach(b => {
+        if (b.ctrl) b.stage = Math.min(w >= 2 ? 2 : 1, 4) + (w === 4 ? 1 : 0); else b.stage = Math.min(4, w);
+        if (b.stage === 4 && !b.ctrl) b.left = b.left == null ? 2 + stars : b.left;
+        drawPlant(b, true);
+      });
+      tone(400 + w * 120, .2, 'triangle', .15);
+    }
+    sun.setAttribute('transform', 'translate(1700 130)');
+    say('Lihat bedanya! Tanaman <b>dengan kompos</b> tumbuh subur dan berbuah lebat. Yang <b>tanpa kompos</b> kurus dan pucat. Ayo <b>petik buahnya</b>!');
+  };
+  function pick(b, f) {
+    b.left--; harvested++; f.style.pointerEvents = 'none';
+    const bb = f.getBBox(); addPts(5, b.x + bb.x + 40, BY + 50 + bb.y);
+    f.animate([{ transform: 'translate(0,0)' }, { transform: `translate(${1800 - b.x}px,${-BY}px) scale(.4)`, opacity: 0 }], { duration: 700, easing: 'ease-in', fill: 'forwards' });
+    sfx.pop(); $('#bk').textContent = '🧺 Panen: ' + harvested;
+    if (harvested === totalFruit) later(done, 900);
+  }
+  async function done() {
+    finishMission('m4'); sfx.win(); confetti(70);
+    await award('petani');
+    modal({ title: '🌻 Kebun Sekolah Jadi Subur!', lead: `Kamu memanen <b>${harvested} buah</b> dari kebun yang diberi kompos buatanmu sendiri.`,
+      html: `<div class="facts">
+        <div class="fact good"><div class="ic">🌿</div><h4>Unsur hara alami</h4>Kompos melepas nitrogen, fosfor, dan kalium <b>secara perlahan</b> sehingga tanaman tumbuh sehat.</div>
+        <div class="fact good"><div class="ic">💧</div><h4>Tanah menahan air</h4>Tanah berkompos lebih gembur dan menyimpan air lebih lama, jadi tidak cepat kering.</div>
+        <div class="fact good"><div class="ic">🦠</div><h4>Mikroba tanah hidup</h4>Kompos memberi makan organisme tanah yang membantu akar menyerap nutrisi.</div>
+        <div class="fact warn"><div class="ic">🥀</div><h4>Tanpa kompos</h4>Tanah padat & miskin hara: tanaman kurus, daun pucat, buahnya sedikit.</div>
+        <div class="fact good"><div class="ic">🪴</div><h4>Cara pakai</h4>Campur <b>1 bagian kompos : 2–3 bagian tanah</b> untuk pot, atau taburkan di sekitar tanaman lalu aduk dengan tanah.</div>
+        <div class="fact good"><div class="ic">🔁</div><h4>Siklus tanpa sampah</h4>Daun gugur → kompos → tanaman tumbuh → daun gugur lagi. Tidak ada yang perlu dibakar!</div>
+      </div>`,
+      buttons: [{ label: '🏆 Lihat Predikatku!', cls: 'y', on: () => go(final) }] });
+  }
+  say('Kompos kita sudah matang! Ayo <b>suburkan kebun sekolah</b>. Pilih alat, lalu sentuh bedengan: <b>Kompos → Bibit → Siram</b>.');
+}
+
+/* =========================================================
+   SERTIFIKAT & PREDIKAT
+   ========================================================= */
+async function final() {
+  const all = MISSIONS.every(m => S.done[m.k]);
+  const tot = totalScore(), max = Object.values(MAX).reduce((a, b) => a + b, 0), pct = tot / max;
+  const pred = !all ? 'Calon Penjaga Bumi' : pct >= .8 ? 'Penjaga Bumi ⭐⭐⭐ Emas' : pct >= .55 ? 'Penjaga Bumi ⭐⭐ Perak' : 'Penjaga Bumi ⭐ Perunggu';
+  screen.innerHTML = `<div class="home"></div><div class="cert" id="cert">
+    <h1>🏆 SERTIFIKAT PENJAGA BUMI</h1>
+    <div style="font-size:24px;font-weight:700;color:#a16207">IPA Kelas VII · Pencemaran Lingkungan · SMP Negeri 1 Bandar Seikijang</div>
+    <div style="font-size:28px;font-weight:600;margin-top:2px">diberikan kepada</div>
+    <div class="nm" id="nmShow">${S.name || 'Sahabat Bumi'}</div>
+    <div class="noprint" style="margin:4px 0 6px"><input class="namein" id="nmIn" maxlength="30" placeholder="Ketik nama / kelompok di sini" value="${S.name || ''}"></div>
+    <div class="pred">${pred}</div>
+    <div style="font-size:30px;font-weight:700">Skor total: ⭐ ${tot} / ${max}</div>
+    <div class="badges">${Object.entries(BADGES).map(([k, b]) => `<div class="bd ${S.badges[k] || (k === 'bumi' && all) ? '' : 'no'}"><div class="e">${b.e}</div>${b.t}</div>`).join('')}</div>
+    <div class="pledge" id="pledge"><b>🤝 Ikrar Penjaga Bumi</b> <span class="noprint" style="color:#64748b">(sentuh untuk berikrar)</span><br>
+      Aku berjanji <b>tidak membakar sampah dan daun</b>, memilah sampah, mengolah daun menjadi kompos, dan mengajak teman-teman menjaga udara tetap bersih.</div>
+    <div class="noprint" style="display:flex;gap:20px;justify-content:center;margin-top:12px">
+      <button class="btn g" id="cHome">🏠 Beranda</button><button class="btn w" id="cPrint">🖨️ Cetak</button><button class="btn y" id="cRefl">💭 Refleksi</button><button class="btn w" id="cAgain">🔄 Main Lagi</button></div>
+  </div>`;
+  $('#nmIn').oninput = e => { S.name = e.target.value.trim(); $('#nmShow').textContent = S.name || 'Sahabat Bumi'; save(); };
+  $('#cHome').onclick = () => go(home);
+  $('#cPrint').onclick = () => window.print();
+  $('#cRefl').onclick = () => go(refleksi);
+  $('#cAgain').onclick = () => { const snd = S.sound, nar = S.narr; S = JSON.parse(JSON.stringify(S0)); S.sound = snd; S.narr = nar; save(); go(home); };
+  $('#pledge').onclick = () => { $('#pledge').style.background = '#dcfce7'; $('#pledge').style.borderColor = '#16a34a'; sfx.win(); confetti(60); speak('Aku berjanji tidak membakar sampah dan daun, memilah sampah, mengolah daun menjadi kompos, dan mengajak teman-teman menjaga udara tetap bersih.'); };
+  if (all) { sfx.win(); confetti(120); await award('bumi'); }
+  speak('Selamat! Predikatmu: ' + pred.replace(/⭐/g, ''));
+}
+
+/* ---------- mulai ---------- */
+if (window.speechSynthesis) speechSynthesis.getVoices();
+document.addEventListener('contextmenu', e => e.preventDefault());
+{ const P = PAGES.find(p => '#' + p.k === location.hash || (location.hash === '#refleksi' && p.k === 'refl')); go(P && P.k !== 'ases' ? P.fn : cover); }
+</script>
+</body>
+</html>

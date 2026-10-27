@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Asesmen Penjaga Bumi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1f2937; --muted:#475569; --cream:#fffbeb;
+  --green:#16a34a; --green-d:#14532d; --green-l:#dcfce7;
+  --red:#dc2626; --yellow:#facc15; --blue:#0284c7;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;overflow:hidden;background:#0b2e22}
+body{font-family:'Baloo 2','Nunito','Segoe UI Rounded','Segoe UI',system-ui,sans-serif;color:var(--ink)}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--s,1));overflow:hidden;background:#e0f2fe}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+
+/* top bar */
+#topbar{position:absolute;inset:0 0 auto 0;height:96px;display:flex;align-items:center;gap:16px;padding:0 24px;background:var(--green-d);color:#fff;z-index:40;box-shadow:0 6px 0 rgba(0,0,0,.18)}
+#topbar .brand{display:flex;align-items:center;gap:14px;font-weight:800;font-size:34px;line-height:1}
+#topbar .brand small{display:block;font-size:20px;font-weight:600;opacity:.8}
+#topbar .sp{flex:1}
+.pill{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.14);border-radius:999px;padding:8px 24px;font-size:30px;font-weight:800}
+.tb{background:rgba(255,255,255,.14);border:none;border-radius:18px;height:68px;min-width:68px;padding:0 18px;font-size:26px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+.tb:active{background:rgba(255,255,255,.3)}
+.tb.fs{background:var(--yellow);color:var(--green-d)}
+.tb.hide,.pill.hide{display:none}
+#screen{position:absolute;top:96px;left:0;right:0;bottom:0;overflow:hidden}
+
+.btn{border:none;border-radius:24px;padding:18px 38px;font-size:34px;font-weight:800;box-shadow:0 8px 0 rgba(0,0,0,.22);transition:transform .08s,box-shadow .08s;display:inline-flex;align-items:center;gap:12px;justify-content:center}
+.btn:active{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.22)}
+.btn.g{background:var(--green);color:#fff}.btn.y{background:var(--yellow);color:var(--green-d)}
+.btn.r{background:var(--red);color:#fff}.btn.w{background:#fff;color:var(--green-d)}
+.btn.sm{font-size:28px;padding:12px 26px;border-radius:18px}
+.glow{animation:glow 1.2s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 8px 0 rgba(0,0,0,.22),0 0 0 14px rgba(250,204,21,.45)}}
+.bg{position:absolute;inset:0;background:linear-gradient(#7dd3fc,#e0f2fe 58%,#bbf7d0 58%,#86efac)}
+.fall{position:absolute;top:-80px;width:60px;height:60px;pointer-events:none;opacity:.85}
+
+/* ---------- pengaturan ---------- */
+.set-t{position:absolute;left:0;right:0;top:26px;text-align:center;margin:0;font-size:70px;line-height:1;color:var(--green-d);text-shadow:0 6px 0 #fff}
+.set-s{position:absolute;left:0;right:0;top:104px;text-align:center;font-size:30px;font-weight:700;color:#0f172a}
+.setcard{position:absolute;left:90px;top:168px;width:1080px;bottom:40px;background:#fff;border:8px solid var(--green-d);border-radius:44px;padding:26px 44px;box-shadow:0 12px 0 rgba(20,83,45,.28)}
+.srow{margin-bottom:20px}
+.srow h3{margin:0 0 10px;font-size:34px;color:var(--green-d)}
+.chips{display:flex;gap:18px}
+.chip{flex:1;height:112px;border-radius:26px;border:6px solid #cbd5e1;background:#f8fafc;font-size:40px;font-weight:800;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 6px 0 rgba(0,0,0,.12)}
+.chip small{font-size:20px;font-weight:700;color:var(--muted)}
+.chip .dots{display:flex;gap:6px}
+.chip .dots i{width:22px;height:22px;border-radius:6px;display:block}
+.chip.on{background:var(--yellow);border-color:var(--green-d);color:var(--green-d)}
+.setgo{display:flex;gap:20px;align-items:center;margin-top:24px}
+.howto{position:absolute;left:1210px;right:90px;top:168px;bottom:40px;background:rgba(255,255,255,.95);border:6px solid var(--green-d);border-radius:44px;padding:24px 34px;box-shadow:0 12px 0 rgba(20,83,45,.2)}
+.howto h3{margin:0 0 8px;font-size:36px;color:var(--green-d)}
+.howto ol{margin:0;padding-left:34px;font-size:26px;line-height:1.35;font-weight:600}
+.howto li{margin-bottom:10px}
+.howto .pts{margin-top:10px;background:#f0fdf4;border-left:10px solid var(--green);border-radius:16px;padding:10px 18px;font-size:24px;line-height:1.35}
+
+/* ---------- permainan ---------- */
+.qbox{position:absolute;left:24px;right:24px;top:16px;height:200px;background:#fff;border:7px solid var(--green-d);border-radius:36px;padding:16px 34px 0 150px;box-shadow:0 10px 0 rgba(20,83,45,.25);z-index:5}
+.qno{position:absolute;left:22px;top:22px;width:110px;height:110px;border-radius:50%;background:var(--yellow);border:6px solid var(--green-d);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;color:var(--green-d);line-height:1}
+.qno b{font-size:48px}.qno small{font-size:18px}
+.qtext{font-size:42px;font-weight:800;line-height:1.18;height:126px;display:flex;align-items:center}
+.qtime{position:absolute;left:150px;right:34px;bottom:16px;height:30px;border-radius:15px;background:#e2e8f0;overflow:hidden;border:3px solid #334155}
+.qtime i{position:absolute;left:0;top:0;bottom:0;background:var(--green);border-radius:12px}
+.qsec{position:absolute;left:24px;bottom:150px;font-size:24px;font-weight:800;color:var(--muted)}
+.qsec{display:none}
+.tbig{position:absolute;right:30px;top:20px;width:120px;height:120px;border-radius:50%;border:7px solid var(--green-d);background:#f0fdf4;display:flex;align-items:center;justify-content:center;font-size:56px;font-weight:800;color:var(--green-d)}
+.tbig.hurry{background:#fee2e2;border-color:var(--red);color:var(--red);animation:pulse .5s ease-in-out infinite alternate}
+@keyframes pulse{to{transform:scale(1.1)}}
+.qbox.has-t{padding-right:180px}
+.opt{position:absolute;left:0;top:0;width:410px;height:124px;border-radius:30px;background:#fff;border:6px solid var(--green-d);box-shadow:0 10px 0 rgba(0,0,0,.2);display:flex;align-items:center;gap:14px;padding:0 18px 0 12px;font-size:28px;font-weight:700;line-height:1.12;touch-action:none;cursor:grab;z-index:10;will-change:transform}
+.opt .L{flex:none;width:76px;height:76px;border-radius:50%;color:#fff;font-size:44px;font-weight:800;display:flex;align-items:center;justify-content:center;border:5px solid rgba(0,0,0,.2)}
+.opt.drag{z-index:30;cursor:grabbing;box-shadow:0 22px 10px rgba(0,0,0,.25);scale:1.08}
+.opt.ok{background:#dcfce7;border-color:var(--green);scale:1.12;z-index:20;box-shadow:0 0 0 14px rgba(34,197,94,.35),0 10px 0 rgba(0,0,0,.2)}
+.opt.dim{opacity:.35;filter:grayscale(.7)}
+.opt.lock{pointer-events:none}
+.bk{position:absolute;top:676px;height:296px;transform:translateX(-50%);z-index:6}
+.bk-name{position:absolute;left:50%;top:0;transform:translateX(-50%);white-space:nowrap;color:#fff;background:var(--cd);border-radius:999px;padding:4px 28px;font-size:30px;font-weight:800;box-shadow:0 5px 0 rgba(0,0,0,.2);z-index:3}
+.bk-body{position:absolute;left:0;right:0;top:66px;height:226px;transition:transform .2s}
+.bk-body svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.bk-score{position:absolute;left:0;right:0;top:58px;text-align:center;font-size:110px;font-weight:800;line-height:1;color:#fff;-webkit-text-stroke:4px rgba(0,0,0,.35);paint-order:stroke;z-index:5}
+.bk-score.bump{animation:bump .6s ease}
+@keyframes bump{30%{transform:scale(1.5)}}
+.bk.hover .bk-body{transform:scale(1.07)}
+.bk-lid{position:absolute;left:-6px;right:-6px;top:52px;height:48px;border-radius:18px;background:#475569;border:5px solid rgba(0,0,0,.3);transform-origin:0% 100%;transform:rotate(-115deg);opacity:0;transition:transform .45s cubic-bezier(.3,1.5,.5,1),opacity .2s;z-index:4;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;white-space:nowrap}
+.bk.closed .bk-lid{transform:rotate(0);opacity:1}
+.bk-shade{position:absolute;left:4%;right:4%;top:100px;bottom:6px;border-radius:0 0 40px 40px;background:rgba(15,23,42,.45);opacity:0;transition:opacity .3s;z-index:3;pointer-events:none}
+.bk.closed .bk-shade{opacity:1}
+.bk.c-ok .bk-lid{background:#16a34a}.bk.c-no .bk-lid{background:#dc2626}.bk.c-to .bk-lid{background:#64748b}
+.bk.shake{animation:wig .4s ease 2}
+@keyframes wig{25%{rotate:-4deg}75%{rotate:4deg}}
+.reveal{position:absolute;left:300px;right:300px;top:236px;z-index:25;background:var(--cream);border:7px solid var(--green-d);border-radius:36px;padding:18px 34px;box-shadow:0 12px 0 rgba(0,0,0,.2);font-size:28px;line-height:1.3;display:none}
+.reveal.show{display:block;animation:popin .35s ease}
+.reveal h3{margin:0 0 4px;font-size:38px;color:var(--green)}
+.reveal .acts{display:flex;justify-content:center;margin-top:12px}
+@keyframes popin{0%{transform:scale(.85);opacity:.3}100%{transform:scale(1);opacity:1}}
+.paused{position:absolute;inset:0;z-index:35;background:rgba(6,30,22,.7);display:none;align-items:center;justify-content:center;flex-direction:column;gap:30px;color:#fff;font-size:80px;font-weight:800}
+.paused.show{display:flex}
+.pts-fly{position:absolute;z-index:50;font-size:60px;font-weight:800;color:#facc15;-webkit-text-stroke:2px #14532d;pointer-events:none;animation:ptsUp 1.3s ease-out forwards}
+.pts-fly.neg{color:#fecaca;-webkit-text-stroke:2px #7f1d1d;font-size:44px}
+@keyframes ptsUp{0%{transform:translate(-50%,0) scale(.6);opacity:0}20%{transform:translate(-50%,-20px) scale(1.15);opacity:1}100%{transform:translate(-50%,-160px) scale(1);opacity:0}}
+
+/* ---------- hasil ---------- */
+.res-t{position:absolute;left:0;right:0;top:24px;text-align:center;margin:0;font-size:74px;line-height:1;color:var(--green-d);text-shadow:0 6px 0 #fff}
+.res-s{position:absolute;left:0;right:0;top:108px;text-align:center;font-size:34px;font-weight:800;color:#0f172a}
+.podium{position:absolute;left:120px;right:120px;top:170px;height:600px;display:flex;align-items:flex-end;justify-content:center;gap:40px}
+.pcol{width:330px;display:flex;flex-direction:column;align-items:center}
+.pcol .md{font-size:90px;line-height:1}
+.pcol .nm{font-size:34px;font-weight:800;color:#fff;background:var(--cd);border-radius:999px;padding:2px 26px;margin:4px 0 8px}
+.pcol .bar{width:100%;border-radius:30px 30px 0 0;background:var(--c);border:7px solid var(--cd);border-bottom:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:16px;color:#fff;transition:height 1s cubic-bezier(.3,1.3,.5,1)}
+.pcol .sc{font-size:96px;font-weight:800;line-height:1;-webkit-text-stroke:3px rgba(0,0,0,.3);paint-order:stroke}
+.pcol .bn{font-size:26px;font-weight:800;background:rgba(0,0,0,.25);border-radius:999px;padding:2px 16px;margin-top:6px}
+.res-acts{position:absolute;left:0;right:0;bottom:40px;display:flex;justify-content:center;gap:22px}
+
+/* modal */
+#modal{position:absolute;inset:0;z-index:60;background:rgba(6,30,22,.66);display:none;align-items:center;justify-content:center}
+#modal.show{display:flex}
+#modal .card{width:1600px;max-height:960px;overflow:auto;background:var(--cream);border-radius:40px;border:8px solid var(--green-d);padding:30px 46px 0;box-shadow:0 20px 0 rgba(0,0,0,.25);animation:popin .35s ease}
+#modal h2{margin:0 0 12px;font-size:52px;line-height:1.1}
+#modal .lead{font-size:28px;margin:0 0 14px;color:var(--muted);font-weight:600}
+#modal .acts{display:flex;gap:20px;justify-content:center;position:sticky;bottom:0;background:var(--cream);padding:18px 0 26px}
+.key{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.key div{background:#fff;border:4px solid #e5e7eb;border-radius:20px;padding:12px 18px;font-size:22px;line-height:1.3}
+.key b{color:var(--green)}
+#toast{position:absolute;left:50%;top:250px;transform:translateX(-50%) translateY(-30px);opacity:0;z-index:70;background:#991b1b;color:#fff;font-size:34px;font-weight:700;padding:14px 34px;border-radius:999px;transition:.3s;pointer-events:none;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.confetti{position:absolute;top:-30px;width:18px;height:28px;z-index:90;pointer-events:none;border-radius:4px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="leafDry" viewBox="0 0 120 120">
+      <path d="M20,95 C15,55 45,15 100,15 C100,70 65,105 20,95 Z" fill="#d97706" stroke="#78350f" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M12,105 L92,23" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+      <path d="M40,75 L35,48 M60,55 L52,32 M50,65 L78,60 M32,83 L62,80" stroke="#92400e" stroke-width="3.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="leafYel" viewBox="0 0 120 120">
+      <path d="M20,95 C15,55 45,15 100,15 C100,70 65,105 20,95 Z" fill="#eab308" stroke="#854d0e" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M12,105 L92,23" stroke="#854d0e" stroke-width="5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="mascot" viewBox="0 0 140 160">
+      <path d="M70,140 Q72,152 64,158" stroke="#15803d" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M70,8 C122,28 138,92 70,144 C2,92 18,28 70,8 Z" fill="#22c55e" stroke="#14532d" stroke-width="6"/>
+      <path d="M70,24 C100,40 110,78 92,106" stroke="#86efac" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <circle cx="52" cy="70" r="13" fill="#fff"/><circle cx="88" cy="70" r="13" fill="#fff"/>
+      <circle cx="55" cy="72" r="7" fill="#111827"/><circle cx="91" cy="72" r="7" fill="#111827"/>
+      <ellipse cx="38" cy="92" rx="9" ry="6" fill="#f9a8d4"/><ellipse cx="102" cy="92" rx="9" ry="6" fill="#f9a8d4"/>
+      <path d="M52,96 Q70,118 88,96 Z" fill="#7f1d1d" stroke="#14532d" stroke-width="4" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="stage">
+  <header id="topbar">
+    <div class="brand"><svg width="60" height="68"><use href="#mascot"/></svg><div>Asesmen Penjaga Bumi<small>IPA Kelas VII · Pencemaran Lingkungan & Pupuk Kompos</small></div></div>
+    <div class="sp"></div>
+    <div class="pill hide" id="qCount">📝 Soal 1/10</div>
+    <button class="tb hide" id="bPause">⏸ Jeda</button>
+    <button class="tb hide" id="bStop">✖ Akhiri</button>
+    <button class="tb" id="bMat">📚 Materi</button>
+    <button class="tb" id="bSnd">🔊</button>
+    <button class="tb fs" id="bFs">⛶ Layar Penuh</button>
+  </header>
+  <main id="screen"></main>
+  <div id="modal"><div class="card" id="mcard"></div></div>
+  <div id="toast"></div>
+</div>
+
+<script>
+/* =========================================================
+   BANK SOAL — jawaban benar selalu ditulis di posisi pertama (indeks 0);
+   urutan opsi diacak saat permainan.
+   ========================================================= */
+const BANK = [
+  { q: 'Sampah daun kering termasuk jenis sampah…', o: ['Organik', 'Anorganik', 'B3', 'Logam'], e: 'Daun berasal dari makhluk hidup dan dapat diurai oleh mikroorganisme.' },
+  { q: 'Manakah yang termasuk sampah organik?', o: ['Kulit pisang', 'Botol plastik', 'Kaleng minuman', 'Baterai bekas'], e: 'Kulit pisang mudah membusuk dan dapat dijadikan kompos.' },
+  { q: 'Baterai bekas sebaiknya dibuang ke wadah sampah…', o: ['B3 (merah)', 'Organik (hijau)', 'Anorganik (kuning)', 'Komposter'], e: 'Baterai mengandung logam berat beracun sehingga termasuk sampah B3.' },
+  { q: 'Langkah pertama sebelum mengolah sampah sekolah menjadi kompos adalah…', o: ['Memilah sampah organik dan anorganik', 'Membakar semua sampah', 'Mengubur sampah plastik', 'Membuang sampah ke sungai'], e: 'Bahan kompos harus dipisahkan dulu dari plastik, kaleng, dan sampah B3.' },
+  { q: 'Membakar sampah daun terutama menyebabkan pencemaran…', o: ['Udara', 'Suara', 'Cahaya', 'Radioaktif'], e: 'Asap pembakaran mengotori udara dengan partikel dan gas berbahaya.' },
+  { q: 'Partikel sangat halus dalam asap yang dapat masuk jauh ke paru-paru disebut…', o: ['PM2.5', 'Oksigen', 'Uap air', 'Nitrogen'], e: 'PM2.5 sekitar 30 kali lebih kecil dari tebal rambut, sehingga lolos ke paru-paru.' },
+  { q: 'Gas beracun tak berwarna dan tak berbau dari pembakaran yang mengurangi oksigen dalam darah adalah…', o: ['Karbon monoksida (CO)', 'Oksigen (O₂)', 'Nitrogen (N₂)', 'Helium (He)'], e: 'CO mengikat darah sehingga tubuh kekurangan oksigen: pusing, mual, lemas.' },
+  { q: 'Penyakit saluran pernapasan yang dapat dipicu oleh asap pembakaran sampah adalah…', o: ['ISPA', 'Cacar air', 'Rabun jauh', 'Sakit gigi'], e: 'ISPA = Infeksi Saluran Pernapasan Akut, sering muncul akibat polusi asap.' },
+  { q: 'Jika plastik ikut dibakar bersama daun, akan muncul zat beracun pemicu kanker, yaitu…', o: ['Dioksin', 'Klorofil', 'Glukosa', 'Vitamin C'], e: 'Dioksin dan furan terbentuk dari pembakaran plastik dan sangat beracun.' },
+  { q: 'Mengapa anak-anak lebih rentan terhadap bahaya asap?', o: ['Bernapas lebih cepat dan paru-parunya masih berkembang', 'Tubuhnya lebih tinggi', 'Lebih sering minum air', 'Matanya lebih besar'], e: 'Anak-anak menghirup lebih banyak udara relatif terhadap tubuhnya.' },
+  { q: 'Sampah daun yang menumpuk di TPA tanpa udara akan membusuk dan menghasilkan gas…', o: ['Metana (CH₄)', 'Oksigen (O₂)', 'Hidrogen (H₂)', 'Ozon (O₃)'], e: 'Metana adalah gas rumah kaca yang jauh lebih kuat memerangkap panas dibanding CO₂.' },
+  { q: 'Larangan membakar sampah tercantum dalam Undang-Undang No. 18 Tahun 2008 tentang…', o: ['Pengelolaan Sampah', 'Lalu Lintas', 'Sistem Pendidikan', 'Ketenagakerjaan'], e: 'UU 18/2008 Pasal 29 melarang membakar sampah yang tidak sesuai persyaratan teknis.' },
+  { q: 'Pupuk kompos terbentuk dari penguraian bahan organik oleh…', o: ['Mikroorganisme', 'Api', 'Plastik', 'Sinar lampu'], e: 'Bakteri, jamur, dan organisme tanah mengurai bahan organik menjadi kompos.' },
+  { q: 'Organisme pengurai seperti bakteri dan jamur disebut…', o: ['Dekomposer', 'Produsen', 'Konsumen I', 'Predator'], e: 'Dekomposer mengurai sisa makhluk hidup dan mengembalikan unsur hara ke tanah.' },
+  { q: 'Dalam pembuatan kompos, daun kering termasuk bahan "cokelat" yang kaya akan…', o: ['Karbon (C)', 'Nitrogen (N)', 'Kalsium (Ca)', 'Besi (Fe)'], e: 'Bahan cokelat kaya karbon, menjadi sumber energi bagi mikroba.' },
+  { q: 'Contoh bahan "hijau" yang kaya nitrogen adalah…', o: ['Sisa sayur dan rumput segar', 'Daun kering', 'Serbuk kayu kering', 'Kardus bekas'], e: 'Bahan hijau yang segar kaya nitrogen untuk membangun tubuh mikroba.' },
+  { q: 'Perbandingan bahan cokelat : hijau yang baik untuk kompos adalah sekitar…', o: ['2–3 : 1', '1 : 5', '10 : 1', '0 : 1'], e: 'Rasio 2–3 : 1 menghasilkan rasio C/N sekitar 25–30 : 1 yang ideal.' },
+  { q: 'Mengapa daun kering sebaiknya dicacah kecil-kecil sebelum dikompos?', o: ['Memperluas permukaan sehingga cepat terurai', 'Supaya lebih berat', 'Agar mudah dibakar', 'Supaya berwarna hijau'], e: 'Potongan kecil (2–5 cm) memudahkan mikroba bekerja sehingga kompos lebih cepat matang.' },
+  { q: 'Kelembapan yang ideal untuk tumpukan kompos adalah…', o: ['40–60%', '0–10%', '90–100%', '10–20%'], e: 'Seperti spons yang sudah diperas: lembap tapi tidak becek.' },
+  { q: 'Pada uji genggam, bahan kompos yang kelembapannya pas akan…', o: ['Menggumpal dan keluar 1–2 tetes air', 'Mengucurkan air deras', 'Berhamburan seperti debu', 'Langsung terbakar'], e: 'Jika air mengucur berarti terlalu basah; jika berhamburan berarti terlalu kering.' },
+  { q: 'Mengapa tumpukan kompos perlu diaduk secara berkala?', o: ['Memberi oksigen bagi mikroba', 'Supaya warnanya hijau', 'Mengusir cacing tanah', 'Supaya kompos menjadi plastik'], e: 'Mikroba pengurai butuh oksigen. Tanpa diaduk, kompos bisa berbau busuk.' },
+  { q: 'Fase pengomposan saat suhu mencapai 50–65°C disebut fase…', o: ['Termofilik', 'Mesofilik', 'Pendinginan', 'Pematangan'], e: 'Pada fase termofilik, bakteri tahan panas bekerja paling cepat.' },
+  { q: 'Suhu tinggi pada fase termofilik bermanfaat untuk…', o: ['Membunuh biji gulma dan kuman', 'Membakar kompos', 'Melelehkan plastik', 'Mendinginkan tanah'], e: 'Panas 50–65°C mematikan biji gulma dan bibit penyakit.' },
+  { q: 'Bahan yang TIDAK boleh dimasukkan ke dalam komposter adalah…', o: ['Sisa daging dan tulang', 'Daun kering', 'Sisa sayur', 'Potongan rumput'], e: 'Daging dan tulang berbau busuk serta mengundang lalat dan tikus.' },
+  { q: 'Fungsi larutan EM4 atau segenggam tanah/kompos lama dalam pembuatan kompos adalah sebagai…', o: ['Starter mikroba pengurai', 'Pewarna kompos', 'Pengawet bahan', 'Pengganti air'], e: 'Starter/aktivator membawa mikroba yang mempercepat pengomposan.' },
+  { q: 'Tumpukan kompos yang berbau busuk biasanya disebabkan oleh…', o: ['Terlalu basah dan kurang oksigen', 'Terlalu sering diaduk', 'Daunnya dicacah', 'Diberi sedikit tanah'], e: 'Kondisi becek tanpa udara membuat bahan membusuk. Solusinya: aduk dan tambah daun kering.' },
+  { q: 'Ciri-ciri kompos yang sudah matang adalah…', o: ['Cokelat kehitaman, remah, berbau tanah', 'Hijau segar dan basah', 'Berbau busuk menyengat', 'Masih panas, daun masih utuh'], e: 'Kompos matang juga sudah dingin, sama dengan suhu sekitar.' },
+  { q: 'Kompos daun yang dicacah dan rajin diaduk biasanya matang dalam waktu…', o: ['4–8 minggu', '1 hari', '2 jam', '10 tahun'], e: 'Tanpa dicacah dan diaduk, pengomposan bisa berlangsung berbulan-bulan.' },
+  { q: 'Manfaat pupuk kompos bagi tanah adalah…', o: ['Menggemburkan tanah dan menambah unsur hara', 'Membuat tanah keras dan padat', 'Membunuh cacing tanah', 'Membuat tanah beracun'], e: 'Kompos menambah unsur hara (N, P, K), bahan organik, dan membantu tanah menahan air.' },
+  { q: 'Sikap yang menunjukkan kepedulian terhadap lingkungan sekolah adalah…', o: ['Mengumpulkan daun untuk dijadikan kompos', 'Membakar sampah di belakang kelas', 'Membuang sampah ke selokan', 'Membiarkan daun menumpuk'], e: 'Mengolah daun menjadi kompos menjaga udara bersih dan menyuburkan kebun sekolah.' },
+];
+
+const GROUPS = [
+  { n: 'Kelompok 1', c: '#ef4444', d: '#991b1b' },
+  { n: 'Kelompok 2', c: '#3b82f6', d: '#1e3a8a' },
+  { n: 'Kelompok 3', c: '#f59e0b', d: '#92400e' },
+  { n: 'Kelompok 4', c: '#a855f7', d: '#581c87' },
+];
+const LETTERS = ['A', 'B', 'C', 'D'];
+const LCOL = ['#ef4444', '#3b82f6', '#16a34a', '#f59e0b'];
+const PTS = 10;
+
+/* ---------- util ---------- */
+const $ = s => document.querySelector(s);
+const stage = $('#stage'), screen = $('#screen');
+const rnd = (a, b) => a + Math.random() * (b - a);
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+let SCALE = 1;
+function fit() { SCALE = Math.min(innerWidth / 1920, innerHeight / 1080); stage.style.setProperty('--s', SCALE); }
+addEventListener('resize', fit); fit();
+function toStage(e) { const r = stage.getBoundingClientRect(); return { x: (e.clientX - r.left) / SCALE, y: (e.clientY - r.top) / SCALE }; }
+
+let CFG = { n: 10, t: 15, g: 2, sound: true };
+try { Object.assign(CFG, JSON.parse(localStorage.getItem('penjagaBumiAsesmen')) || {}); } catch (e) {}
+function saveCfg() { try { localStorage.setItem('penjagaBumiAsesmen', JSON.stringify(CFG)); } catch (e) {} }
+
+/* ---------- suara ---------- */
+let AC = null;
+function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (AC && AC.state === 'suspended') AC.resume(); return AC; }
+function tone(f, d = .15, type = 'sine', v = .18, delay = 0, f2) {
+  const a = ac(); if (!a || !CFG.sound) return;
+  const t = a.currentTime + delay, o = a.createOscillator(), g = a.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
+  g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + d);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t + d + .05);
+}
+const sfx = {
+  click: () => tone(620, .08, 'triangle', .14),
+  good: () => { tone(660, .12, 'triangle'); tone(990, .2, 'triangle', .18, .1); },
+  bad: () => tone(220, .35, 'sawtooth', .1, 0, 120),
+  tick: () => tone(1200, .05, 'square', .06),
+  pop: () => tone(500, .1, 'sine', .16, 0, 1100),
+  lid: () => tone(160, .18, 'triangle', .2, 0, 90),
+  win: () => [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, .28, 'triangle', .18, i * .11)),
+};
+function confetti(n = 80) {
+  const cols = ['#facc15', '#22c55e', '#38bdf8', '#f472b6', '#f97316', '#a78bfa'];
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('div'); d.className = 'confetti';
+    d.style.left = rnd(0, 1920) + 'px'; d.style.background = cols[i % cols.length]; stage.appendChild(d);
+    d.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${rnd(-200, 200)}px,${rnd(1000, 1200)}px) rotate(${rnd(360, 1080)}deg)` }],
+      { duration: rnd(1800, 3200), delay: rnd(0, 600), easing: 'cubic-bezier(.3,.6,.6,1)', fill: 'forwards' }).onfinish = () => d.remove();
+  }
+}
+let toastT;
+function toast(m) { const t = $('#toast'); t.innerHTML = m; t.className = 'show'; clearTimeout(toastT); toastT = setTimeout(() => t.className = '', 1800); }
+function floatPts(txt, x, y, neg) {
+  const d = document.createElement('div'); d.className = 'pts-fly' + (neg ? ' neg' : ''); d.textContent = txt;
+  d.style.left = x + 'px'; d.style.top = y + 'px'; stage.appendChild(d); setTimeout(() => d.remove(), 1400);
+}
+function modal(title, lead, html, buttons) {
+  const c = $('#mcard');
+  c.innerHTML = `<h2>${title}</h2>${lead ? `<p class="lead">${lead}</p>` : ''}${html || ''}<div class="acts"></div>`;
+  buttons.forEach(b => { const el = document.createElement('button'); el.className = 'btn ' + (b.cls || 'g'); el.innerHTML = b.label; el.onclick = () => { sfx.click(); $('#modal').classList.remove('show'); b.on && b.on(); }; c.querySelector('.acts').appendChild(el); });
+  $('#modal').classList.add('show'); c.scrollTop = 0;
+}
+
+/* ---------- tombol topbar ---------- */
+function isFs() { return document.fullscreenElement || document.webkitFullscreenElement; }
+$('#bFs').onclick = () => {
+  sfx.click(); const el = document.documentElement;
+  if (!isFs()) (el.requestFullscreen || el.webkitRequestFullscreen || function () {}).call(el);
+  else (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+};
+function fsLabel() { $('#bFs').innerHTML = isFs() ? '🗗 Keluar Layar Penuh' : '⛶ Layar Penuh'; setTimeout(fit, 120); }
+document.addEventListener('fullscreenchange', fsLabel); document.addEventListener('webkitfullscreenchange', fsLabel);
+$('#bSnd').onclick = () => { CFG.sound = !CFG.sound; saveCfg(); $('#bSnd').textContent = CFG.sound ? '🔊' : '🔇'; sfx.click(); };
+$('#bSnd').textContent = CFG.sound ? '🔊' : '🔇';
+$('#bMat').onclick = () => { location.href = 'index.html'; };
+function gameBar(on) { ['#qCount', '#bPause', '#bStop'].forEach(s => $(s).classList.toggle('hide', !on)); $('#bMat').classList.toggle('hide', on); }
+
+/* =========================================================
+   HALAMAN PENGATURAN
+   ========================================================= */
+function settings() {
+  stopGame(); gameBar(false);
+  const chipRow = (key, vals, fmt) => `<div class="chips">${vals.map(v => `<button class="chip ${CFG[key] === v ? 'on' : ''}" data-k="${key}" data-v="${v}">${fmt(v)}</button>`).join('')}</div>`;
+  screen.innerHTML = `<div class="bg" id="bg"></div>
+    <h1 class="set-t">📝 Asesmen</h1>
+    <div class="set-s">Pencemaran Lingkungan & Pembuatan Pupuk Kompos dari Sampah Daun</div>
+    <div class="setcard">
+      <div class="srow"><h3>🔢 Jumlah soal</h3>${chipRow('n', [10, 15, 20, 30], v => `${v}<small>soal</small>`)}</div>
+      <div class="srow"><h3>⏱️ Waktu per soal</h3>${chipRow('t', [10, 15, 30], v => `${v}<small>detik</small>`)}</div>
+      <div class="srow"><h3>⚔️ VS Battle (jumlah kelompok)</h3>${chipRow('g', [2, 3, 4], v => `<span class="dots">${GROUPS.slice(0, v).map(g => `<i style="background:${g.c}"></i>`).join('')}</span>${v}<small>kelompok</small>`)}</div>
+      <div class="setgo"><button class="btn y glow" id="go" style="flex:1;font-size:44px;padding:24px">▶ Mulai Asesmen</button><button class="btn w" id="back">📚 Kembali ke Materi</button></div>
+    </div>
+    <div class="howto"><h3>🎮 Cara Bermain</h3><ol>
+      <li>Soal muncul di bagian <b>atas layar</b>.</li>
+      <li>Pilihan jawaban <b>A, B, C, D</b> berputar-putar di tengah layar.</li>
+      <li>Perwakilan kelompok <b>menarik jawaban</b> ke dalam <b>keranjang kelompoknya</b>.</li>
+      <li>Jawaban <b>benar</b> → poin di keranjang bertambah.</li>
+      <li>Jawaban <b>salah</b> → keranjang <b>tertutup</b> sampai soal berikutnya.</li>
+      <li>Setiap kelompok hanya punya <b>1 kesempatan</b> per soal.</li>
+      <li>Begitu ada kelompok yang <b>menjawab benar</b>, soal <b>langsung berakhir</b>. Cepat-cepatan!</li></ol>
+      <div class="pts">⭐ Benar: <b>+${PTS} poin</b><br>⏰ Waktu habis / semua salah: tidak ada poin</div></div>`;
+  const bg = $('#bg');
+  for (let i = 0; i < 10; i++) {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'fall'); s.setAttribute('viewBox', '0 0 120 120');
+    s.innerHTML = `<use href="#${i % 2 ? 'leafDry' : 'leafYel'}"/>`; s.style.left = rnd(0, 1880) + 'px'; bg.appendChild(s);
+    s.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${rnd(-150, 150)}px,1080px) rotate(${rnd(-540, 540)}deg)` }], { duration: rnd(7000, 13000), delay: rnd(0, 8000), iterations: Infinity });
+  }
+  screen.querySelectorAll('.chip').forEach(b => b.onclick = () => {
+    sfx.click(); CFG[b.dataset.k] = +b.dataset.v; saveCfg();
+    screen.querySelectorAll(`.chip[data-k="${b.dataset.k}"]`).forEach(x => x.classList.toggle('on', x === b));
+  });
+  $('#go').onclick = () => { sfx.click(); startGame(); };
+  $('#back').onclick = () => { location.href = 'index.html'; };
+}
+
+/* =========================================================
+   PERMAINAN (VS BATTLE)
+   ========================================================= */
+const CX = 960, CY = 446, RX = 600, RY = 128, OW = 410, OH = 124;
+let G = null, raf = 0;
+
+function startGame() {
+  const qs = shuffle(BANK.map((b, i) => ({ ...b, id: i }))).slice(0, CFG.n);
+  G = {
+    qs, i: -1, groups: GROUPS.slice(0, CFG.g).map(g => ({ ...g, score: 0, right: 0, state: 'open' })),
+    state: 'idle', remain: 0, ang: 0, last: 0, paused: false, lastSec: 99, cards: [],
+  };
+  gameBar(true);
+  const W = Math.min(430, 1920 / CFG.g - 50);
+  screen.innerHTML = `<div class="bg"></div>
+    <div class="qbox has-t"><div class="qno"><small>SOAL</small><b id="qn">1</b></div><div class="qtext" id="qt"></div>
+      <div class="tbig" id="tb">0</div><div class="qtime" style="right:180px"><i id="tf"></i></div></div>
+    <div id="opts"></div>
+    ${G.groups.map((g, k) => `<div class="bk" id="bk${k}" style="left:${1920 * (k + .5) / CFG.g}px;width:${W}px;--c:${g.c};--cd:${g.d}">
+      <div class="bk-name">${g.n}</div>
+      <div class="bk-body"><svg viewBox="0 0 300 226" preserveAspectRatio="none">
+        <path d="M60 50 Q150 -40 240 50" fill="none" stroke="${g.d}" stroke-width="12" stroke-linecap="round"/>
+        <path d="M8 44 H292 L262 220 H38 Z" fill="${g.c}" stroke="${g.d}" stroke-width="8" stroke-linejoin="round"/>
+        <path d="M18 96 H282 M26 146 H274 M32 192 H268" stroke="${g.d}" stroke-width="6" opacity=".45"/>
+        <path d="M70 46 L80 218 M120 46 L124 218 M180 46 L176 218 M230 46 L220 218" stroke="${g.d}" stroke-width="6" opacity=".3"/>
+        <rect x="2" y="34" width="296" height="24" rx="12" fill="${g.d}"/></svg>
+        <div class="bk-score" id="sc${k}">0</div></div>
+      <div class="bk-shade" id="sh${k}"></div>
+      <div class="bk-lid" id="ld${k}"></div>
+    </div>`).join('')}
+    <div class="reveal" id="rv"></div>
+    <div class="paused" id="pz">⏸ Dijeda<button class="btn y" id="resume">▶ Lanjutkan</button></div>`;
+  $('#resume').onclick = () => togglePause(false);
+  // kartu opsi
+  for (let j = 0; j < 4; j++) {
+    const el = document.createElement('div'); el.className = 'opt';
+    el.innerHTML = `<div class="L" style="background:${LCOL[j]}">${LETTERS[j]}</div><div class="tx"></div>`;
+    $('#opts').appendChild(el);
+    const c = { el, j, x: CX, y: CY, drag: null, ret: null, correct: false };
+    G.cards.push(c); dragCard(c);
+  }
+  cancelAnimationFrame(raf); G.last = performance.now(); raf = requestAnimationFrame(loop);
+  nextQ();
+}
+function stopGame() { cancelAnimationFrame(raf); G = null; }
+
+function nextQ() {
+  G.i++;
+  if (G.i >= G.qs.length) return results();
+  const q = G.qs[G.i];
+  const order = shuffle([0, 1, 2, 3]);
+  G.cards.forEach((c, k) => {
+    const oi = order[k]; c.correct = oi === 0; c.text = q.o[oi];
+    c.el.querySelector('.tx').textContent = q.o[oi];
+    c.el.classList.remove('ok', 'dim', 'lock', 'drag'); c.drag = null; c.ret = null;
+  });
+  G.cards.forEach(c => c.el.animate([{ opacity: 0, scale: .3 }, { opacity: 1, scale: 1 }], { duration: 450, delay: c.j * 90, fill: 'backwards', easing: 'cubic-bezier(.3,1.5,.5,1)' }));
+  G.groups.forEach((g, k) => { g.state = 'open'; const b = $('#bk' + k); b.classList.remove('closed', 'c-ok', 'c-no', 'c-to'); });
+  $('#qn').textContent = G.i + 1; $('#qt').textContent = q.q;
+  $('#qCount').textContent = `📝 Soal ${G.i + 1}/${G.qs.length}`;
+  $('#qt').animate([{ opacity: 0, transform: 'translateY(-20px)' }, { opacity: 1, transform: 'none' }], { duration: 400 });
+  $('#rv').classList.remove('show');
+  G.remain = CFG.t * 1000; G.lastSec = 99; G.state = 'play';
+  sfx.pop();
+}
+
+function loop(t) {
+  raf = requestAnimationFrame(loop);
+  if (!G) return;
+  const dt = Math.min(60, t - G.last); G.last = t;
+  if (G.paused) return;
+  if (G.state === 'play') {
+    G.ang += dt * (2 * Math.PI / 24000);
+    G.remain -= dt;
+    const sec = Math.max(0, Math.ceil(G.remain / 1000));
+    $('#tb').textContent = sec; $('#tb').classList.toggle('hurry', sec <= 3);
+    const f = $('#tf'); f.style.width = Math.max(0, G.remain / (CFG.t * 1000) * 100) + '%';
+    f.style.background = sec <= 3 ? '#dc2626' : sec <= CFG.t / 2 ? '#f59e0b' : '#16a34a';
+    if (sec <= 3 && sec < G.lastSec && sec > 0) sfx.tick();
+    G.lastSec = sec;
+    if (G.remain <= 0) timeUp();
+  }
+  G.cards.forEach((c, i) => {
+    if (c.drag) return;
+    const th = G.ang + i * Math.PI / 2;
+    let ox = CX + RX * Math.cos(th), oy = CY + RY * Math.sin(th);
+    if (G.state === 'reveal' && c.correct) { ox = CX; oy = 528; }
+    let x = ox, y = oy;
+    if (c.ret) {
+      const k = Math.min(1, (t - c.ret.t0) / 450), e = 1 - Math.pow(1 - k, 3);
+      x = c.ret.x + (ox - c.ret.x) * e; y = c.ret.y + (oy - c.ret.y) * e;
+      if (k >= 1) c.ret = null;
+    }
+    c.x = x; c.y = y;
+    c.el.style.zIndex = c.el.classList.contains('ok') ? 20 : Math.round(10 + Math.sin(th) * 5);
+    c.el.style.transform = `translate(${x - OW / 2}px,${y - OH / 2}px) rotate(${Math.sin(t / 600 + i * 1.7) * 5}deg)`;
+  });
+}
+
+function basketAt(p) {
+  const W = Math.min(430, 1920 / CFG.g - 50);
+  for (let k = 0; k < G.groups.length; k++) {
+    const cx = 1920 * (k + .5) / CFG.g;
+    if (p.x > cx - W / 2 - 20 && p.x < cx + W / 2 + 20 && p.y > 96 + 650 && p.y < 1080) return k;
+  }
+  return -1;
+}
+function dragCard(c) {
+  const el = c.el;
+  el.addEventListener('pointerdown', e => {
+    if (!G || G.state !== 'play' || G.paused || c.drag) return;
+    el.setPointerCapture(e.pointerId);
+    const p = toStage(e);
+    c.drag = { id: e.pointerId, dx: p.x - c.x, dy: p.y - 96 - c.y };
+    el.classList.add('drag'); sfx.pop();
+  });
+  el.addEventListener('pointermove', e => {
+    if (!c.drag || e.pointerId !== c.drag.id) return;
+    const p = toStage(e);
+    c.x = p.x - c.drag.dx; c.y = p.y - 96 - c.drag.dy;
+    el.style.transform = `translate(${c.x - OW / 2}px,${c.y - OH / 2}px) rotate(-4deg)`;
+    const k = basketAt(p);
+    document.querySelectorAll('.bk').forEach((b, i) => b.classList.toggle('hover', i === k && G.groups[i].state === 'open'));
+  });
+  const up = e => {
+    if (!c.drag || e.pointerId !== c.drag.id) return;
+    c.drag = null; el.classList.remove('drag');
+    document.querySelectorAll('.bk').forEach(b => b.classList.remove('hover'));
+    const p = toStage(e), k = basketAt(p);
+    if (k >= 0 && G && G.state === 'play') answer(k, c);
+    c.ret = { x: c.x, y: c.y, t0: performance.now() };
+  };
+  el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+}
+
+function closeBasket(k, kind, icon) {
+  const g = G.groups[k], b = $('#bk' + k);
+  g.state = kind; b.classList.add('closed', 'c-' + kind);
+  $('#ld' + k).textContent = '🔒 ' + icon;
+  sfx.lid();
+}
+function answer(k, c) {
+  if (!G || G.state !== 'play') return;
+  const g = G.groups[k], b = $('#bk' + k), cx = 1920 * (k + .5) / CFG.g;
+  if (g.state !== 'open') { toast(`🔒 Keranjang ${g.n} sudah tertutup untuk soal ini`); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); return; }
+  if (c.correct) {
+    g.score += PTS; g.right++;
+    const sc = $('#sc' + k); sc.textContent = g.score; sc.classList.remove('bump'); void sc.offsetWidth; sc.classList.add('bump');
+    floatPts(`+${PTS}`, cx, 700);
+    sfx.good(); closeBasket(k, 'ok', '✅ Benar!');
+    // soal langsung berakhir begitu ada kelompok yang menjawab benar
+    reveal(`🎉 ${g.n} menjawab benar!`);
+    return;
+  } else {
+    floatPts('Salah!', cx, 720, true);
+    sfx.bad(); closeBasket(k, 'no', '❌ Salah');
+    b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
+  }
+  if (G.groups.every(x => x.state !== 'open')) setTimeout(() => G && G.state === 'play' && reveal('😮 Semua kelompok salah!'), 500);
+}
+function timeUp() {
+  G.groups.forEach((g, k) => { if (g.state === 'open') closeBasket(k, 'to', '⏰ Waktu habis'); });
+  reveal('⏰ Waktu habis!');
+}
+function reveal(head) {
+  G.state = 'reveal';
+  const q = G.qs[G.i], ok = G.cards.find(c => c.correct);
+  G.cards.forEach(c => { c.el.classList.add('lock'); c.el.classList.toggle('ok', c.correct); c.el.classList.toggle('dim', !c.correct); });
+  ok.ret = { x: ok.x, y: ok.y, t0: performance.now() };
+  const last = G.i === G.qs.length - 1;
+  const rv = $('#rv');
+  rv.innerHTML = `<h3>${head ? head + ' ' : ''}✔ Jawaban: ${LETTERS[ok.j]}. ${ok.text}</h3>${q.e}
+    <div class="acts"><button class="btn y glow" id="nx">${last ? '🏆 Lihat Hasil' : 'Soal Berikutnya ➜'}</button></div>`;
+  rv.classList.add('show');
+  $('#nx').onclick = () => { sfx.click(); nextQ(); };
+}
+function togglePause(on) {
+  if (!G) return;
+  G.paused = on; $('#pz').classList.toggle('show', on);
+  $('#bPause').innerHTML = on ? '▶ Lanjut' : '⏸ Jeda';
+}
+$('#bPause').onclick = () => { sfx.click(); togglePause(!G.paused); };
+$('#bStop').onclick = () => {
+  sfx.click(); if (!G) return; togglePause(true);
+  modal('Akhiri asesmen?', 'Skor sementara akan ditampilkan sebagai hasil akhir.', '', [
+    { label: '🏁 Ya, tampilkan hasil', cls: 'r', on: () => { G.qs = G.qs.slice(0, G.i + 1); togglePause(false); results(); } },
+    { label: 'Lanjutkan bermain', cls: 'w', on: () => togglePause(false) }]);
+};
+
+/* =========================================================
+   HASIL AKHIR
+   ========================================================= */
+function results() {
+  const used = G.qs, groups = G.groups.map(g => ({ ...g }));
+  cancelAnimationFrame(raf); gameBar(false);
+  const sorted = groups.slice().sort((a, b) => b.score - a.score);
+  const top = sorted[0].score, winners = sorted.filter(g => g.score === top);
+  const rank = g => 1 + sorted.filter(x => x.score > g.score).length;
+  const MED = ['🥇', '🥈', '🥉', '🏅'];
+  const maxScore = Math.max(1, top);
+  // urutan podium: juara di tengah
+  const order = sorted.length === 2 ? [sorted[1], sorted[0]] : sorted.length === 3 ? [sorted[1], sorted[0], sorted[2]] : [sorted[3], sorted[1], sorted[0], sorted[2]];
+  const title = top === 0 ? 'Belum ada poin… ayo coba lagi!' : winners.length > 1 ? `🤝 Seri! ${winners.map(w => w.n).join(' & ')}` : `🏆 ${winners[0].n} Menang!`;
+  screen.innerHTML = `<div class="bg"></div>
+    <h1 class="res-t">${title}</h1>
+    <div class="res-s">Hasil VS Battle · ${used.length} soal · ${CFG.t} detik per soal</div>
+    <div class="podium">${order.map(g => `<div class="pcol" style="--c:${g.c};--cd:${g.d}">
+      <div class="md">${MED[rank(g) - 1]}</div><div class="nm">${g.n}</div>
+      <div class="bar" data-h="${120 + 330 * g.score / maxScore}" style="height:60px"><div class="sc">${g.score}</div><div class="bn">✔ ${g.right}/${used.length} benar</div></div></div>`).join('')}</div>
+    <div class="res-acts">
+      <button class="btn y glow" id="again">🔁 Main Lagi</button>
+      <button class="btn w" id="cfg">⚙️ Pengaturan</button>
+      <button class="btn w" id="key">📋 Kunci & Pembahasan</button>
+      <button class="btn g" id="refl">💭 Ke Refleksi</button>
+    </div>`;
+  requestAnimationFrame(() => setTimeout(() => document.querySelectorAll('.pcol .bar').forEach(b => b.style.height = b.dataset.h + 'px'), 60));
+  if (top > 0) { sfx.win(); confetti(140); }
+  G = null;
+  $('#again').onclick = () => { sfx.click(); startGame(); };
+  $('#cfg').onclick = () => { sfx.click(); settings(); };
+  $('#refl').onclick = () => { location.href = 'index.html#refleksi'; };
+  $('#key').onclick = () => modal('📋 Kunci Jawaban & Pembahasan', `${used.length} soal yang dimainkan:`,
+    `<div class="key">${used.map((q, i) => `<div><b>${i + 1}. ${q.q}</b><br>✔ <b>${q.o[0]}</b><br><span style="color:#475569">${q.e}</span></div>`).join('')}</div>`,
+    [{ label: 'Tutup' }]);
+}
+
+settings();
+</script>
+</body>
+</html>
