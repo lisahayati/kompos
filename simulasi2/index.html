@@ -114,7 +114,7 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 /* ---------- halaman depan ---------- */
 .front{position:absolute;inset:0;background:linear-gradient(#7dd3fc,#e0f2fe 58%,#bbf7d0 58%,#86efac);overflow:hidden}
 .fnav{position:absolute;top:16px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:30;background:rgba(255,255,255,.92);padding:8px;border-radius:999px;box-shadow:0 6px 0 rgba(0,0,0,.12);border:4px solid var(--green-d);white-space:nowrap}
-.fnav button{border:none;border-radius:999px;padding:8px 16px;font-size:24px;font-weight:800;background:transparent;color:var(--green-d)}
+.fnav button{border:none;border-radius:999px;padding:8px 14px;font-size:23px;font-weight:800;background:transparent;color:var(--green-d)}
 .fnav button.on{background:var(--green-d);color:#fff}
 .fnav button:active{background:var(--green-l)}
 .parrows{position:absolute;left:40px;right:40px;bottom:34px;display:flex;justify-content:space-between;z-index:25;pointer-events:none}
@@ -202,6 +202,49 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 .brief b{display:block}
 .brief div b{display:inline}.brief div > b:first-of-type{display:block;font-size:28px;color:var(--green-d)}
 body:not(.narr-on) .bubble .spk{display:none}
+
+
+/* ---------- LKPD ---------- */
+.lk-left{position:absolute;left:40px;top:96px;width:620px;bottom:130px}
+.lk-hero{position:relative;height:250px}
+.lk-guru{position:absolute;left:0;top:0;width:250px;height:250px}
+.lk-say{position:absolute;left:240px;top:56px;background:#fff;border:7px solid #7c3aed;border-radius:999px;padding:12px 26px;font-size:46px;font-weight:800;line-height:1;white-space:nowrap;
+  background-image:linear-gradient(90deg,#ef4444,#f59e0b,#16a34a,#3b82f6,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent;box-shadow:0 8px 0 #7c3aed}
+.lk-say:before{content:"";position:absolute;left:-30px;top:50%;border:16px solid transparent;border-right:22px solid #7c3aed;transform:translateY(-50%)}
+.lk-title{margin-top:8px;background:linear-gradient(90deg,#38bdf8,#a855f7,#f97316);color:#fff;font-size:36px;font-weight:800;line-height:1.15;text-align:center;border-radius:28px;padding:16px 24px;box-shadow:0 8px 0 rgba(0,0,0,.18)}
+.lk-arts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.lk-art{background:#fff;border:5px solid;border-radius:26px;padding:8px 6px 10px;text-align:center;font-size:20px;font-weight:800;line-height:1.1;box-shadow:0 6px 0 rgba(0,0,0,.12)}
+.lk-art svg{width:100%;height:150px;display:block}
+.lk-art small{font-size:16px;font-weight:600}
+.lk-art.air{border-color:#38bdf8;color:#0369a1}.lk-art.em4{border-color:#facc15;color:#a16207}.lk-art.gula{border-color:#fb923c;color:#c2410c}
+.lk-right{position:absolute;left:700px;right:40px;top:96px;bottom:130px;display:flex;flex-direction:column}
+.lk-tab{background:#fff;border-radius:40px;padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;box-shadow:0 12px 30px rgba(0,0,0,.12)}
+.lk-h{border-radius:26px;color:#fff;font-size:34px;font-weight:800;text-align:center;padding:16px 8px;line-height:1.1;box-shadow:0 6px 0 rgba(0,0,0,.15)}
+.lk-h small{display:block;font-size:22px;font-weight:600;opacity:.95}
+.lk-h.air{background:linear-gradient(#38bdf8,#0284c7)}.lk-h.em4{background:linear-gradient(#fde047,#f59e0b);color:#422006}.lk-h.gula{background:linear-gradient(#fb923c,#c2410c)}
+.lk-c{height:120px;border-radius:26px;border:6px solid;font-size:64px;font-weight:800;display:flex;align-items:center;justify-content:center;position:relative;transition:transform .12s}
+.lk-c.air{border-color:#38bdf8;background:#f0f9ff;color:#0369a1}.lk-c.em4{border-color:#facc15;background:#fefce8;color:#854d0e}.lk-c.gula{border-color:#fb923c;background:#fff7ed;color:#c2410c}
+button.lk-c{cursor:pointer}button.lk-c:active{transform:scale(.96)}
+.lk-c .lk-q{opacity:.35}
+button.lk-c:not(.ok):not(.no){border-style:dashed;animation:lkq 1.6s ease-in-out infinite}
+@keyframes lkq{50%{box-shadow:0 0 0 8px rgba(124,58,237,.18)}}
+.lk-c.ok{border-color:#16a34a;background:#dcfce7;color:#15803d}
+.lk-c.no{border-color:#dc2626;background:#fee2e2;color:#b91c1c;animation:wig .4s ease 2}
+.lk-c.ok:after,.lk-c.no:after{position:absolute;top:-16px;right:-12px;width:46px;height:46px;border-radius:50%;color:#fff;font-size:28px;line-height:46px;text-align:center}
+.lk-c.ok:after{content:"✓";background:#16a34a}.lk-c.no:after{content:"✗";background:#dc2626}
+.lk-acts{display:flex;gap:16px;justify-content:center;margin-top:22px}
+.lk-fb{margin-top:18px;background:#fff;border-left:12px solid #7c3aed;border-radius:20px;padding:12px 22px;font-size:27px;line-height:1.3;box-shadow:0 6px 0 rgba(0,0,0,.1)}
+.lk-fb.ok{border-color:#16a34a;background:#f0fdf4}.lk-fb.no{border-color:#dc2626;background:#fef2f2}
+.lk-pad{position:absolute;inset:0;z-index:40;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center}
+.lk-pad.show{display:flex}
+.lk-padc{background:#fff;border:7px solid #7c3aed;border-radius:36px;padding:22px 30px;text-align:center;width:520px;animation:popin .3s ease}
+.lk-padt{font-size:28px;font-weight:800;color:#4c1d95;line-height:1.15}
+.lk-padt small{font-size:20px;color:#64748b}
+.lk-disp{margin:12px 0;height:110px;border-radius:22px;background:#f5f3ff;border:5px solid #c4b5fd;font-size:80px;font-weight:800;line-height:100px;color:#4c1d95}
+.lk-keys{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.lk-keys button{height:92px;border:none;border-radius:20px;background:#ede9fe;font-size:46px;font-weight:800;color:#4c1d95;box-shadow:0 6px 0 #c4b5fd}
+.lk-keys button:active{transform:translateY(4px);box-shadow:0 2px 0 #c4b5fd}
+.lk-keys button.ok{background:#16a34a;color:#fff;box-shadow:0 6px 0 #14532d}
 
 /* ---------- mission 1 ---------- */
 .choices{position:absolute;left:0;right:0;bottom:28px;display:flex;justify-content:center;gap:34px;z-index:12}
@@ -745,6 +788,7 @@ const PAGES = [
   { k: 'profil', l: '🌟 Profil Lulusan', s: 'Profil Lulusan', fn: () => profil() },
   { k: 'alat', l: '🧰 Alat & Bahan', s: 'Alat & Bahan', fn: () => alat() },
   { k: 'misi', l: '🚀 Petualangan', s: 'Petualangan', fn: () => home() },
+  { k: 'lkpd', l: '📋 LKPD', s: 'LKPD', fn: () => lkpd() },
   { k: 'refl', l: '💭 Refleksi', s: 'Refleksi', fn: () => refleksi() },
   { k: 'ases', l: '📝 Asesmen', s: 'Asesmen', fn: () => { location.href = 'asesmen.html'; } },
 ];
@@ -945,7 +989,156 @@ function home() {
   };
 }
 
-/* ---------- 6. Refleksi ---------- */
+/* ---------- 7. LKPD: Hitung Perbandingan Bioaktivator ---------- */
+const LK_BASE = [1, 3, 2];
+const LK_COLS = [
+  { n: 'Air cucian beras', u: 'liter', k: 'air' },
+  { n: 'Cairan EM4', u: 'tutup botol', k: 'em4' },
+  { n: 'Gula merah serut', u: 'sendok makan', k: 'gula' },
+];
+// soal bawaan sama dengan lembar kerja: 1:3:2 | air 4 | EM4 6
+const LK_DEFAULT = [{ k: 1, g: [0, 1, 2] }, { k: 4, g: [0] }, { k: 2, g: [1] }];
+let LK = null;
+function lkNew(random) {
+  let rows = LK_DEFAULT;
+  if (random) {
+    const ks = shuffle([2, 3, 4, 5, 6, 7, 8]).slice(0, 2);
+    rows = [{ k: 1, g: [0, 1, 2] }, ...ks.map(k => ({ k, g: [Math.floor(Math.random() * 3)] }))];
+  }
+  LK = { rows: rows.map(r => ({ k: r.k, cells: LK_BASE.map((b, c) => ({ ans: b * r.k, given: r.g.includes(c), val: null, ok: null })) })) };
+}
+const LK_ART = {
+  air: `<svg viewBox="0 0 160 150"><path d="M38 20 H112 L104 140 H46 Z" fill="#e0f2fe" stroke="#64748b" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M44 44 H106 L104 140 H46 Z" fill="#f8fafc" opacity=".9"/><path d="M112 40 Q146 44 140 80 Q136 104 108 104" fill="none" stroke="#64748b" stroke-width="7"/>
+    ${[[44, '1 L'], [70, '750'], [96, '500'], [120, '250']].map(([y, t]) => `<path d="M44 ${y} H62" stroke="#64748b" stroke-width="3"/><text x="16" y="${y + 5}" font-size="13" font-weight="700" fill="#475569">${t}</text>`).join('')}
+    <path d="M40 44 H110" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 3"/></svg>`,
+  em4: `<svg viewBox="0 0 160 150"><rect x="64" y="6" width="32" height="20" rx="4" fill="#16a34a"/><rect x="60" y="22" width="40" height="14" fill="#facc15" stroke="#a16207" stroke-width="3"/>
+    <path d="M60 36 Q40 44 40 64 V136 Q40 144 50 144 H110 Q120 144 120 136 V64 Q120 44 100 36 Z" fill="#fde047" stroke="#a16207" stroke-width="4"/>
+    <rect x="50" y="68" width="60" height="50" rx="6" fill="#fff"/><text x="80" y="102" text-anchor="middle" font-size="24" font-weight="800" fill="#dc2626">EM4</text>
+    <text x="80" y="62" text-anchor="middle" font-size="9" font-weight="800" fill="#166534">PERTANIAN</text></svg>`,
+  gula: `<svg viewBox="0 0 160 150"><ellipse cx="70" cy="112" rx="62" ry="20" fill="#e2e8f0" stroke="#94a3b8" stroke-width="4"/><ellipse cx="70" cy="106" rx="48" ry="12" fill="#f8fafc"/>
+    <path d="M30 104 Q44 62 70 60 Q98 62 108 104 Z" fill="#7c2d12"/>${Array.from({ length: 14 }, (_, i) => `<circle cx="${38 + (i * 37) % 66}" cy="${72 + (i * 13) % 30}" r="4" fill="${i % 2 ? '#9a3412' : '#451a03'}"/>`).join('')}
+    <path d="M118 104 L146 30" stroke="#94a3b8" stroke-width="7" stroke-linecap="round"/><ellipse cx="114" cy="110" rx="12" ry="8" fill="#cbd5e1" stroke="#94a3b8" stroke-width="3"/></svg>`,
+};
+function lkpd() {
+  if (!LK) lkNew(false);
+  screen.innerHTML = `<div class="front" id="front" style="background:linear-gradient(120deg,#e0f2fe,#fef9c3 55%,#fee2e2)">
+    <div class="lk-left">
+      <div class="lk-hero">
+        <svg class="lk-guru" viewBox="0 0 260 260">
+          <path d="M40 260 Q40 170 130 166 Q220 170 220 260 Z" fill="#fff" stroke="#cbd5e1" stroke-width="5"/>
+          <path d="M112 168 L130 210 L148 168 Z" fill="#e0f2fe"/><path d="M125 180 L130 232 L135 180 Z" fill="#dc2626"/>
+          <rect x="150" y="214" width="34" height="14" rx="3" fill="#ef4444"/><text x="167" y="225" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">GURU</text>
+          <rect x="114" y="140" width="32" height="34" rx="10" fill="#f1c27d"/>
+          <circle cx="130" cy="100" r="58" fill="#f1c27d"/>
+          <path d="M70 92 Q66 34 126 32 Q190 30 190 92 Q178 58 150 58 Q140 70 112 62 Q86 60 70 92 Z" fill="#1f2937"/>
+          <circle cx="106" cy="102" r="20" fill="#fff" stroke="#1e3a8a" stroke-width="6"/><circle cx="154" cy="102" r="20" fill="#fff" stroke="#1e3a8a" stroke-width="6"/>
+          <path d="M126 102 H134" stroke="#1e3a8a" stroke-width="6"/><circle cx="108" cy="104" r="7" fill="#111827"/><circle cx="152" cy="104" r="7" fill="#111827"/>
+          <path d="M108 134 Q130 154 152 134 Q130 146 108 134 Z" fill="#b91c1c"/>
+          <ellipse cx="86" cy="126" rx="8" ry="5" fill="#fca5a5" opacity=".7"/><ellipse cx="174" cy="126" rx="8" ry="5" fill="#fca5a5" opacity=".7"/>
+          <g transform="rotate(-35 210 200)"><rect x="200" y="140" width="16" height="80" rx="4" fill="#facc15" stroke="#a16207" stroke-width="3"/><path d="M200 220 L208 240 L216 220 Z" fill="#fde68a" stroke="#a16207" stroke-width="3"/></g>
+          <circle cx="206" cy="214" r="16" fill="#f1c27d"/>
+        </svg>
+        <div class="lk-say">Hitung yuk...!!!</div>
+      </div>
+      <div class="lk-title">📋 LKPD · Perbandingan Bahan Pembuatan Bioaktivator</div>
+      <div class="lk-arts">${LK_COLS.map(c => `<div class="lk-art ${c.k}">${LK_ART[c.k]}<div>${c.n}<br><small>${c.k === 'air' ? 'dalam gelas takar 1 liter' : 'ukuran: ' + c.u}</small></div></div>`).join('')}</div>
+    </div>
+    <div class="lk-right">
+      <div class="lk-tab">
+        ${LK_COLS.map(c => `<div class="lk-h ${c.k}">${c.n}<small>(${c.u})</small></div>`).join('')}
+        ${LK.rows.map((r, ri) => r.cells.map((c, ci) => c.given
+          ? `<div class="lk-c ${LK_COLS[ci].k} given">${c.ans}</div>`
+          : `<button class="lk-c ${LK_COLS[ci].k} ${c.ok === true ? 'ok' : c.ok === false ? 'no' : ''}" data-r="${ri}" data-c="${ci}">${c.val == null ? '<span class="lk-q">?</span>' : c.val}</button>`).join('')).join('')}
+      </div>
+      <div class="lk-acts">
+        <button class="btn w sm" id="lkHint">💡 Petunjuk</button>
+        <button class="btn sm" id="lkClear" style="background:#7c3aed;color:#fff">🧹 Hapus Isian</button>
+        <button class="btn y sm" id="lkNew">🎲 Soal Baru</button>
+        <button class="btn sm" id="lkPrint" style="background:#0d9488;color:#fff">🖨️ Cetak</button>
+      </div>
+      <div class="lk-fb" id="lkFb">👆 Sentuh kotak <b>?</b> lalu masukkan angka. Bandingkan dengan <b>baris pertama</b> (takaran dasar)!</div>
+    </div>
+    <div class="lk-pad" id="lkPad"><div class="lk-padc">
+      <div class="lk-padt" id="lkPadT"></div><div class="lk-disp" id="lkDisp"></div>
+      <div class="lk-keys">${[7, 8, 9, 4, 5, 6, 1, 2, 3].map(n => `<button data-n="${n}">${n}</button>`).join('')}<button data-n="del">⌫</button><button data-n="0">0</button><button data-n="ok" class="ok">OK</button></div>
+      <button class="btn w sm" id="lkCancel" style="margin-top:14px">Batal</button></div></div>
+  </div>`;
+  frontNav('lkpd');
+  let sel = null, buf = '';
+  const pad = $('#lkPad');
+  screen.querySelectorAll('.lk-c[data-r]').forEach(b => b.onclick = () => {
+    sfx.click(); sel = { r: +b.dataset.r, c: +b.dataset.c }; buf = '';
+    $('#lkPadT').innerHTML = `${LK_COLS[sel.c].n} <small>(${LK_COLS[sel.c].u})</small> — baris ${sel.r + 1}`;
+    $('#lkDisp').textContent = '?'; pad.classList.add('show');
+  });
+  pad.querySelectorAll('.lk-keys button').forEach(k => k.onclick = () => {
+    const n = k.dataset.n;
+    if (n === 'del') buf = buf.slice(0, -1);
+    else if (n === 'ok') { if (buf) submit(+buf); return; }
+    else if (buf.length < 3) buf = (buf === '0' ? '' : buf) + n;
+    tone(500 + (+n || 0) * 40, .05, 'triangle', .1);
+    $('#lkDisp').textContent = buf || '?';
+  });
+  $('#lkCancel').onclick = () => { pad.classList.remove('show'); sfx.click(); };
+  function submit(v) {
+    const cell = LK.rows[sel.r].cells[sel.c];
+    cell.val = v; cell.ok = v === cell.ans;
+    pad.classList.remove('show');
+    const k = LK.rows[sel.r].k, fb = $('#lkFb');
+    if (cell.ok) {
+      sfx.good();
+      fb.className = 'lk-fb ok';
+      fb.innerHTML = `✅ <b>Benar!</b> Baris ${sel.r + 1} adalah <b>${k} kali</b> takaran dasar, jadi ${LK_COLS[sel.c].n} = ${k} × ${LK_BASE[sel.c]} = <b>${cell.ans} ${LK_COLS[sel.c].u}</b>.`;
+    } else {
+      sfx.bad();
+      fb.className = 'lk-fb no';
+      fb.innerHTML = `❌ <b>Belum tepat.</b> Lihat bahan yang sudah diketahui di baris ${sel.r + 1}: berapa kali lipat dari baris pertama? Coba lagi!`;
+    }
+    const done = LK.rows.every(r => r.cells.every(c => c.given || c.ok));
+    lkpd();
+    if (done) {
+      sfx.win(); confetti(90);
+      const f = $('#lkFb'); f.className = 'lk-fb ok';
+      f.innerHTML = '🎉 <b>Hebat, semua benar!</b> Kesimpulan: air cucian beras : EM4 : gula merah = <b>1 : 3 : 2</b>. Jika air dikali sekian, EM4 dan gula merah juga dikali dengan <b>bilangan yang sama</b>.';
+    } else { const f = $('#lkFb'); f.className = fb.className; f.innerHTML = fb.innerHTML; }
+  }
+  $('#lkHint').onclick = () => {
+    const used = LK.rows.map(r => r.k), ex = [5, 7, 3, 10].find(n => !used.includes(n));
+    modal({ title: '💡 Petunjuk Menghitung Perbandingan', lead: 'Gunakan baris pertama sebagai takaran dasar.',
+      html: `<div class="facts" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="fact good"><div class="ic">1️⃣</div><h4>Takaran dasar</h4>1 liter air cucian beras : 3 tutup EM4 : 2 sendok gula merah.</div>
+        <div class="fact good"><div class="ic">✖️</div><h4>Cari kelipatannya</h4>Lihat bahan yang sudah diketahui. Berapa kali lipat dari takaran dasar?</div>
+        <div class="fact good"><div class="ic">🟰</div><h4>Kalikan semua</h4>Kalikan bahan lain dengan bilangan yang sama.</div></div>
+        <div class="note g">📝 <b>Contoh:</b> air cucian beras <b>${ex} liter</b> = ${ex} × 1 liter → EM4 = ${ex} × 3 = <b>${ex * 3} tutup</b>, gula merah = ${ex} × 2 = <b>${ex * 2} sendok makan</b>.</div>`,
+      buttons: [{ label: 'Mengerti 👍' }] });
+  };
+  $('#lkClear').onclick = () => { sfx.click(); LK.rows.forEach(r => r.cells.forEach(c => { c.val = null; c.ok = null; })); lkpd(); };
+  $('#lkNew').onclick = () => { sfx.pop(); lkNew(true); lkpd(); };
+  $('#lkPrint').onclick = lkPrint;
+  speak('Hitung yuk! Perbandingan bahan pembuatan bioaktivator.');
+}
+function lkPrint() {
+  const cell = c => c.given ? `<b>${c.ans}</b>` : (c.val == null ? '' : c.val + (c.ok ? ' ✔' : ' ✘'));
+  const w = window.open('', '_blank');
+  if (!w) { toast('Izinkan pop-up untuk mencetak LKPD.', true); return; }
+  w.document.write(`<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><title>LKPD Perbandingan Bioaktivator</title>
+    <style>body{font-family:Arial,sans-serif;margin:32px;color:#111}h1{font-size:22px;margin:0}h2{font-size:17px;margin:4px 0 16px;font-weight:normal}
+    table{border-collapse:collapse;width:100%;margin:14px 0}th,td{border:2px solid #333;padding:14px;text-align:center;font-size:20px}th{background:#e5e7eb}
+    .id td{border:none;text-align:left;font-size:16px;padding:6px 0}.ln{border-bottom:1px solid #333;display:inline-block;width:320px}p{font-size:16px;line-height:1.6}</style></head><body>
+    <h1>LKPD · Perbandingan Bahan Pembuatan Bioaktivator</h1>
+    <h2>IPA Kelas VII · Pencemaran Lingkungan · SMP Negeri 1 Bandar Seikijang</h2>
+    <table class="id"><tr><td>Nama / Kelompok: <span class="ln"></span></td><td>Kelas: <span class="ln" style="width:160px"></span></td></tr></table>
+    <p><b>Petunjuk:</b> Baris pertama adalah takaran dasar. Lengkapi kotak yang kosong dengan perbandingan yang sama.</p>
+    <table><tr>${LK_COLS.map(c => `<th>${c.n}<br><small>(${c.u})</small></th>`).join('')}</tr>
+    ${LK.rows.map(r => `<tr>${r.cells.map(c => `<td>${cell(c)}</td>`).join('')}</tr>`).join('')}</table>
+    <p><b>Kesimpulan:</b> Perbandingan air cucian beras : EM4 : gula merah = ____ : ____ : ____</p>
+    <p><b>Cara menghitung:</b><br>________________________________________________________________________________<br>________________________________________________________________________________</p>
+    <script>window.onload=function(){window.print()}<\/script></body></html>`);
+  w.document.close();
+}
+
+/* ---------- 8. Refleksi ---------- */
 const REFL = [
   { k: 'senang', f: '😄', l: 'Senang', m: 'Hebat! Terima kasih sudah belajar dengan semangat. Ayo praktikkan membuat kompos di sekolah dan di rumah! 🌱' },
   { k: 'biasa', f: '😐', l: 'Biasa Saja', m: 'Terima kasih sudah jujur! Bagian mana yang masih membingungkan? Tanyakan pada guru atau ulangi misinya, ya. 👍' },
